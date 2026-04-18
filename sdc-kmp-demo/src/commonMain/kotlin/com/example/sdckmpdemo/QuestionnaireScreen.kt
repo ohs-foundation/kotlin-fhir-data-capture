@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2025-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package com.example.sdckmpdemo
 
-import com.example.sdc_kmp_demo.generated.resources.Res
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,8 +34,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import dev.ohs.fhir.datacapture.Questionnaire
+import com.example.sdc_kmp_demo.generated.resources.Res
 import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.datacapture.Questionnaire
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

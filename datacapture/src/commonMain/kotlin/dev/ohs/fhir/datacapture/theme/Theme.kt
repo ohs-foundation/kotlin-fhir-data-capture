@@ -297,9 +297,7 @@ object QuestionnaireTheme {
   val alphas: QuestionnaireAlphas
     @Composable get() = LocalQuestionnaireAlphas.current
 
-  /**
-   * Retrieves the current Material3 [ColorScheme] from MaterialTheme.
-   */
+  /** Retrieves the current Material3 [ColorScheme] from MaterialTheme. */
   val colorScheme
     @Composable get() = MaterialTheme.colorScheme
 

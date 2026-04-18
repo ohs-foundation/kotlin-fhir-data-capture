@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2025-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@
 
 package com.example.sdckmpdemo
 
-import com.example.sdc_kmp_demo.generated.resources.Res
-import com.example.sdc_kmp_demo.generated.resources.back
-import com.example.sdc_kmp_demo.generated.resources.label_address
-import com.example.sdc_kmp_demo.generated.resources.label_date_of_birth
-import com.example.sdc_kmp_demo.generated.resources.label_gender
-import com.example.sdc_kmp_demo.generated.resources.label_marital_status
-import com.example.sdc_kmp_demo.generated.resources.label_telecom
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,6 +42,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.example.sdc_kmp_demo.generated.resources.Res
+import com.example.sdc_kmp_demo.generated.resources.back
+import com.example.sdc_kmp_demo.generated.resources.label_address
+import com.example.sdc_kmp_demo.generated.resources.label_date_of_birth
+import com.example.sdc_kmp_demo.generated.resources.label_gender
+import com.example.sdc_kmp_demo.generated.resources.label_marital_status
+import com.example.sdc_kmp_demo.generated.resources.label_telecom
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -16,12 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.button_pagination_next
-import dev.ohs.fhir.datacapture.generated.resources.button_pagination_previous
-import dev.ohs.fhir.datacapture.generated.resources.button_review
-import dev.ohs.fhir.datacapture.generated.resources.cancel_questionnaire
-import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +35,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.QuestionnaireNavigationUIState
 import dev.ohs.fhir.datacapture.QuestionnaireNavigationViewUIState
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.button_pagination_next
+import dev.ohs.fhir.datacapture.generated.resources.button_pagination_previous
+import dev.ohs.fhir.datacapture.generated.resources.button_review
+import dev.ohs.fhir.datacapture.generated.resources.cancel_questionnaire
+import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import org.jetbrains.compose.resources.stringResource
 

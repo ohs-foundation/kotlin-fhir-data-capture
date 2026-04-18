@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2025-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package com.example.sdckmpdemo
 
-import com.example.sdc_kmp_demo.generated.resources.Res
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sdc_kmp_demo.generated.resources.Res
 import com.google.fhir.model.r4.FhirR4Json
 import com.google.fhir.model.r4.Patient
 import kotlinx.coroutines.flow.MutableStateFlow

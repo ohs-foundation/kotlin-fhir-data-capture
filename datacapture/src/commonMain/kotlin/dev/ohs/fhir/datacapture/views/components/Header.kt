@@ -16,9 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.help
-import dev.ohs.fhir.datacapture.generated.resources.space_asterisk
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,6 +48,9 @@ import dev.ohs.fhir.datacapture.extensions.hasHelpButton
 import dev.ohs.fhir.datacapture.extensions.localizedHelpAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.localizedPrefixAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.readCustomStyleExtension
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.help
+import dev.ohs.fhir.datacapture.generated.resources.space_asterisk
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.ValidationResult

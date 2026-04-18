@@ -16,10 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.gm_schedule_24
-import dev.ohs.fhir.datacapture.generated.resources.select_time
-import dev.ohs.fhir.datacapture.generated.resources.time
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,6 +41,10 @@ import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.gm_schedule_24
+import dev.ohs.fhir.datacapture.generated.resources.select_time
+import dev.ohs.fhir.datacapture.generated.resources.time
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource

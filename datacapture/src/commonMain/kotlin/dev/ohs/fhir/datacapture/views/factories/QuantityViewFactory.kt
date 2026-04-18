@@ -34,6 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.google.fhir.model.r4.Coding
+import com.google.fhir.model.r4.Decimal
+import com.google.fhir.model.r4.Quantity
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.ohs.fhir.datacapture.extensions.hasCode
 import dev.ohs.fhir.datacapture.extensions.hasDisplay
 import dev.ohs.fhir.datacapture.extensions.itemMedia
@@ -51,11 +56,6 @@ import dev.ohs.fhir.datacapture.views.components.EditTextFieldState
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.components.getRequiredOrOptionalText
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Quantity
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

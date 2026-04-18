@@ -16,6 +16,11 @@
 
 package dev.ohs.fhir.datacapture.expressions
 
+import com.google.fhir.model.r4.Coding
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.Resource
+import com.google.fhir.model.r4.ValueSet
 import dev.ohs.fhir.datacapture.ExternalAnswerValueSetResolver
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.answerExpression
@@ -25,11 +30,6 @@ import dev.ohs.fhir.datacapture.extensions.isFhirPath
 import dev.ohs.fhir.datacapture.extensions.isXFhirQuery
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.convertToBoolean
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Resource
-import com.google.fhir.model.r4.ValueSet
 
 /**
  * Evaluates and manages answer options within a [Questionnaire] and its corresponding

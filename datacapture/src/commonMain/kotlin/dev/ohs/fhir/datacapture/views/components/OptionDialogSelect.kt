@@ -16,14 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.cancel
-import dev.ohs.fhir.datacapture.generated.resources.delete
-import dev.ohs.fhir.datacapture.generated.resources.delete_24px
-import dev.ohs.fhir.datacapture.generated.resources.open_choice_other
-import dev.ohs.fhir.datacapture.generated.resources.open_choice_other_add_another
-import dev.ohs.fhir.datacapture.generated.resources.open_choice_other_hint
-import dev.ohs.fhir.datacapture.generated.resources.save
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,13 +49,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.google.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.datacapture.extensions.displayString
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.itemAnswerOptionImage
 import dev.ohs.fhir.datacapture.extensions.optionExclusive
 import dev.ohs.fhir.datacapture.extensions.toAnnotatedString
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.cancel
+import dev.ohs.fhir.datacapture.generated.resources.delete
+import dev.ohs.fhir.datacapture.generated.resources.delete_24px
+import dev.ohs.fhir.datacapture.generated.resources.open_choice_other
+import dev.ohs.fhir.datacapture.generated.resources.open_choice_other_add_another
+import dev.ohs.fhir.datacapture.generated.resources.open_choice_other_hint
+import dev.ohs.fhir.datacapture.generated.resources.save
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
-import com.google.fhir.model.r4.Questionnaire
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.fetchAndIncrement

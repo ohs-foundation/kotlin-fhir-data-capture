@@ -16,10 +16,10 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.min_length_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Integer
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.min_length_validation_error_msg
 import org.jetbrains.compose.resources.getString
 
 internal const val MIN_LENGTH_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/minLength"

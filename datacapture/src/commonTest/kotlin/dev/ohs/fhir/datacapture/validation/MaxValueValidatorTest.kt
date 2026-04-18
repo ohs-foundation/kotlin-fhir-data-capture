@@ -20,8 +20,6 @@ import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
-import dev.ohs.fhir.datacapture.validation.MAX_VALUE_EXTENSION_URL
-import dev.ohs.fhir.datacapture.validation.MaxValueValidator
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

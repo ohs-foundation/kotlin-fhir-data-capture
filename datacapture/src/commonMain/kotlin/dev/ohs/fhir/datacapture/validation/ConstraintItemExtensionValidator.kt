@@ -16,6 +16,11 @@
 
 package dev.ohs.fhir.datacapture.validation
 
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.Expression
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.String
 import dev.ohs.fhir.datacapture.extensions.ConstraintSeverityTypes
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_EXPRESSION
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_HUMAN
@@ -23,11 +28,6 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_SE
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_URL
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.convertToBoolean
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Expression
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.String
 
 /**
  * TODO: Add constraint support for global case, create a separate validator,
@@ -43,9 +43,8 @@ internal class ConstraintItemExtensionValidator(
     return questionnaireItem.extension
       .filter { extension ->
         /**
-         * TODO: Add constraint support for warning case, update the [Result]
-         *   data class to also include warning state,
-         *   https://github.com/google/android-fhir/issues/2480
+         * TODO: Add constraint support for warning case, update the [Result] data class to also
+         *   include warning state, https://github.com/google/android-fhir/issues/2480
          */
         extension.url == EXTENSION_QUESTIONNAIRE_CONSTRAINT_URL &&
           ConstraintSeverityTypes.ERROR.code ==

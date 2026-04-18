@@ -16,8 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.factories
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.decimal_format_validation_error_msg
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,16 +28,18 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
-import dev.ohs.fhir.datacapture.extensions.FhirR4String
-import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
-import dev.ohs.fhir.datacapture.validation.NotValidated
-import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
-import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import com.google.fhir.model.r4.Decimal
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.decimal_format_validation_error_msg
+import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
+import dev.ohs.fhir.datacapture.validation.NotValidated
+import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
+import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

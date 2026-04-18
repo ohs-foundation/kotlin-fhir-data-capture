@@ -18,8 +18,6 @@ package dev.ohs.fhir.datacapture.extensions
 
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Expression
-import dev.ohs.fhir.datacapture.extensions.isFhirPath
-import dev.ohs.fhir.datacapture.extensions.isXFhirQuery
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

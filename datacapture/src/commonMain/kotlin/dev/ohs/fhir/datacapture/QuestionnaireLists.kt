@@ -16,8 +16,6 @@
 
 package dev.ohs.fhir.datacapture
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.not_answered
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,11 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.datacapture.extensions.displayString
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.itemControl
 import dev.ohs.fhir.datacapture.extensions.shouldUseDialog
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.not_answered
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
+import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.QuestionnaireBottomNavigation
 import dev.ohs.fhir.datacapture.views.components.RepeatedGroupAddButtonItem
@@ -68,8 +70,6 @@ import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
 import dev.ohs.fhir.datacapture.views.factories.RadioGroupViewFactory
 import dev.ohs.fhir.datacapture.views.factories.SliderViewFactory
 import dev.ohs.fhir.datacapture.views.factories.TimeViewFactory
-import com.google.fhir.model.r4.Questionnaire
-import dev.ohs.fhir.datacapture.validation.Invalid
 import kotlin.uuid.ExperimentalUuidApi
 import org.jetbrains.compose.resources.stringResource
 
@@ -274,10 +274,7 @@ private fun QuestionnaireReviewItem(
         }
 
         // Error display
-        if (
-          questionnaireViewItem.validationResult
-            is Invalid
-        ) {
+        if (questionnaireViewItem.validationResult is Invalid) {
           Row(
             modifier = Modifier.padding(top = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

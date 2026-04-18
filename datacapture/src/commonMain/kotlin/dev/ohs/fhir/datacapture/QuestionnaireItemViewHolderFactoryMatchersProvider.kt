@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2025-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package dev.ohs.fhir.datacapture
 
 /**
  * Provides the [QuestionnaireItemViewHolderFactoryMatcher]s which are used to evaluate whether a
- * custom [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewHolderFactory]
- * should be used to render a given questionnaire item.
+ * custom [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewHolderFactory] should be
+ * used to render a given questionnaire item.
  *
  * **NOTE**:
  *
@@ -37,8 +37,8 @@ abstract class QuestionnaireItemViewHolderFactoryMatchersProvider {
    *
    * @return A [List] of [QuestionnaireItemViewHolderFactoryMatcher]s which are used to evaluate
    *   whether a custom
-   *   [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewHolderFactory]
-   *   should be used to render a given questionnaire item.
+   *   [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewHolderFactory] should be used
+   *   to render a given questionnaire item.
    */
   abstract fun get(): List<QuestionnaireItemViewHolderFactoryMatcher>
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2025-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import dev.ohs.fhir.datacapture.DataCapture
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Base64Binary
+import dev.ohs.fhir.datacapture.DataCapture
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 

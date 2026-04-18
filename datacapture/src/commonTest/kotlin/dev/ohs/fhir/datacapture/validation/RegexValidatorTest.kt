@@ -19,8 +19,6 @@ package dev.ohs.fhir.datacapture.validation
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
-import dev.ohs.fhir.datacapture.validation.REGEX_EXTENSION_URL
-import dev.ohs.fhir.datacapture.validation.RegexValidator
 import com.google.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertFalse

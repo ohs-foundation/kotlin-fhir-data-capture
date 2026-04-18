@@ -16,7 +16,6 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import com.google.fhir.model.r4.Boolean
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Extension
@@ -25,9 +24,7 @@ import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import com.google.fhir.model.r4.String as FhirString
 import com.google.fhir.model.r4.terminologies.PublicationStatus
-import dev.ohs.fhir.datacapture.validation.MAX_VALUE_EXTENSION_URL
-import dev.ohs.fhir.datacapture.validation.MIN_VALUE_EXTENSION_URL
-import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseItemValidator
+import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest

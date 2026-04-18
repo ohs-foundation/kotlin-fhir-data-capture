@@ -16,12 +16,12 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.min_value_validation_error_msg
-import dev.ohs.fhir.datacapture.enablement.compareFhirValue
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.datacapture.enablement.compareFhirValue
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.min_value_validation_error_msg
 import org.jetbrains.compose.resources.getString
 
 internal const val MIN_VALUE_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/minValue"

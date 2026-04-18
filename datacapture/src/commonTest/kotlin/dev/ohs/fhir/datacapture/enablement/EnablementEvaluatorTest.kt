@@ -16,7 +16,6 @@
 
 package dev.ohs.fhir.datacapture.enablement
 
-import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Boolean
 import com.google.fhir.model.r4.Code
@@ -35,7 +34,7 @@ import com.google.fhir.model.r4.String
 import com.google.fhir.model.r4.Time
 import com.google.fhir.model.r4.Uri
 import com.google.fhir.model.r4.terminologies.PublicationStatus
-import dev.ohs.fhir.datacapture.enablement.EnablementEvaluator
+import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull

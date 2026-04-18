@@ -19,7 +19,6 @@ package dev.ohs.fhir.datacapture.validation
 import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
-import dev.ohs.fhir.datacapture.validation.MaxLengthValidator
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

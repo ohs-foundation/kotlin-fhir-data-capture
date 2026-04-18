@@ -21,7 +21,6 @@ import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import com.google.fhir.model.r4.String as FhirString
 import com.google.fhir.model.r4.terminologies.PublicationStatus
-import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseValidator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

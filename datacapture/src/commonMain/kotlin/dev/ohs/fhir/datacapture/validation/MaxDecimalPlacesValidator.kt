@@ -23,11 +23,11 @@ package dev.ohs.fhir.datacapture.validation
  * Only decimal types permitted in questionnaires response are subjected to this validation. See
  * https://www.hl7.org/fhir/extension-maxdecimalplaces.html
  */
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.max_decimal_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.max_decimal_validation_error_msg
 import org.jetbrains.compose.resources.getString
 
 private const val MAX_DECIMAL_URL = "http://hl7.org/fhir/StructureDefinition/maxDecimalPlaces"
