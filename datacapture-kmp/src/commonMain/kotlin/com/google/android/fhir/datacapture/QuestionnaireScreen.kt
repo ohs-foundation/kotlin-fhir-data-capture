@@ -16,9 +16,9 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.edit_button_text
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_review_mode_title
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.edit_button_text
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.questionnaire_review_mode_title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

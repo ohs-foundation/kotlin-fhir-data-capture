@@ -23,8 +23,8 @@ package com.google.android.fhir.datacapture.validation
  * Only decimal types permitted in questionnaires response are subjected to this validation. See
  * https://www.hl7.org/fhir/extension-maxdecimalplaces.html
  */
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.max_decimal_validation_error_msg
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.max_decimal_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.QuestionnaireResponse

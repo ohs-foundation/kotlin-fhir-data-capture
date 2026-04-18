@@ -16,12 +16,12 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_next
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_previous
-import android_fhir.datacapture_kmp.generated.resources.button_review
-import android_fhir.datacapture_kmp.generated.resources.cancel_questionnaire
-import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_pagination_next
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_pagination_previous
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_review
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.cancel_questionnaire
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

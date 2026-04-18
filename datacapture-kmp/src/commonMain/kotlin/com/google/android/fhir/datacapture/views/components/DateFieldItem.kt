@@ -16,9 +16,9 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.gm_calendar_today_24
-import android_fhir.datacapture_kmp.generated.resources.select_date
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.gm_calendar_today_24
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.select_date
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePicker

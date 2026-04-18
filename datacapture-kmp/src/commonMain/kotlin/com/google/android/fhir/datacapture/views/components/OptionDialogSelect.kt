@@ -16,14 +16,14 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.cancel
-import android_fhir.datacapture_kmp.generated.resources.delete
-import android_fhir.datacapture_kmp.generated.resources.delete_24px
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other_add_another
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other_hint
-import android_fhir.datacapture_kmp.generated.resources.save
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.cancel
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.delete
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.delete_24px
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.open_choice_other
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.open_choice_other_add_another
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.open_choice_other_hint
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.save
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

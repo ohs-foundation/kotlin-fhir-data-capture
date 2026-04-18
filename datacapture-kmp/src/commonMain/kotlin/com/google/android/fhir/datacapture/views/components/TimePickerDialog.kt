@@ -16,14 +16,14 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.cancel
-import android_fhir.datacapture_kmp.generated.resources.ic_access_time
-import android_fhir.datacapture_kmp.generated.resources.ic_keyboard
-import android_fhir.datacapture_kmp.generated.resources.ok
-import android_fhir.datacapture_kmp.generated.resources.select_time
-import android_fhir.datacapture_kmp.generated.resources.switch_to_clock_input
-import android_fhir.datacapture_kmp.generated.resources.switch_to_text_input
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.cancel
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.ic_access_time
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.ic_keyboard
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.ok
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.select_time
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.switch_to_clock_input
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.switch_to_text_input
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

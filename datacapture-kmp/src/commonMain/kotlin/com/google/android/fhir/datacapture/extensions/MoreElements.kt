@@ -16,9 +16,9 @@
 
 package com.google.android.fhir.datacapture.extensions
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.no
-import android_fhir.datacapture_kmp.generated.resources.yes
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.no
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.yes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.google.android.fhir.datacapture.getLocalDateTimeFormatter

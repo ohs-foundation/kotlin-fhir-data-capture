@@ -16,12 +16,12 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_next
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_previous
-import android_fhir.datacapture_kmp.generated.resources.button_review
-import android_fhir.datacapture_kmp.generated.resources.edit_button_text
-import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_pagination_next
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_pagination_previous
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.button_review
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.edit_button_text
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.semantics.ProgressBarRangeInfo

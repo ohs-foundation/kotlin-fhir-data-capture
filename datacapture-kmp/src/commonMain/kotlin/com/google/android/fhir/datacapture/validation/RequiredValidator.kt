@@ -16,8 +16,8 @@
 
 package com.google.android.fhir.datacapture.validation
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.required_constraint_validation_error_msg
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture_kmp.generated.resources.required_constraint_validation_error_msg
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import org.jetbrains.compose.resources.getString

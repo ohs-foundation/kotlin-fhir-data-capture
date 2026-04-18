@@ -16,13 +16,13 @@
 
 package com.example.sdckmpdemo
 
-import android_fhir.sdc_kmp_demo.generated.resources.Res
-import android_fhir.sdc_kmp_demo.generated.resources.back
-import android_fhir.sdc_kmp_demo.generated.resources.label_address
-import android_fhir.sdc_kmp_demo.generated.resources.label_date_of_birth
-import android_fhir.sdc_kmp_demo.generated.resources.label_gender
-import android_fhir.sdc_kmp_demo.generated.resources.label_marital_status
-import android_fhir.sdc_kmp_demo.generated.resources.label_telecom
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.Res
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.back
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.label_address
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.label_date_of_birth
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.label_gender
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.label_marital_status
+import kotlin_fhir_data_capture.sdc_kmp_demo.generated.resources.label_telecom
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
