@@ -17,8 +17,8 @@
 package com.example.sdckmpdemo
 
 import android.app.Application
-import com.google.android.fhir.datacapture.DataCapture
-import com.google.android.fhir.datacapture.DataCaptureConfig
+import dev.ohs.fhir.datacapture.DataCapture
+import dev.ohs.fhir.datacapture.DataCaptureConfig
 
 class DemoApplication : Application(), DataCaptureConfig.Provider {
 

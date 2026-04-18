@@ -20,7 +20,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 
 private val lightScheme =
   lightColorScheme(

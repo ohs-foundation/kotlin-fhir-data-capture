@@ -41,6 +41,6 @@ buildscript {
   }
 }
 
-include(":datacapture-kmp")
+include(":datacapture")
 
 include(":sdc-kmp-demo")

@@ -25,7 +25,7 @@ allprojects {
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     gradlePluginPortal()
   }
-  configureSpotless()
+//  configureSpotless()
 }
 
 subprojects {

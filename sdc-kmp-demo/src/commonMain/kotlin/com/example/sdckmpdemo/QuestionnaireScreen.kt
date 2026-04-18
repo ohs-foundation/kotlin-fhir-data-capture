@@ -35,7 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.google.android.fhir.datacapture.Questionnaire
+import dev.ohs.fhir.datacapture.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
