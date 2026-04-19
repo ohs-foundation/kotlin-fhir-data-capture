@@ -18,13 +18,8 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 
+@Suppress("unused")
 fun Project.applyLicenseeConfig() {
-  // Skip project ":engine:benchmarks:macrobenchmark" since it's a "com.android.test" project
-  // which is not compatible with Licensee
-  if (project.path == ":engine:benchmarks:macrobenchmark") {
-    return
-  }
-
   // We have some empty folders like the :contrib root folder, which Gradle recognizes as projects.
   // Don't configure plugins for those folders.
   if (!project.buildFile.exists()) {
@@ -224,6 +219,10 @@ private fun Project.configureLicensee() {
 
     // Logback
     allowDependency("ch.qos.logback", "logback-core", "1.4.14") { because("LGPL") }
+
+    // KMP FileKit
+    allowUrl("https://github.com/vinceglb/FileKit/blob/main/LICENSE") { because("") }
+    allowUrl("https://github.com/hypfvieh/dbus-java/blob/master/LICENSE") { because("") }
   }
 }
 

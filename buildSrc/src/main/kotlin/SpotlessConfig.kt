@@ -18,6 +18,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 
+@Suppress("unused")
 fun Project.configureSpotless() {
   val ktlintVersion = "0.50.0"
   val ktlintOptions = mapOf("indent_size" to "2", "continuation_indent_size" to "2")

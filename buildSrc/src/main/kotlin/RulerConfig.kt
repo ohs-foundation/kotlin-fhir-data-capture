@@ -18,6 +18,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 
+@Suppress("unused")
 fun Project.configureRuler() {
   apply(plugin = Plugins.BuildPlugins.ruler)
   configure<com.spotify.ruler.plugin.RulerExtension> {

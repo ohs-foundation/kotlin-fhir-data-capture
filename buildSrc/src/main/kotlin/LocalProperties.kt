@@ -24,6 +24,7 @@ import org.gradle.api.Project
  * Retrieve the project local properties if they are available. If there is no local properties file
  * then an empty set of properties is returned.
  */
+@Suppress("unused")
 fun Project.gradleLocalProperties(file: String = "local.properties"): Properties {
   val properties = Properties()
   val localProperties = File(rootDir, file)
