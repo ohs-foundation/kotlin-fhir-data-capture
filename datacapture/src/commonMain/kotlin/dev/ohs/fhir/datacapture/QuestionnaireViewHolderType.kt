@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Google LLC
+ * Copyright 2023-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package dev.ohs.fhir.datacapture
 /**
  * Questionnaire item view holder types supported by default by the data capture library.
  *
- * This is used by the [dev.ohs.fhir.datacapture.QuestionnaireFragment] lists to
- * determine how each [com.google.fhir.model.r4.Questionnaire.Item] is rendered.
+ * This is used by the [dev.ohs.fhir.datacapture.QuestionnaireFragment] lists to determine how each
+ * [com.google.fhir.model.r4.Questionnaire.Item] is rendered.
  *
  * This list should provide sufficient coverage for values in
  * https://www.hl7.org/fhir/valueset-item-type.html and

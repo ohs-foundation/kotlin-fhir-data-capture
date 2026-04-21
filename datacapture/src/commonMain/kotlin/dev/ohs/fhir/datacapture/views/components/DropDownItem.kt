@@ -16,8 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.ic_clear
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
@@ -46,13 +44,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.google.fhir.model.r4.Element
+import com.google.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.datacapture.extensions.displayString
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.itemAnswerOptionImage
 import dev.ohs.fhir.datacapture.extensions.toAnnotatedString
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.ic_clear
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
-import com.google.fhir.model.r4.Element
-import com.google.fhir.model.r4.Questionnaire
 import org.jetbrains.compose.resources.painterResource
 
 internal const val CLEAR_TEXT_ICON_BUTTON_TAG = "clear_field_text"

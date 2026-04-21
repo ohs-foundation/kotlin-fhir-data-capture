@@ -16,6 +16,7 @@
 
 package dev.ohs.fhir.catalog.ui.components
 
+import androidx.lifecycle.ViewModel
 import dev.ohs.fhir.catalog.generated.resources.Res
 import dev.ohs.fhir.catalog.generated.resources.component_name_attachment
 import dev.ohs.fhir.catalog.generated.resources.component_name_auto_complete
@@ -62,7 +63,6 @@ import dev.ohs.fhir.catalog.generated.resources.ic_unitoptions
 import dev.ohs.fhir.catalog.generated.resources.misc_components
 import dev.ohs.fhir.catalog.generated.resources.text_format_48dp
 import dev.ohs.fhir.catalog.generated.resources.widgets
-import androidx.lifecycle.ViewModel
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

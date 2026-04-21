@@ -23,7 +23,6 @@ import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.camera.CAMERA
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
-import dev.ohs.fhir.datacapture.contrib.views.barcode.CameraPermissionProvider
 
 @Composable
 internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider {

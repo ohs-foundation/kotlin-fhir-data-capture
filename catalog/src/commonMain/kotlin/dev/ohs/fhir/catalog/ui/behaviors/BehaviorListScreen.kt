@@ -33,7 +33,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun BehaviorListScreen(
   viewModel: dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel,
-  onBehaviorClick: (dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel.Behavior, String) -> Unit,
+  onBehaviorClick:
+    (dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel.Behavior, String) -> Unit,
 ) {
   Scaffold(
     topBar = { CatalogTopAppBar() },

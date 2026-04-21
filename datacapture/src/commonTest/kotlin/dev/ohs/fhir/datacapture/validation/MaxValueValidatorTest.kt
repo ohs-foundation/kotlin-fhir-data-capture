@@ -16,10 +16,6 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import dev.ohs.fhir.datacapture.extensions.EXTENSION_CQF_CALCULATED_VALUE_URL
-import dev.ohs.fhir.datacapture.extensions.FhirR4DateType
-import dev.ohs.fhir.datacapture.extensions.FhirR4String
-import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Expression
 import com.google.fhir.model.r4.Extension
@@ -28,6 +24,10 @@ import com.google.fhir.model.r4.Integer
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import com.google.fhir.model.r4.QuestionnaireResponse.QuestionnaireResponseStatus
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_CQF_CALCULATED_VALUE_URL
+import dev.ohs.fhir.datacapture.extensions.FhirR4DateType
+import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

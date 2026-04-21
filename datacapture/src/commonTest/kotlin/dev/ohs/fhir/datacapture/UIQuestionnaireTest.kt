@@ -16,12 +16,6 @@
 
 package dev.ohs.fhir.datacapture
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.button_pagination_next
-import dev.ohs.fhir.datacapture.generated.resources.button_pagination_previous
-import dev.ohs.fhir.datacapture.generated.resources.button_review
-import dev.ohs.fhir.datacapture.generated.resources.edit_button_text
-import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
@@ -47,7 +41,17 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.testing.TestLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.FhirR4Json
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.terminologies.PublicationStatus
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.button_pagination_next
+import dev.ohs.fhir.datacapture.generated.resources.button_pagination_previous
+import dev.ohs.fhir.datacapture.generated.resources.button_review
+import dev.ohs.fhir.datacapture.generated.resources.edit_button_text
+import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import dev.ohs.fhir.datacapture.views.components.ADD_REPEATED_GROUP_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.components.DELETE_REPEATED_GROUP_ITEM_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.components.HINT_HEADER_TAG
@@ -58,10 +62,6 @@ import dev.ohs.fhir.datacapture.views.components.REPEATED_GROUP_INSTANCE_HEADER_
 import dev.ohs.fhir.datacapture.views.components.SLIDER_TAG
 import dev.ohs.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.FhirR4Json
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import org.jetbrains.compose.resources.getString

@@ -31,11 +31,13 @@ private val DarkColorScheme =
     secondary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SecondaryBlue80,
     onSecondary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryBlue20,
     secondaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SecondaryContainerBlue30,
-    onSecondaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryContainerBlue90,
+    onSecondaryContainer =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryContainerBlue90,
     tertiary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.TertiaryGreen80,
     onTertiary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryGreen20,
     tertiaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.TertiaryContainerGreen30,
-    onTertiaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryContainerGreen90,
+    onTertiaryContainer =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryContainerGreen90,
     error = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.ErrorRed80,
     errorContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.ErrorContainerRed20,
     onError = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnErrorRed30,
@@ -44,8 +46,10 @@ private val DarkColorScheme =
     onBackground = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnBackgroundNeutral90,
     surface = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceNeutral10,
     onSurface = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceNeutral90,
-    surfaceVariant = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceVariantNeutralVariant30,
-    onSurfaceVariant = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceVariantNeutralVariant80,
+    surfaceVariant =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceVariantNeutralVariant30,
+    onSurfaceVariant =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceVariantNeutralVariant80,
     outline = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OutlineNeutralVariant60,
   )
 
@@ -58,11 +62,13 @@ private val LightColorScheme =
     secondary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SecondaryBlue40,
     onSecondary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryBlue100,
     secondaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SecondaryContainerBlue90,
-    onSecondaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryContainerBlue10,
+    onSecondaryContainer =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSecondaryContainerBlue10,
     tertiary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.TertiaryGreen40,
     onTertiary = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryGreen100,
     tertiaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.TertiaryContainerGreen90,
-    onTertiaryContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryContainerGreen10,
+    onTertiaryContainer =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnTertiaryContainerGreen10,
     error = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.ErrorRed40,
     errorContainer = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.ErrorContainerRed100,
     onError = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnErrorRed90,
@@ -71,8 +77,10 @@ private val LightColorScheme =
     onBackground = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnBackgroundNeutral10,
     surface = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceNeutral100,
     onSurface = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceNeutral10,
-    surfaceVariant = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceVariantNeutralVariant90,
-    onSurfaceVariant = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceVariantNeutralVariant30,
+    surfaceVariant =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.SurfaceVariantNeutralVariant90,
+    onSurfaceVariant =
+      _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OnSurfaceVariantNeutralVariant30,
     outline = _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.OutlineNeutralVariant50,
   )
 
@@ -81,7 +89,9 @@ fun AppTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
-  val colorScheme = if (darkTheme) _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.DarkColorScheme else _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.LightColorScheme
+  val colorScheme =
+    if (darkTheme) _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.DarkColorScheme
+    else _root_ide_package_.dev.ohs.fhir.catalog.ui.theme.LightColorScheme
 
   QuestionnaireTheme(
     colorScheme = colorScheme,

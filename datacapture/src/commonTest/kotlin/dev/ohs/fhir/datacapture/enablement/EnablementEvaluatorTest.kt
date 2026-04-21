@@ -16,7 +16,6 @@
 
 package dev.ohs.fhir.datacapture.enablement
 
-import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Boolean
 import com.google.fhir.model.r4.Code
@@ -35,6 +34,7 @@ import com.google.fhir.model.r4.String
 import com.google.fhir.model.r4.Time
 import com.google.fhir.model.r4.Uri
 import com.google.fhir.model.r4.terminologies.PublicationStatus
+import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -79,9 +79,9 @@ class EnablementEvaluatorTest {
 
     val result =
       EnablementEvaluator(
-        questionnaireBuilder.build(),
-        questionnaireResponseBuilder.build()
-      )
+          questionnaireBuilder.build(),
+          questionnaireResponseBuilder.build(),
+        )
         .evaluate(questionnaireItemBuilder.build(), questionnaireResponseItemBuilder.build())
     assertFalse(result)
   }
@@ -200,9 +200,9 @@ class EnablementEvaluatorTest {
     assertNotNull(questionnaireItem)
     assertTrue(
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(
           questionnaireItem,
           questionnaireResponse.item[1],
@@ -279,9 +279,9 @@ class EnablementEvaluatorTest {
     assertNotNull(questionnaireItemComponent)
     assertFalse(
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(
           questionnaireItemComponent,
           questionnaireResponse.item[1],
@@ -359,9 +359,9 @@ class EnablementEvaluatorTest {
 
     assertTrue(
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(
           questionnaireItem,
           questionnaireResponse.item[1],
@@ -427,9 +427,9 @@ class EnablementEvaluatorTest {
 
     assertTrue(
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(
           questionnaire.item[0],
           questionnaireResponse.item[0],
@@ -495,9 +495,9 @@ class EnablementEvaluatorTest {
 
     assertTrue(
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(
           questionnaire.item[0],
           questionnaireResponse.item[0],
@@ -1111,9 +1111,9 @@ class EnablementEvaluatorTest {
 
     val result =
       EnablementEvaluator(
-        questionnaire,
-        questionnaireResponse
-      )
+          questionnaire,
+          questionnaireResponse,
+        )
         .evaluate(questionnaireItemBuilder.build(), targetResponseItem.build())
     return result
   }

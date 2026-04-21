@@ -16,6 +16,7 @@
 
 package dev.ohs.fhir.catalog.ui.layouts
 
+import androidx.lifecycle.ViewModel
 import dev.ohs.fhir.catalog.generated.resources.Res
 import dev.ohs.fhir.catalog.generated.resources.ic_defaultlayout
 import dev.ohs.fhir.catalog.generated.resources.ic_paginatedlayout
@@ -25,7 +26,6 @@ import dev.ohs.fhir.catalog.generated.resources.layout_name_default_text
 import dev.ohs.fhir.catalog.generated.resources.layout_name_paginated
 import dev.ohs.fhir.catalog.generated.resources.layout_name_read_only
 import dev.ohs.fhir.catalog.generated.resources.layout_name_review
-import androidx.lifecycle.ViewModel
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

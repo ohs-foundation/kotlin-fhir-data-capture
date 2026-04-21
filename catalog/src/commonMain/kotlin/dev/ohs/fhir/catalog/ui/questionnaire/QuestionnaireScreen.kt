@@ -16,13 +16,6 @@
 
 package dev.ohs.fhir.catalog.ui.questionnaire
 
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression_info
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic_info
-import dev.ohs.fhir.catalog.generated.resources.ic_info_24
-import dev.ohs.fhir.catalog.generated.resources.loading
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +49,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression
+import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression_info
+import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic
+import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic_info
+import dev.ohs.fhir.catalog.generated.resources.ic_info_24
+import dev.ohs.fhir.catalog.generated.resources.loading
 import dev.ohs.fhir.catalog.ui.questionnaire.components.ErrorStateToggleAction
 import dev.ohs.fhir.datacapture.Questionnaire
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher

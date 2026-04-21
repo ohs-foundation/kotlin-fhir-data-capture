@@ -16,6 +16,7 @@
 
 package dev.ohs.fhir.catalog.ui.behaviors
 
+import androidx.lifecycle.ViewModel
 import dev.ohs.fhir.catalog.generated.resources.Res
 import dev.ohs.fhir.catalog.generated.resources.behavior_name_answer_expression
 import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression
@@ -30,7 +31,6 @@ import dev.ohs.fhir.catalog.generated.resources.ic_context
 import dev.ohs.fhir.catalog.generated.resources.ic_dynamic_text_behavior
 import dev.ohs.fhir.catalog.generated.resources.ic_rule
 import dev.ohs.fhir.catalog.generated.resources.ic_skiplogic_behavior
-import androidx.lifecycle.ViewModel
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

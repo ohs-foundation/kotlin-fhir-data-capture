@@ -28,9 +28,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import dev.ohs.fhir.datacapture.extensions.FhirR4String
-import dev.ohs.fhir.datacapture.validation.NotValidated
-import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Base64Binary
 import com.google.fhir.model.r4.Code
@@ -38,6 +35,9 @@ import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.validation.NotValidated
+import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

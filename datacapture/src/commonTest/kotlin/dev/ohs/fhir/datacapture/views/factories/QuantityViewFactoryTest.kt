@@ -33,6 +33,16 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
+import com.google.fhir.model.r4.Code
+import com.google.fhir.model.r4.Coding
+import com.google.fhir.model.r4.Decimal
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.Extension
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.Uri
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
@@ -45,16 +55,6 @@ import dev.ohs.fhir.datacapture.views.components.DROP_DOWN_TEXT_FIELD_TAG
 import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.ERROR_TEXT_AT_HEADER_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
-import com.google.fhir.model.r4.Code
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Uri
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
@@ -118,9 +118,10 @@ class QuantityViewFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
-                      value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                        value = "5".toBigDecimal()
-                      ),
+                      value =
+                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                          value = "5".toBigDecimal(),
+                        ),
                     ),
                 ),
               ),
@@ -151,9 +152,10 @@ class QuantityViewFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
-                      value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                        value = "5".toBigDecimal()
-                      ),
+                      value =
+                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                          value = "5".toBigDecimal(),
+                        ),
                     ),
                 ),
               ),
@@ -196,9 +198,11 @@ class QuantityViewFactoryTest {
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Quantity(value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                      unit = "kg"
-                    )
+                    QuestionnaireResponse.Item.Answer.Value.Quantity(
+                      value =
+                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                          unit = "kg",
+                        ),
                     ),
                 ),
               ),
@@ -225,10 +229,11 @@ class QuantityViewFactoryTest {
               Questionnaire.Item.Initial(
                 value =
                   Questionnaire.Item.Initial.Value.Quantity(
-                    value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                      unit = "kg",
-                      code = "kilo"
-                    ),
+                    value =
+                      _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        unit = "kg",
+                        code = "kilo",
+                      ),
                   ),
               ),
             ),
@@ -258,9 +263,11 @@ class QuantityViewFactoryTest {
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Quantity(value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                      unit = "kg"
-                    )
+                    QuestionnaireResponse.Item.Answer.Value.Quantity(
+                      value =
+                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                          unit = "kg",
+                        ),
                     ),
                 ),
               ),
@@ -657,9 +664,10 @@ class QuantityViewFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
-                      value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                        value = "5".toBigDecimal()
-                      ),
+                      value =
+                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                          value = "5".toBigDecimal(),
+                        ),
                     ),
                 ),
               ),
@@ -686,9 +694,10 @@ class QuantityViewFactoryTest {
               QuestionnaireResponse.Item.Answer(
                 value =
                   QuestionnaireResponse.Item.Answer.Value.Quantity(
-                    value = _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
-                      value = "7".toBigDecimal()
-                    ),
+                    value =
+                      _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        value = "7".toBigDecimal(),
+                      ),
                   ),
               ),
             ),

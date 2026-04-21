@@ -40,7 +40,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ComponentListScreen(
   viewModel: dev.ohs.fhir.catalog.ui.components.ComponentListViewModel,
-  onComponentClick: (dev.ohs.fhir.catalog.ui.components.ComponentListViewModel.Component, String) -> Unit,
+  onComponentClick:
+    (dev.ohs.fhir.catalog.ui.components.ComponentListViewModel.Component, String) -> Unit,
 ) {
   Scaffold(
     topBar = { CatalogTopAppBar() },

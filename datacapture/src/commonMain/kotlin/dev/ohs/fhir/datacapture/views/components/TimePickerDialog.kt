@@ -16,14 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.cancel
-import dev.ohs.fhir.datacapture.generated.resources.ic_access_time
-import dev.ohs.fhir.datacapture.generated.resources.ic_keyboard
-import dev.ohs.fhir.datacapture.generated.resources.ok
-import dev.ohs.fhir.datacapture.generated.resources.select_time
-import dev.ohs.fhir.datacapture.generated.resources.switch_to_clock_input
-import dev.ohs.fhir.datacapture.generated.resources.switch_to_text_input
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +36,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.cancel
+import dev.ohs.fhir.datacapture.generated.resources.ic_access_time
+import dev.ohs.fhir.datacapture.generated.resources.ic_keyboard
+import dev.ohs.fhir.datacapture.generated.resources.ok
+import dev.ohs.fhir.datacapture.generated.resources.select_time
+import dev.ohs.fhir.datacapture.generated.resources.switch_to_clock_input
+import dev.ohs.fhir.datacapture.generated.resources.switch_to_text_input
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

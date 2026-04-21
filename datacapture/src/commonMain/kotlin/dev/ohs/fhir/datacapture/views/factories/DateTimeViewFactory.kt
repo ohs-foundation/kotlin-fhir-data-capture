@@ -16,10 +16,6 @@
 
 package dev.ohs.fhir.datacapture.views.factories
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.date_format_validation_error_msg
-import dev.ohs.fhir.datacapture.generated.resources.required_text_and_new_line
-import dev.ohs.fhir.datacapture.generated.resources.time
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,9 +30,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.google.fhir.model.r4.DateTime
+import com.google.fhir.model.r4.FhirDateTime
+import com.google.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.canonicalizeDatePattern
 import dev.ohs.fhir.datacapture.extensions.getDateSeparator
 import dev.ohs.fhir.datacapture.extensions.itemMedia
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.date_format_validation_error_msg
+import dev.ohs.fhir.datacapture.generated.resources.required_text_and_new_line
+import dev.ohs.fhir.datacapture.generated.resources.time
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import dev.ohs.fhir.datacapture.parseLocalDateOrNull
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
@@ -49,9 +52,6 @@ import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.components.TimeFieldItem
 import dev.ohs.fhir.datacapture.views.components.getRequiredOrOptionalText
-import com.google.fhir.model.r4.DateTime
-import com.google.fhir.model.r4.FhirDateTime
-import com.google.fhir.model.r4.QuestionnaireResponse
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers

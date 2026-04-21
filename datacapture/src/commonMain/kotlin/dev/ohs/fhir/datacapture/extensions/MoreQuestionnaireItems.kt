@@ -18,8 +18,6 @@ package dev.ohs.fhir.datacapture.extensions
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
-import dev.ohs.fhir.datacapture.QuestionnaireViewHolderType
-import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Coding
 import com.google.fhir.model.r4.Date
@@ -34,6 +32,8 @@ import com.google.fhir.model.r4.String as FhirString
 import com.google.fhir.model.r4.Time
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import dev.ohs.fhir.datacapture.QuestionnaireViewHolderType
+import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 
 internal const val MIN_VALUE_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/minValue"
 

@@ -16,9 +16,6 @@
 
 package dev.ohs.fhir.catalog.ui.questionnaire.components
 
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.options
-import dev.ohs.fhir.catalog.generated.resources.show_error_state
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -47,6 +44,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.options
+import dev.ohs.fhir.catalog.generated.resources.show_error_state
 import org.jetbrains.compose.resources.stringResource
 
 /** Action button that toggles error state via a bottom sheet. */

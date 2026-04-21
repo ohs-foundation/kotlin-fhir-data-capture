@@ -16,9 +16,6 @@
 
 package dev.ohs.fhir.datacapture.contrib.views.locationwidget
 
-import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.Res
-import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.gm_location_on_24
-import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.record_gps_location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +36,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.jordond.compass.Priority
+import dev.jordond.compass.geolocation.GeolocatorResult
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher
+import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.Res
+import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.gm_location_on_24
+import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.record_gps_location
 import dev.ohs.fhir.datacapture.extensions.itemControlCode
 import dev.ohs.fhir.datacapture.extensions.itemMedia
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
@@ -47,8 +49,6 @@ import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
-import dev.jordond.compass.Priority
-import dev.jordond.compass.geolocation.GeolocatorResult
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

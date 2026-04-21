@@ -16,10 +16,6 @@
 
 package dev.ohs.fhir.datacapture.contrib.views.barcode
 
-import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.Res
-import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.ic_barcode
-import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.rescan
-import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.scan_barcode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,17 +42,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.String
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher
+import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.Res
+import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.ic_barcode
+import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.rescan
+import dev.ohs.fhir.datacapture.contrib.barcode.generated.resources.scan_barcode
 import dev.ohs.fhir.datacapture.extensions.itemControlCode
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Valid
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.String
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource

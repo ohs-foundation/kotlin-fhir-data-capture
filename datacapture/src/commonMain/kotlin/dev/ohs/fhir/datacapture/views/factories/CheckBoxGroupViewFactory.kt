@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
+import com.google.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.datacapture.extensions.ChoiceOrientationTypes
 import dev.ohs.fhir.datacapture.extensions.choiceOrientation
 import dev.ohs.fhir.datacapture.extensions.displayString
@@ -43,7 +44,6 @@ import dev.ohs.fhir.datacapture.views.components.ChoiceCheckbox
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.isAnswerOptionSelected
-import com.google.fhir.model.r4.Questionnaire
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

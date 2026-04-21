@@ -16,8 +16,6 @@
 
 package dev.ohs.fhir.datacapture.contrib.views.locationwidget
 
-import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.Res
-import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.required_text_and_new_line
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,16 +28,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.google.fhir.model.r4.Decimal
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher
+import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.Res
+import dev.ohs.fhir.datacapture.contrib.locationwidget.generated.resources.required_text_and_new_line
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.stringResource
 
 internal const val PRIMARY_GPS_COORDINATE_EXTENSION_URL =

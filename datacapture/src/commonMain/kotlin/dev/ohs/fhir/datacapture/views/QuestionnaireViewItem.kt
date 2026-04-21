@@ -17,6 +17,9 @@
 package dev.ohs.fhir.datacapture.views
 
 import androidx.compose.ui.text.AnnotatedString
+import com.google.fhir.model.r4.Extension
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.isHelpCode
 import dev.ohs.fhir.datacapture.extensions.localizedTextAnnotatedString
@@ -26,9 +29,6 @@ import dev.ohs.fhir.datacapture.extensions.toAnnotatedString
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.validation.Valid
 import dev.ohs.fhir.datacapture.validation.ValidationResult
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
 
 /**
  * Data item for [QuestionnaireItemViewHolder] in [androidx.compose.foundation.lazy.LazyColumn].

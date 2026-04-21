@@ -16,10 +16,6 @@
 
 package dev.ohs.fhir.catalog
 
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.ic_behaviors
-import dev.ohs.fhir.catalog.generated.resources.ic_components
-import dev.ohs.fhir.catalog.generated.resources.ic_layouts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -45,6 +41,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.savedstate.read
+import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.ic_behaviors
+import dev.ohs.fhir.catalog.generated.resources.ic_components
+import dev.ohs.fhir.catalog.generated.resources.ic_layouts
 import dev.ohs.fhir.catalog.ui.behaviors.BehaviorListScreen
 import dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel
 import dev.ohs.fhir.catalog.ui.components.ComponentListScreen
@@ -96,7 +96,12 @@ fun App() {
       val navBackStackEntry by navController.currentBackStackEntryAsState()
       val currentDestination = navBackStackEntry?.destination
 
-      val items = listOf(_root_ide_package_.dev.ohs.fhir.catalog.Screen.Components, _root_ide_package_.dev.ohs.fhir.catalog.Screen.Layouts, _root_ide_package_.dev.ohs.fhir.catalog.Screen.Behaviors)
+      val items =
+        listOf(
+          _root_ide_package_.dev.ohs.fhir.catalog.Screen.Components,
+          _root_ide_package_.dev.ohs.fhir.catalog.Screen.Layouts,
+          _root_ide_package_.dev.ohs.fhir.catalog.Screen.Behaviors
+        )
 
       Scaffold(
         bottomBar = {

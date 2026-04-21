@@ -16,9 +16,6 @@
 
 package dev.ohs.fhir.catalog.ui.shared
 
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.open_questionnaire
-import dev.ohs.fhir.catalog.generated.resources.toolbar_text
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
@@ -37,6 +34,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.open_questionnaire
+import dev.ohs.fhir.catalog.generated.resources.toolbar_text
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

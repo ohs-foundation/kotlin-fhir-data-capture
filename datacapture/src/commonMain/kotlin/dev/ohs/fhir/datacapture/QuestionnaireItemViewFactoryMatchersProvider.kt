@@ -18,8 +18,8 @@ package dev.ohs.fhir.datacapture
 
 /**
  * Provides the [QuestionnaireItemViewFactoryMatcher]s which are used to evaluate whether a custom
- * [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory] should be used
- * to render a given questionnaire item.
+ * [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory] should be used to render
+ * a given questionnaire item.
  *
  * **NOTE**:
  *
@@ -36,8 +36,8 @@ interface QuestionnaireItemViewFactoryMatchersProvider {
    * Implementation should specify when custom questionnaire components should be used.
    *
    * @return A [List] of [QuestionnaireItemViewFactoryMatcher]s which are used to evaluate whether a
-   *   custom [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory]
-   *   should be used to render a given questionnaire item.
+   *   custom [dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory] should be used
+   *   to render a given questionnaire item.
    */
   fun get(): List<QuestionnaireItemViewFactoryMatcher>
 }

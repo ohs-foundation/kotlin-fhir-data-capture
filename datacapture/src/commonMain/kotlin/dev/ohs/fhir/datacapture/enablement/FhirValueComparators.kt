@@ -16,9 +16,6 @@
 
 package dev.ohs.fhir.datacapture.enablement
 
-import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
-import dev.ohs.fhir.datacapture.extensions.FhirR4Decimal
-import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Coding
 import com.google.fhir.model.r4.Date
@@ -31,6 +28,9 @@ import com.google.fhir.model.r4.QuestionnaireResponse
 import com.google.fhir.model.r4.Reference
 import com.google.fhir.model.r4.Time
 import com.google.fhir.model.r4.Uri
+import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
+import dev.ohs.fhir.datacapture.extensions.FhirR4Decimal
+import dev.ohs.fhir.datacapture.extensions.FhirR4String
 
 /**
  * Compares a [QuestionnaireResponse.Item.Answer.Value] with [Any] value for equality check. Returns

@@ -16,11 +16,11 @@
 
 package dev.ohs.fhir.datacapture.views.components
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import dev.ohs.fhir.datacapture.generated.resources.Res
 import dev.ohs.fhir.datacapture.generated.resources.optional_helper_text
 import dev.ohs.fhir.datacapture.generated.resources.required
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import org.jetbrains.compose.resources.stringResource
 

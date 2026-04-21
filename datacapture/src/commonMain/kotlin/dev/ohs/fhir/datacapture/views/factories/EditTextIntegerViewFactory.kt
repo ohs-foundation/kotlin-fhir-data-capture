@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 Google LLC
+ * Copyright 2022-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package dev.ohs.fhir.datacapture.views.factories
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.integer_format_validation_error_msg
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import dev.ohs.fhir.datacapture.NumberFormatter
 import com.google.fhir.model.r4.Integer as FhirInteger
 import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.datacapture.NumberFormatter
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.integer_format_validation_error_msg
 
 internal val EditTextIntegerViewFactory =
   EditTextViewFactoryDelegate(

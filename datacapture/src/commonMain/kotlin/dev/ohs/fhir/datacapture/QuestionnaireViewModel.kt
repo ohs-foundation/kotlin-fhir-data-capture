@@ -16,13 +16,29 @@
 
 package dev.ohs.fhir.datacapture
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.google.fhir.model.r4.Attachment
+import com.google.fhir.model.r4.Canonical
+import com.google.fhir.model.r4.Coding
+import com.google.fhir.model.r4.Date
+import com.google.fhir.model.r4.DateTime
+import com.google.fhir.model.r4.Decimal
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.Extension
+import com.google.fhir.model.r4.FhirDateTime
+import com.google.fhir.model.r4.FhirR4Json
+import com.google.fhir.model.r4.Integer
+import com.google.fhir.model.r4.Quantity
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.Reference
+import com.google.fhir.model.r4.Resource
+import com.google.fhir.model.r4.Time
+import com.google.fhir.model.r4.Uri
 import dev.ohs.fhir.datacapture.enablement.EnablementEvaluator
 import dev.ohs.fhir.datacapture.expressions.EnabledAnswerOptionsEvaluator
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_LAST_LAUNCHED_TIMESTAMP
@@ -57,6 +73,8 @@ import dev.ohs.fhir.datacapture.extensions.validateLaunchContextExtensions
 import dev.ohs.fhir.datacapture.extensions.zipByLinkId
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseItemValidator
@@ -66,24 +84,6 @@ import dev.ohs.fhir.datacapture.validation.Valid
 import dev.ohs.fhir.datacapture.validation.ValidationResult
 import dev.ohs.fhir.datacapture.views.QuestionTextConfiguration
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
-import com.google.fhir.model.r4.Attachment
-import com.google.fhir.model.r4.Canonical
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Date
-import com.google.fhir.model.r4.DateTime
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.FhirDateTime
-import com.google.fhir.model.r4.FhirR4Json
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Quantity
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Reference
-import com.google.fhir.model.r4.Resource
-import com.google.fhir.model.r4.Time
-import com.google.fhir.model.r4.Uri
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -700,8 +700,8 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
       )
 
   /**
-   * Travers all [dev.ohs.fhir.datacapture.extensions.calculatedExpression] within a
-   * [Questionnaire] and evaluate them.
+   * Travers all [dev.ohs.fhir.datacapture.extensions.calculatedExpression] within a [Questionnaire]
+   * and evaluate them.
    */
   private suspend fun initializeCalculatedExpressions() {
     expressionEvaluator.detectExpressionCyclicDependency(questionnaire.item)
@@ -716,12 +716,11 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
   }
 
   /**
-   * Updates all items that has
-   * [dev.ohs.fhir.datacapture.extensions.calculatedExpression] that reference the given
-   * [questionnaireItem] within their calculations.
+   * Updates all items that has [dev.ohs.fhir.datacapture.extensions.calculatedExpression] that
+   * reference the given [questionnaireItem] within their calculations.
    *
-   * If item X has a [dev.ohs.fhir.datacapture.extensions.calculatedExpression], but that
-   * item does not reference the given [questionnaireItem], then item X should not be calculated.
+   * If item X has a [dev.ohs.fhir.datacapture.extensions.calculatedExpression], but that item does
+   * not reference the given [questionnaireItem], then item X should not be calculated.
    *
    * Only items that have not been modified by the user will be updated to prevent any event loops.
    *

@@ -33,6 +33,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import com.google.fhir.model.r4.Canonical
+import com.google.fhir.model.r4.Code
+import com.google.fhir.model.r4.CodeableConcept
+import com.google.fhir.model.r4.Coding
+import com.google.fhir.model.r4.Enumeration
+import com.google.fhir.model.r4.Extension
+import com.google.fhir.model.r4.Questionnaire
+import com.google.fhir.model.r4.QuestionnaireResponse
+import com.google.fhir.model.r4.Uri
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
@@ -50,15 +59,6 @@ import dev.ohs.fhir.datacapture.views.components.MULTI_AUTO_COMPLETE_INPUT_CHIP_
 import dev.ohs.fhir.datacapture.views.components.MULTI_AUTO_COMPLETE_TEXT_FIELD_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
 import dev.ohs.fhir.datacapture.views.components.REQUIRED_OPTIONAL_HEADER_TEXT_TAG
-import com.google.fhir.model.r4.Canonical
-import com.google.fhir.model.r4.Code
-import com.google.fhir.model.r4.CodeableConcept
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Uri
 import io.kotest.matchers.collections.shouldContainExactly
 import kotlin.test.Test
 

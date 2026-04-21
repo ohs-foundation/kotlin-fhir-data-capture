@@ -18,7 +18,6 @@ package dev.ohs.fhir.datacapture.contrib.views.barcode
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import dev.ohs.fhir.datacapture.contrib.views.barcode.CameraPermissionProvider
 
 @Composable
 internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider {
