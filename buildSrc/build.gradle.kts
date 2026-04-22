@@ -18,7 +18,6 @@ dependencies {
   implementation(libs.licensee.gradle.plugin)
   implementation(libs.fladle)
   implementation(libs.ruler.gradle.plugin)
-  implementation(libs.hapi.fhir.structures.r4.v6100)
   implementation(libs.kotlinpoet)
   implementation(plugin(libs.plugins.android.kotlin.multiplatform.library))
   implementation(plugin(libs.plugins.compose.compiler))
