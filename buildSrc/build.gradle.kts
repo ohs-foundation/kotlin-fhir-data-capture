@@ -13,9 +13,7 @@ repositories {
 }
 
 dependencies {
-  implementation(libs.fladle)
   implementation(libs.gradle)
-  implementation(libs.kotlinpoet)
   implementation(libs.licensee.gradle.plugin)
   implementation(libs.ruler.gradle.plugin)
   implementation(libs.spotless.plugin.gradle)
