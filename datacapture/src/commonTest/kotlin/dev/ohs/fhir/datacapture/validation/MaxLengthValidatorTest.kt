@@ -16,9 +16,9 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -30,9 +30,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfMaxLengthIsNull() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -42,7 +42,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "some answer"),
+              value = dev.ohs.fhir.model.r4.String(value = "some answer"),
             )
         }
         .build()
@@ -56,9 +56,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsLessThanMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -69,7 +69,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "short"),
+              value = dev.ohs.fhir.model.r4.String(value = "short"),
             )
         }
         .build()
@@ -83,9 +83,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsEqualToMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -96,7 +96,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "1234567890"),
+              value = dev.ohs.fhir.model.r4.String(value = "1234567890"),
             )
         }
         .build()
@@ -110,9 +110,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnInvalidResultIfAnswerLengthIsGreaterThanMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -123,7 +123,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "very long answer"),
+              value = dev.ohs.fhir.model.r4.String(value = "very long answer"),
             )
         }
         .build()

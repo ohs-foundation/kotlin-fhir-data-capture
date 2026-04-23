@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.Element
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Element
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 
 val QuestionnaireResponse.Item.Answer.elementValue: Element?
   get() =

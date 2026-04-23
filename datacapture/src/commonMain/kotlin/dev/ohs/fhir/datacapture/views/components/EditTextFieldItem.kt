@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -43,6 +41,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.datacapture.generated.resources.Res
+import dev.ohs.fhir.datacapture.generated.resources.error_filled_24dp
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal const val EDIT_TEXT_FIELD_TEST_TAG = "text_input_edit_text"
@@ -124,7 +125,7 @@ internal fun OutlinedEditTextFieldItem(
     isError = isError,
     trailingIcon = {
       if (isError) {
-        Icon(imageVector = Icons.Default.Error, contentDescription = "Error")
+        Icon(painter = painterResource(Res.drawable.error_filled_24dp), contentDescription = "Error")
       }
     },
     readOnly = isReadOnly,

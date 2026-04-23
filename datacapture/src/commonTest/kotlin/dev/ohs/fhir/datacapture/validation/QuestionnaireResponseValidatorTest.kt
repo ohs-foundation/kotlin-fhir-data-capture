@@ -16,11 +16,11 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.String as FhirString
-import com.google.fhir.model.r4.terminologies.PublicationStatus
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
+import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -80,7 +80,7 @@ class QuestionnaireResponseValidatorTest {
           linkId = FhirString.Builder().apply { value = "a-question" },
           type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
-        .apply { required = com.google.fhir.model.r4.Boolean.Builder().apply { value = true } }
+        .apply { required = dev.ohs.fhir.model.r4.Boolean.Builder().apply { value = true } }
         .build()
     val questionnaire =
       Questionnaire.Builder(status = Enumeration(PublicationStatus.Active.getCode()))

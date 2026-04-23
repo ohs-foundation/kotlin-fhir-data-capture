@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture
 
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Resource
 
 /**
  * The App developers may provide the [DataCaptureConfig] for the DataCapture library by

@@ -73,23 +73,22 @@ kotlin {
 
     commonMain {
       dependencies {
-        implementation(libs.material.icons.extended)
         implementation(compose.runtime)
         implementation(compose.foundation)
         implementation(compose.material3)
         implementation(compose.ui)
         implementation(compose.components.resources)
         implementation(compose.components.uiToolingPreview)
-        implementation(libs.fhir.path)
-        implementation(libs.navigation.compose)
         implementation(libs.androidx.lifecycle.viewmodel.compose)
         implementation(libs.androidx.lifecycle.runtime.compose)
         implementation(libs.filekit.dialogs.compose)
         implementation(libs.kermit)
         implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlin.fhir)
         implementation(libs.kotlinx.io.core)
         implementation(libs.kotlinx.serialization.json)
+        implementation(libs.navigation.compose)
+        implementation(libs.ohs.fhir.model)
+        implementation(libs.ohs.fhir.path)
       }
     }
 

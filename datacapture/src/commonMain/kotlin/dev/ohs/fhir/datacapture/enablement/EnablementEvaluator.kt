@@ -16,9 +16,9 @@
 
 package dev.ohs.fhir.datacapture.enablement
 
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Resource
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.enableWhenExpression
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator

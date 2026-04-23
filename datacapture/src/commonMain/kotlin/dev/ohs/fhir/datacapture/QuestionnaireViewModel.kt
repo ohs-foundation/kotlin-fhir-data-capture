@@ -21,24 +21,24 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.google.fhir.model.r4.Attachment
-import com.google.fhir.model.r4.Canonical
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Date
-import com.google.fhir.model.r4.DateTime
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.FhirDateTime
-import com.google.fhir.model.r4.FhirR4Json
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Quantity
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Reference
-import com.google.fhir.model.r4.Resource
-import com.google.fhir.model.r4.Time
-import com.google.fhir.model.r4.Uri
+import dev.ohs.fhir.model.r4.Attachment
+import dev.ohs.fhir.model.r4.Canonical
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Date
+import dev.ohs.fhir.model.r4.DateTime
+import dev.ohs.fhir.model.r4.Decimal
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDateTime
+import dev.ohs.fhir.model.r4.FhirR4Json
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Quantity
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Reference
+import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.Time
+import dev.ohs.fhir.model.r4.Uri
 import dev.ohs.fhir.datacapture.enablement.EnablementEvaluator
 import dev.ohs.fhir.datacapture.expressions.EnabledAnswerOptionsEvaluator
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_LAST_LAUNCHED_TIMESTAMP
@@ -1255,7 +1255,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
           if (text?.value.isNullOrBlank()) {
             text =
               questionnaireItem.localizedTextAnnotatedString?.toString()?.let {
-                com.google.fhir.model.r4.String.Builder().apply { value = it }
+                dev.ohs.fhir.model.r4.String.Builder().apply { value = it }
               }
           }
           // Nested group items

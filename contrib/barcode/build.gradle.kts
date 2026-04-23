@@ -76,7 +76,7 @@ kotlin {
         implementation(compose.ui)
         implementation(project(":datacapture"))
         implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlin.fhir)
+        implementation(libs.ohs.fhir.model)
         implementation(libs.kscan)
       }
     }

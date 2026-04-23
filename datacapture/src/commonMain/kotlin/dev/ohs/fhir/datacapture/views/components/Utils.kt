@@ -27,7 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * Returns string identified by R.string.required if
  * [QuestionnaireViewItem.questionViewTextConfiguration.showRequiredText] and
- * [com.google.fhir.model.r4.Questionnaire.Item.required] is true, or R.string.optional_text if
+ * [dev.ohs.fhir.model.r4.Questionnaire.Item.required] is true, or R.string.optional_text if
  * [QuestionnaireViewItem.questionViewTextConfiguration.showOptionalText] is true.
  */
 @Composable

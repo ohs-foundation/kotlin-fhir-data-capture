@@ -16,7 +16,7 @@
 
 package dev.ohs.fhir.datacapture
 
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 
 /** Various types of rows that can be used in a Questionnaire RecyclerView. */

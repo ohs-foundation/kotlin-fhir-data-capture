@@ -16,7 +16,7 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Expression
 
 internal val Expression.isXFhirQuery: Boolean
   get() =

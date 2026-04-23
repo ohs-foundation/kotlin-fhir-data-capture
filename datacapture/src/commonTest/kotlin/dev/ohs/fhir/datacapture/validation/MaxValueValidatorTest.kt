@@ -16,14 +16,14 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Expression
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.FhirDate
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.QuestionnaireResponse.QuestionnaireResponseStatus
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDate
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.QuestionnaireResponse.QuestionnaireResponseStatus
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_CQF_CALCULATED_VALUE_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4DateType
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
@@ -47,7 +47,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfMaxValueExtensionIsNotPresent() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
             Enumeration(
               value = Questionnaire.QuestionnaireItemType.Integer,
@@ -73,7 +73,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfAnswerValueIsLessThanMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
             Enumeration(
               value = Questionnaire.QuestionnaireItemType.Integer,
@@ -108,7 +108,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfAnswerValueIsEqualToMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
             Enumeration(
               value = Questionnaire.QuestionnaireItemType.Integer,
@@ -143,7 +143,7 @@ class MaxValueValidatorTest {
   fun shouldReturnInvalidResultIfAnswerValueIsGreaterThanMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
             Enumeration(
               value = Questionnaire.QuestionnaireItemType.Integer,

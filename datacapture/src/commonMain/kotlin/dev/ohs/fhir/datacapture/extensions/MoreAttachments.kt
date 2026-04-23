@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.Attachment
-import com.google.fhir.model.r4.Base64Binary
+import dev.ohs.fhir.model.r4.Attachment
+import dev.ohs.fhir.model.r4.Base64Binary
 import dev.ohs.fhir.datacapture.DataCapture
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi

@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 
 /**
  * Pre-order list of descendants of the questionnaire response item (inclusive of the current item).

@@ -16,10 +16,10 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.String as FhirString
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -33,7 +33,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -59,7 +59,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -96,7 +96,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )

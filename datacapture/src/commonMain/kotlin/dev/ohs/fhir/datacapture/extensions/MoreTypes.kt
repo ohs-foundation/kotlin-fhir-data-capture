@@ -17,18 +17,18 @@
 package dev.ohs.fhir.datacapture.extensions
 
 import androidx.compose.ui.text.intl.Locale
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Quantity
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Quantity
 
 internal const val EXT_TRANSLATION = "http://hl7.org/fhir/StructureDefinition/translation"
 
-internal fun com.google.fhir.model.r4.String.getLocalizedText(
+internal fun dev.ohs.fhir.model.r4.String.getLocalizedText(
   lang: String = Locale.current.toLanguageTag(),
 ): String? {
   return getTranslation(lang) ?: getTranslation(lang.split("-").firstOrNull()) ?: value
 }
 
-internal fun com.google.fhir.model.r4.String.getTranslation(l: String?): String? {
+internal fun dev.ohs.fhir.model.r4.String.getTranslation(l: String?): String? {
   for (e in extension) {
     if (e.url == EXT_TRANSLATION) {
       val langExtValue = e.readStringExtension("lang")
@@ -53,12 +53,12 @@ internal fun Coding.hasSystem() = !this.system?.value.isNullOrBlank()
 
 internal fun Coding.hasVersion() = !this.version?.value.isNullOrBlank()
 
-typealias FhirR4Boolean = com.google.fhir.model.r4.Boolean
+typealias FhirR4Boolean = dev.ohs.fhir.model.r4.Boolean
 
-typealias FhirR4DateType = com.google.fhir.model.r4.Date
+typealias FhirR4DateType = dev.ohs.fhir.model.r4.Date
 
-typealias FhirR4Decimal = com.google.fhir.model.r4.Decimal
+typealias FhirR4Decimal = dev.ohs.fhir.model.r4.Decimal
 
-typealias FhirR4Integer = com.google.fhir.model.r4.Integer
+typealias FhirR4Integer = dev.ohs.fhir.model.r4.Integer
 
-typealias FhirR4String = com.google.fhir.model.r4.String
+typealias FhirR4String = dev.ohs.fhir.model.r4.String

@@ -34,10 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Quantity
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Decimal
+import dev.ohs.fhir.model.r4.Quantity
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.ohs.fhir.datacapture.extensions.hasCode
 import dev.ohs.fhir.datacapture.extensions.hasDisplay

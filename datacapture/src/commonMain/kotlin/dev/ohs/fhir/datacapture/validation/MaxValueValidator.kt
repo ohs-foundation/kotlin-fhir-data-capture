@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.compareTo
 import dev.ohs.fhir.datacapture.extensions.elementDeepValue
 import dev.ohs.fhir.datacapture.extensions.elementValue

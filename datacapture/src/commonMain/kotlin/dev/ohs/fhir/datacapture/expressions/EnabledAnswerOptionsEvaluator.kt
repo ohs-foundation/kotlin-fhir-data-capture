@@ -16,11 +16,11 @@
 
 package dev.ohs.fhir.datacapture.expressions
 
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Resource
-import com.google.fhir.model.r4.ValueSet
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.ValueSet
 import dev.ohs.fhir.datacapture.ExternalAnswerValueSetResolver
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.answerExpression

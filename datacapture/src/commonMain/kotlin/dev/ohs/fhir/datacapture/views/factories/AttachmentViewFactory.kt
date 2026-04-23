@@ -48,8 +48,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.google.fhir.model.r4.Attachment
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Attachment
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.MediaCaptureResult
 import dev.ohs.fhir.datacapture.MediaHandler
 import dev.ohs.fhir.datacapture.extensions.MimeType

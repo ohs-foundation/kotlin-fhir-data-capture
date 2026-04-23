@@ -17,12 +17,12 @@
 package dev.ohs.fhir.datacapture.fhirpath
 
 import co.touchlab.kermit.Logger
-import com.google.fhir.model.r4.Bundle
-import com.google.fhir.model.r4.Enumeration
-import com.google.fhir.model.r4.Expression
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.Bundle
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Resource
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.calculatedExpression
 import dev.ohs.fhir.datacapture.extensions.findVariableExpression

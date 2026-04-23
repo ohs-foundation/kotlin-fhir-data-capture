@@ -18,18 +18,18 @@ package dev.ohs.fhir.datacapture.extensions
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
-import com.google.fhir.model.r4.Attachment
-import com.google.fhir.model.r4.Coding
-import com.google.fhir.model.r4.Date
-import com.google.fhir.model.r4.Expression
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.Reference
-import com.google.fhir.model.r4.Resource
-import com.google.fhir.model.r4.String as FhirString
-import com.google.fhir.model.r4.Time
+import dev.ohs.fhir.model.r4.Attachment
+import dev.ohs.fhir.model.r4.Coding
+import dev.ohs.fhir.model.r4.Date
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Reference
+import dev.ohs.fhir.model.r4.Resource
+import dev.ohs.fhir.model.r4.String as FhirString
+import dev.ohs.fhir.model.r4.Time
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.QuestionnaireViewHolderType
@@ -723,7 +723,7 @@ internal data class ChoiceColumn(val path: String, val label: String?, val forDi
  * - With other types it adds the options as is
  *
  * @param dataList the source data to extract the answer option values. The data could be list of
- *   resources [Resource], identifiers [com.google.fhir.model.r4.Identifier] or codes [Coding]
+ *   resources [Resource], identifiers [dev.ohs.fhir.model.r4.Identifier] or codes [Coding]
  * @return list of answer options [Questionnaire.Item.AnswerOption]
  */
 internal fun Questionnaire.Item.extractAnswerOptions(

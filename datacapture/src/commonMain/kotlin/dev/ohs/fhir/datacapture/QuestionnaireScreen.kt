@@ -23,8 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -45,9 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ohs.fhir.datacapture.generated.resources.Res
 import dev.ohs.fhir.datacapture.generated.resources.edit_button_text
+import dev.ohs.fhir.datacapture.generated.resources.edit_outlined_24dp
 import dev.ohs.fhir.datacapture.generated.resources.questionnaire_review_mode_title
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.views.components.QuestionnaireBottomNavigation
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -269,7 +269,7 @@ fun QuestionnaireTitleBar(
           ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
       ) {
         Icon(
-          imageVector = Icons.Outlined.Edit,
+          painter = painterResource(Res.drawable.edit_outlined_24dp),
           contentDescription = "Edit",
         )
         Text(text = stringResource(Res.string.edit_button_text))

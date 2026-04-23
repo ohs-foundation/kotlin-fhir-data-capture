@@ -16,12 +16,12 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.Element
-import com.google.fhir.model.r4.Expression
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.FhirDate
-import com.google.fhir.model.r4.FhirDateTime
-import com.google.fhir.model.r4.Quantity
+import dev.ohs.fhir.model.r4.Element
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDate
+import dev.ohs.fhir.model.r4.FhirDateTime
+import dev.ohs.fhir.model.r4.Quantity
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.LocalTime
 

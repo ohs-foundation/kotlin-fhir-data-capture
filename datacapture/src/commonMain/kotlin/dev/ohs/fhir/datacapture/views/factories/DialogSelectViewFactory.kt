@@ -36,8 +36,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.error as SemanticsError
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.extensions.ItemControlTypes
 import dev.ohs.fhir.datacapture.extensions.itemControl

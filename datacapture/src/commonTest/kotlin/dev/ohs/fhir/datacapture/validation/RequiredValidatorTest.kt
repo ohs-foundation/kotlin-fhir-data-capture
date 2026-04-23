@@ -16,9 +16,9 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Boolean
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Boolean
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -30,9 +30,9 @@ class RequiredValidatorTest {
   fun shouldReturnValidResultIfItemIsNotRequired() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -40,7 +40,7 @@ class RequiredValidatorTest {
         .build()
     val questionnaireResponseItem =
       QuestionnaireResponse.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
         )
         .build()
 
@@ -53,9 +53,9 @@ class RequiredValidatorTest {
   fun shouldReturnValidResultIfItemIsRequiredAndHasAnswer() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -63,7 +63,7 @@ class RequiredValidatorTest {
         .build()
     val questionnaireResponseItem =
       QuestionnaireResponse.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
         )
         .apply {
           answer =
@@ -71,7 +71,7 @@ class RequiredValidatorTest {
               QuestionnaireResponse.Item.Answer.Builder().apply {
                 value =
                   QuestionnaireResponse.Item.Answer.Value.String(
-                    value = com.google.fhir.model.r4.String(value = "some answer"),
+                    value = dev.ohs.fhir.model.r4.String(value = "some answer"),
                   )
               },
             )
@@ -87,9 +87,9 @@ class RequiredValidatorTest {
   fun shouldReturnInvalidResultIfItemIsRequiredAndHasNoAnswer() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -97,7 +97,7 @@ class RequiredValidatorTest {
         .build()
     val questionnaireResponseItem =
       QuestionnaireResponse.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
         )
         .build()
 

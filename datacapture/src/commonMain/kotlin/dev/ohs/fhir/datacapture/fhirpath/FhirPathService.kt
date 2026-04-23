@@ -17,8 +17,8 @@
 package dev.ohs.fhir.datacapture.fhirpath
 
 import co.touchlab.kermit.Logger
-import com.google.fhir.fhirpath.FhirPathEngine
-import com.google.fhir.model.r4.Resource
+import dev.ohs.fhir.fhirpath.FhirPathEngine
+import dev.ohs.fhir.model.r4.Resource
 
 /** Centralized service for FHIRPath evaluation and utility functions. */
 internal object FhirPathService {
@@ -63,17 +63,17 @@ internal object FhirPathService {
 
   private fun convertSingleResultToString(value: Any): String {
     return when (value) {
-      is com.google.fhir.model.r4.String -> value.value ?: ""
-      is com.google.fhir.model.r4.Integer -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.Decimal -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.Boolean -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.Date -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.DateTime -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.Time -> value.value?.toString() ?: ""
-      is com.google.fhir.model.r4.Code -> value.value ?: ""
-      is com.google.fhir.model.r4.Uri -> value.value ?: ""
-      is com.google.fhir.model.r4.Coding -> value.display?.value ?: value.code?.value ?: ""
-      is com.google.fhir.model.r4.Quantity -> value.value?.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.String -> value.value ?: ""
+      is dev.ohs.fhir.model.r4.Integer -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.Decimal -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.Boolean -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.Date -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.DateTime -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.Time -> value.value?.toString() ?: ""
+      is dev.ohs.fhir.model.r4.Code -> value.value ?: ""
+      is dev.ohs.fhir.model.r4.Uri -> value.value ?: ""
+      is dev.ohs.fhir.model.r4.Coding -> value.display?.value ?: value.code?.value ?: ""
+      is dev.ohs.fhir.model.r4.Quantity -> value.value?.value?.toString() ?: ""
       else -> value.toString()
     }
   }

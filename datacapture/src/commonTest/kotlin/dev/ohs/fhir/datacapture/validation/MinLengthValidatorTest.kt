@@ -16,10 +16,10 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -31,9 +31,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfMinLengthExtensionIsNotPresent() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -43,7 +43,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "some answer"),
+              value = dev.ohs.fhir.model.r4.String(value = "some answer"),
             )
         }
         .build()
@@ -57,9 +57,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsGreaterThanMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -78,7 +78,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "longer than 5"),
+              value = dev.ohs.fhir.model.r4.String(value = "longer than 5"),
             )
         }
         .build()
@@ -92,9 +92,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsEqualToMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -113,7 +113,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "12345"),
+              value = dev.ohs.fhir.model.r4.String(value = "12345"),
             )
         }
         .build()
@@ -127,9 +127,9 @@ class MinLengthValidatorTest {
   fun shouldReturnInvalidResultIfAnswerLengthIsLessThanMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.String,
             ),
         )
@@ -148,7 +148,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = com.google.fhir.model.r4.String(value = "123"),
+              value = dev.ohs.fhir.model.r4.String(value = "123"),
             )
         }
         .build()

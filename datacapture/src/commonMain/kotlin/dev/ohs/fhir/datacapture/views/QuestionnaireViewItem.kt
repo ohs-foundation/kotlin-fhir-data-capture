@@ -17,9 +17,9 @@
 package dev.ohs.fhir.datacapture.views
 
 import androidx.compose.ui.text.AnnotatedString
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.isHelpCode
 import dev.ohs.fhir.datacapture.extensions.localizedTextAnnotatedString

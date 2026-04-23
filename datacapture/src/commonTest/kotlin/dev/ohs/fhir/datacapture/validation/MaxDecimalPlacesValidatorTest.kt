@@ -16,11 +16,11 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import com.google.fhir.model.r4.Decimal
-import com.google.fhir.model.r4.Extension
-import com.google.fhir.model.r4.Integer
-import com.google.fhir.model.r4.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Decimal
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -33,9 +33,9 @@ class MaxDecimalPlacesValidatorTest {
   fun shouldReturnValidResultIfMaxDecimalPlacesExtensionIsNotPresent() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.Decimal,
             ),
         )
@@ -59,9 +59,9 @@ class MaxDecimalPlacesValidatorTest {
   fun shouldReturnValidResultIfDecimalPlacesIsLessThanMaxDecimalPlaces() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.Decimal,
             ),
         )
@@ -95,9 +95,9 @@ class MaxDecimalPlacesValidatorTest {
   fun shouldReturnValidResultIfDecimalPlacesIsEqualToMaxDecimalPlaces() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.Decimal,
             ),
         )
@@ -131,9 +131,9 @@ class MaxDecimalPlacesValidatorTest {
   fun shouldReturnInvalidResultIfDecimalPlacesIsGreaterThanMaxDecimalPlaces() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = com.google.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
           type =
-            com.google.fhir.model.r4.Enumeration(
+            dev.ohs.fhir.model.r4.Enumeration(
               value = Questionnaire.QuestionnaireItemType.Decimal,
             ),
         )

@@ -30,9 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.google.fhir.model.r4.DateTime
-import com.google.fhir.model.r4.FhirDateTime
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.DateTime
+import dev.ohs.fhir.model.r4.FhirDateTime
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.datacapture.extensions.canonicalizeDatePattern
 import dev.ohs.fhir.datacapture.extensions.getDateSeparator
 import dev.ohs.fhir.datacapture.extensions.itemMedia

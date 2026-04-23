@@ -16,7 +16,7 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import com.google.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 
 internal fun List<QuestionnaireResponse.Item.Answer>.hasDifferentAnswerSet(answers: List<Any>) =
   this.size != answers.size || this.map { it.value }.zip(answers).any { (v1, v2) -> v1 != v2 }
