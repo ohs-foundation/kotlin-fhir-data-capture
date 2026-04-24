@@ -41,10 +41,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.savedstate.read
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.ic_behaviors
-import dev.ohs.fhir.catalog.generated.resources.ic_components
-import dev.ohs.fhir.catalog.generated.resources.ic_layouts
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_behaviors
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_components
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_layouts
 import dev.ohs.fhir.catalog.ui.behaviors.BehaviorListScreen
 import dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel
 import dev.ohs.fhir.catalog.ui.components.ComponentListScreen

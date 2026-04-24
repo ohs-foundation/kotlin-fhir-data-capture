@@ -47,10 +47,10 @@ import dev.ohs.fhir.datacapture.extensions.hasHelpButton
 import dev.ohs.fhir.datacapture.extensions.localizedHelpAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.localizedPrefixAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.readCustomStyleExtension
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.help
-import dev.ohs.fhir.datacapture.generated.resources.ic_help
-import dev.ohs.fhir.datacapture.generated.resources.space_asterisk
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.help
+import kotlin_fhir_data_capture.datacapture.generated.resources.ic_help
+import kotlin_fhir_data_capture.datacapture.generated.resources.space_asterisk
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.ValidationResult

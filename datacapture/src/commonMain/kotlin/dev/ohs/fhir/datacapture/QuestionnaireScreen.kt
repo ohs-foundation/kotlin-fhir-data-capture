@@ -41,10 +41,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.edit_button_text
-import dev.ohs.fhir.datacapture.generated.resources.edit_outlined_24dp
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_review_mode_title
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
+import kotlin_fhir_data_capture.datacapture.generated.resources.edit_outlined_24dp
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_review_mode_title
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.views.components.QuestionnaireBottomNavigation
 import org.jetbrains.compose.resources.painterResource

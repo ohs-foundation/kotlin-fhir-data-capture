@@ -24,9 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import dev.ohs.fhir.datacapture.extensions.itemMedia
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.required_text_and_new_line
-import dev.ohs.fhir.datacapture.generated.resources.time
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
+import kotlin_fhir_data_capture.datacapture.generated.resources.time
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid

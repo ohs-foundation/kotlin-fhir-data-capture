@@ -39,12 +39,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.arrow_back_filled_24dp
-import dev.ohs.fhir.catalog.generated.resources.close
-import dev.ohs.fhir.catalog.generated.resources.questionnaire_response_subtitle
-import dev.ohs.fhir.catalog.generated.resources.questionnaire_response_title
-import dev.ohs.fhir.catalog.generated.resources.questionnaire_submitted
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.arrow_back_filled_24dp
+import kotlin_fhir_data_capture.catalog.generated.resources.close
+import kotlin_fhir_data_capture.catalog.generated.resources.questionnaire_response_subtitle
+import kotlin_fhir_data_capture.catalog.generated.resources.questionnaire_response_title
+import kotlin_fhir_data_capture.catalog.generated.resources.questionnaire_submitted
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

@@ -17,20 +17,20 @@
 package dev.ohs.fhir.catalog.ui.behaviors
 
 import androidx.lifecycle.ViewModel
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_answer_expression
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_context_variables
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_dynamic_question_text
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_questionnaire_constraint
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic
-import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic_with_expression
-import dev.ohs.fhir.catalog.generated.resources.ic_answers_behavior
-import dev.ohs.fhir.catalog.generated.resources.ic_calculations_behavior
-import dev.ohs.fhir.catalog.generated.resources.ic_context
-import dev.ohs.fhir.catalog.generated.resources.ic_dynamic_text_behavior
-import dev.ohs.fhir.catalog.generated.resources.ic_rule
-import dev.ohs.fhir.catalog.generated.resources.ic_skiplogic_behavior
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_answer_expression
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_calculated_expression
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_context_variables
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_dynamic_question_text
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_questionnaire_constraint
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_skip_logic
+import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_skip_logic_with_expression
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_answers_behavior
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_calculations_behavior
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_context
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_dynamic_text_behavior
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_rule
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_skiplogic_behavior
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

@@ -16,8 +16,8 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.required_constraint_validation_error_msg
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_constraint_validation_error_msg
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import org.jetbrains.compose.resources.getString

@@ -42,10 +42,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.options
-import dev.ohs.fhir.catalog.generated.resources.settings_outlined_24dp
-import dev.ohs.fhir.catalog.generated.resources.show_error_state
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.options
+import kotlin_fhir_data_capture.catalog.generated.resources.settings_outlined_24dp
+import kotlin_fhir_data_capture.catalog.generated.resources.show_error_state
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

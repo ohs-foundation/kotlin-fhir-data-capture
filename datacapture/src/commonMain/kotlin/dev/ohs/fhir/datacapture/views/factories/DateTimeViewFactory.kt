@@ -33,10 +33,10 @@ import androidx.compose.ui.Modifier
 import dev.ohs.fhir.datacapture.extensions.canonicalizeDatePattern
 import dev.ohs.fhir.datacapture.extensions.getDateSeparator
 import dev.ohs.fhir.datacapture.extensions.itemMedia
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.date_format_validation_error_msg
-import dev.ohs.fhir.datacapture.generated.resources.required_text_and_new_line
-import dev.ohs.fhir.datacapture.generated.resources.time
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.date_format_validation_error_msg
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
+import kotlin_fhir_data_capture.datacapture.generated.resources.time
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import dev.ohs.fhir.datacapture.parseLocalDateOrNull
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme

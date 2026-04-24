@@ -27,12 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_validation_error_fix_button_text
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_validation_error_headline
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_validation_error_item_text_with_bullet
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_validation_error_submit_button_text
-import dev.ohs.fhir.datacapture.generated.resources.questionnaire_validation_error_supporting_text
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_validation_error_fix_button_text
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_validation_error_headline
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_validation_error_item_text_with_bullet
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_validation_error_submit_button_text
+import kotlin_fhir_data_capture.datacapture.generated.resources.questionnaire_validation_error_supporting_text
 import org.jetbrains.compose.resources.stringResource
 
 /** Dialog shown when validation errors are found on questionnaire submission. */

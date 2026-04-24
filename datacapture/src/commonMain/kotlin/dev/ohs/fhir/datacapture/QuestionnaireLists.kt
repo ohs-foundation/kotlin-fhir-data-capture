@@ -45,9 +45,9 @@ import dev.ohs.fhir.datacapture.extensions.itemControl
 import dev.ohs.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.localizedPrefixAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.shouldUseDialog
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.not_answered
-import dev.ohs.fhir.datacapture.generated.resources.warning_filled_24dp
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.not_answered
+import kotlin_fhir_data_capture.datacapture.generated.resources.warning_filled_24dp
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem

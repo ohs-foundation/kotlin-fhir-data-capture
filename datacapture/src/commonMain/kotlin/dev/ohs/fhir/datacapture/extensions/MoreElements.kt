@@ -18,9 +18,9 @@ package dev.ohs.fhir.datacapture.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.no
-import dev.ohs.fhir.datacapture.generated.resources.yes
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.no
+import kotlin_fhir_data_capture.datacapture.generated.resources.yes
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Coding

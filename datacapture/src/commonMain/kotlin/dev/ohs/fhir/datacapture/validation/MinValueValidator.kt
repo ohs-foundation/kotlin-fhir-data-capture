@@ -19,8 +19,8 @@ package dev.ohs.fhir.datacapture.validation
 import dev.ohs.fhir.datacapture.extensions.compareTo
 import dev.ohs.fhir.datacapture.extensions.elementDeepValue
 import dev.ohs.fhir.datacapture.extensions.elementValue
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.min_value_validation_error_msg
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_validation_error_msg
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import org.jetbrains.compose.resources.getString

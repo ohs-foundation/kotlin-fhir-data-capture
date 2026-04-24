@@ -12,12 +12,7 @@ plugins {
   alias(libs.plugins.ksp)
 }
 
-val mavenGroupId: String by project
-val mavenArtifactId: String by project
-val mavenVersion: String by project
 val androidNamespace: String by project
-
-group = mavenGroupId
 
 kotlin {
   jvmToolchain(21)

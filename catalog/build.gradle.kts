@@ -11,13 +11,10 @@ plugins {
   alias(libs.plugins.androidx.navigation.safeargs)
 }
 
-val groupId: String by project
 val androidNamespace: String by project
 val applicationId: String by project
 val applicationVersionCode: String by project
 val applicationVersionName: String by project
-
-group = groupId
 
 android {
   namespace = androidNamespace

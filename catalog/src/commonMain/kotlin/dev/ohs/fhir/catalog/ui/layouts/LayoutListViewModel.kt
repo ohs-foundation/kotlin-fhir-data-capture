@@ -17,15 +17,15 @@
 package dev.ohs.fhir.catalog.ui.layouts
 
 import androidx.lifecycle.ViewModel
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.ic_defaultlayout
-import dev.ohs.fhir.catalog.generated.resources.ic_paginatedlayout
-import dev.ohs.fhir.catalog.generated.resources.ic_readonlylayout
-import dev.ohs.fhir.catalog.generated.resources.ic_reviewlayout
-import dev.ohs.fhir.catalog.generated.resources.layout_name_default_text
-import dev.ohs.fhir.catalog.generated.resources.layout_name_paginated
-import dev.ohs.fhir.catalog.generated.resources.layout_name_read_only
-import dev.ohs.fhir.catalog.generated.resources.layout_name_review
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_defaultlayout
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_paginatedlayout
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_readonlylayout
+import kotlin_fhir_data_capture.catalog.generated.resources.ic_reviewlayout
+import kotlin_fhir_data_capture.catalog.generated.resources.layout_name_default_text
+import kotlin_fhir_data_capture.catalog.generated.resources.layout_name_paginated
+import kotlin_fhir_data_capture.catalog.generated.resources.layout_name_read_only
+import kotlin_fhir_data_capture.catalog.generated.resources.layout_name_review
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

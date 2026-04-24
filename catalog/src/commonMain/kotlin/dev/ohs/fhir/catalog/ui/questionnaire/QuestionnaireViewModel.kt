@@ -17,7 +17,7 @@
 package dev.ohs.fhir.catalog.ui.questionnaire
 
 import androidx.lifecycle.ViewModel
-import dev.ohs.fhir.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseValidator
 import dev.ohs.fhir.model.r4.FhirR4Json

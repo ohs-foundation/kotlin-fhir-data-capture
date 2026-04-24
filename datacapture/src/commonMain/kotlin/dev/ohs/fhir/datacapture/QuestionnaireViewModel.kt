@@ -55,8 +55,8 @@ import dev.ohs.fhir.datacapture.extensions.validateLaunchContextExtensions
 import dev.ohs.fhir.datacapture.extensions.zipByLinkId
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
-import dev.ohs.fhir.datacapture.generated.resources.Res
-import dev.ohs.fhir.datacapture.generated.resources.submit_questionnaire
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseItemValidator

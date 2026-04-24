@@ -32,10 +32,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import dev.ohs.fhir.catalog.generated.resources.Res
-import dev.ohs.fhir.catalog.generated.resources.more_vert_filled_24dp
-import dev.ohs.fhir.catalog.generated.resources.open_questionnaire
-import dev.ohs.fhir.catalog.generated.resources.toolbar_text
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.more_vert_filled_24dp
+import kotlin_fhir_data_capture.catalog.generated.resources.open_questionnaire
+import kotlin_fhir_data_capture.catalog.generated.resources.toolbar_text
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
