@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.arrow_back_filled_24dp
 import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression
 import dev.ohs.fhir.catalog.generated.resources.behavior_name_calculated_expression_info
 import dev.ohs.fhir.catalog.generated.resources.behavior_name_skip_logic
@@ -119,7 +118,7 @@ fun QuestionnaireScreen(
           title = { Text(title) },
           navigationIcon = {
             IconButton(onClick = onBackClick) {
-              Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+              Icon(painter = painterResource(Res.drawable.arrow_back_filled_24dp), contentDescription = "Back")
             }
           },
           actions = {

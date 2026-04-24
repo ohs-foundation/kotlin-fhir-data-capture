@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -46,7 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.catalog.generated.resources.Res
 import dev.ohs.fhir.catalog.generated.resources.options
+import dev.ohs.fhir.catalog.generated.resources.settings_outlined_24dp
 import dev.ohs.fhir.catalog.generated.resources.show_error_state
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Action button that toggles error state via a bottom sheet. */
@@ -58,7 +58,7 @@ fun ErrorStateToggleAction(
   var showBottomSheet by remember { mutableStateOf(false) }
 
   IconButton(onClick = { showBottomSheet = true }) {
-    Icon(Icons.Outlined.Settings, contentDescription = "Options")
+    Icon(painter = painterResource(Res.drawable.settings_outlined_24dp), contentDescription = "Options")
   }
 
   if (showBottomSheet) {

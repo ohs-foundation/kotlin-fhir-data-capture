@@ -18,8 +18,6 @@ package dev.ohs.fhir.catalog.ui.shared
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -35,8 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.more_vert_filled_24dp
 import dev.ohs.fhir.catalog.generated.resources.open_questionnaire
 import dev.ohs.fhir.catalog.generated.resources.toolbar_text
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +70,7 @@ fun CatalogTopAppBar(
     actions = {
       Box {
         IconButton(onClick = { showMenu = !showMenu }) {
-          Icon(Icons.Default.MoreVert, contentDescription = null)
+          Icon(painter = painterResource(Res.drawable.more_vert_filled_24dp), contentDescription = null)
         }
         DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
           DropdownMenuItem(

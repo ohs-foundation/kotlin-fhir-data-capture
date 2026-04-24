@@ -1,35 +1,45 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-  repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-  dependencies {
-    classpath(Plugins.androidGradlePlugin)
-    classpath(Plugins.benchmarkGradlePlugin)
-    classpath(Plugins.flankGradlePlugin)
-    classpath(Plugins.kotlinComposePlugin)
-    classpath(Plugins.kotlinGradlePlugin)
-    classpath(Plugins.kotlinSerializationPlugin)
-    classpath(Plugins.kspGradlePlugin)
-    classpath(Plugins.navSafeArgsGradlePlugin)
-    classpath(Plugins.rulerGradlePlugin)
-  }
+plugins {
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+  alias(libs.plugins.androidx.navigation.safeargs) apply false
+  alias(libs.plugins.compose.compiler) apply false
+  alias(libs.plugins.compose.hotreload) apply false
+  alias(libs.plugins.compose.multiplatform) apply false
+  alias(libs.plugins.kotlin.multiplatform) apply false
+  alias(libs.plugins.kotlin.serialization) apply false
+  alias(libs.plugins.ksp) apply false
+  alias(libs.plugins.spotless)
 }
 
-allprojects {
-  repositories {
-    google()
-    mavenCentral()
-    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-    gradlePluginPortal()
+spotless {
+  val ktLintVersion = libs.versions.kt.lint.get()
+  val ktLintOptions = mapOf("indent_size" to "2", "continuation_indent_size" to "2")
+
+  ratchetFrom = "origin/main"
+  kotlin {
+    target("**/*.kt")
+    targetExclude("**/build/", "**/*_Generated.kt")
+    ktlint(ktLintVersion).editorConfigOverride(ktLintOptions)
+    ktfmt().googleStyle()
+    licenseHeaderFile(
+      "${project.rootProject.projectDir}/license-header.txt",
+      "^(package|//startfile)",
+    )
   }
-  configureSpotless()
+  kotlinGradle {
+    target("*.gradle.kts")
+    ktlint(ktLintVersion).editorConfigOverride(ktLintOptions)
+    ktfmt().googleStyle()
+  }
+
+//  flexmark {
+//      target("**/*.md")
+//      flexmark()
+//    }
 }
 
 subprojects {
-  applyLicenseeConfig()
+//  configureLicensee()
 
   tasks.withType(Test::class.java).configureEach {
     maxParallelForks = 1

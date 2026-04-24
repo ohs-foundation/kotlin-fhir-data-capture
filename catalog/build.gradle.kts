@@ -3,27 +3,31 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-  id("org.jetbrains.kotlin.multiplatform")
-  id("com.android.application")
-  id("org.jetbrains.kotlin.plugin.compose")
-  id("org.jetbrains.compose")
-  id("org.jetbrains.kotlin.plugin.serialization")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.compose.multiplatform)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.androidx.navigation.safeargs)
 }
 
-// configureRuler()
-group = "dev.ohs.fhir"
+val groupId: String by project
+val androidNamespace: String by project
+val applicationId: String by project
+val applicationVersionCode: String by project
+val applicationVersionName: String by project
+
+group = groupId
 
 android {
-  namespace = "dev.ohs.fhir.catalog"
-  compileSdk = Sdk.COMPILE_SDK
+  namespace = androidNamespace
+  compileSdk = libs.versions.compileSdk.get().toInt()
 
   defaultConfig {
-    applicationId = Releases.Catalog.applicationId
-    minSdk = Sdk.MIN_SDK
-    targetSdk = Sdk.TARGET_SDK
-    versionCode = Releases.Catalog.versionCode
-    versionName = Releases.Catalog.versionName
+    applicationId = applicationId
+    minSdk = libs.versions.minSdk.get().toInt()
+    versionCode = applicationVersionCode.toInt()
+    versionName = applicationVersionName
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
@@ -95,7 +99,6 @@ kotlin {
       implementation(compose.components.uiToolingPreview)
       implementation(libs.androidx.lifecycle.viewmodel.compose)
       implementation(libs.androidx.lifecycle.runtime.compose)
-      implementation(libs.material.icons.extended)
       implementation(libs.kermit)
       implementation(libs.ohs.fhir.model)
       implementation(libs.kotlinx.serialization.json)

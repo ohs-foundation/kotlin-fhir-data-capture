@@ -18,18 +18,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 
-@Suppress("unused")
-fun Project.applyLicenseeConfig() {
-  // We have some empty folders like the :contrib root folder, which Gradle recognizes as projects.
-  // Don't configure plugins for those folders.
-  if (!project.buildFile.exists()) {
-    return
-  }
-
-  configureLicensee()
-}
-
-private fun Project.configureLicensee() {
+fun Project.configureLicensee() {
   apply(plugin = "app.cash.licensee")
   configure<app.cash.licensee.LicenseeExtension> {
     allow("Apache-2.0")

@@ -19,8 +19,8 @@ kotlin {
 
   androidLibrary {
     namespace = "dev.ohs.fhir.datacapture.contrib.views.locationwidget"
-    compileSdk = Sdk.COMPILE_SDK
-    minSdk = Sdk.MIN_SDK
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    minSdk = libs.versions.minSdk.get().toInt()
     withJava()
     withHostTestBuilder {}
     withDeviceTestBuilder { sourceSetTreeName = "test" }

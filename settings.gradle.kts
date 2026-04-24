@@ -1,33 +1,22 @@
-import androidx.build.gradle.gcpbuildcache.GcpBuildCache
-import androidx.build.gradle.gcpbuildcache.GcpBuildCacheServiceFactory
-
-plugins {
-  id("com.gradle.enterprise") version ("3.10")
-  id("androidx.build.gradle.gcpbuildcache") version "1.0.0-beta07"
-  id("org.gradle.toolchains.foojay-resolver-convention") version ("0.5.0")
-}
-
-gradleEnterprise {
-  buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
-    capture { isTaskInputFiles = true }
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+pluginManagement {
+  repositories {
+    google()
+    gradlePluginPortal()
+    mavenCentral()
   }
 }
 
-val kokoroRun = providers.environmentVariable("KOKORO_BUILD_ID").isPresent
-
-if (kokoroRun == true) {
-  buildCache {
-    registerBuildCacheService(GcpBuildCache::class, GcpBuildCacheServiceFactory::class)
-    remote(GcpBuildCache::class) {
-      projectId = "android-fhir-build"
-      bucketName = "android-fhir-build-cache"
-      isPush = true
-    }
+dependencyResolutionManagement {
+  @Suppress("UnstableApiUsage")
+  repositories {
+    google()
+    mavenCentral()
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+    gradlePluginPortal()
   }
 }
 
+rootProject.name = "kotlin-fhir-data-capture"
 include(":datacapture")
-
 include(":contrib:barcode", ":contrib:locationwidget", ":catalog")

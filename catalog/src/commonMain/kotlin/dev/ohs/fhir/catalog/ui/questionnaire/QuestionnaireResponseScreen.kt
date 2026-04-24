@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -42,10 +40,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.catalog.generated.resources.Res
+import dev.ohs.fhir.catalog.generated.resources.arrow_back_filled_24dp
 import dev.ohs.fhir.catalog.generated.resources.close
 import dev.ohs.fhir.catalog.generated.resources.questionnaire_response_subtitle
 import dev.ohs.fhir.catalog.generated.resources.questionnaire_response_title
 import dev.ohs.fhir.catalog.generated.resources.questionnaire_submitted
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +65,7 @@ fun QuestionnaireResponseScreen(
         },
         navigationIcon = {
           IconButton(onClick = onBackClick) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            Icon(painter = painterResource(Res.drawable.arrow_back_filled_24dp), contentDescription = "Back")
           }
         },
       )

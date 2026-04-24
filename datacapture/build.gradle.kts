@@ -4,23 +4,28 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-  id("org.jetbrains.kotlin.multiplatform")
-  id("com.android.kotlin.multiplatform.library")
-  id("org.jetbrains.kotlin.plugin.compose")
-  id("org.jetbrains.compose.hot-reload")
-  id("org.jetbrains.compose")
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
+  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.compose.hotreload)
+  alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.ksp)
 }
 
-group = "dev.ohs.fhir"
+val mavenGroupId: String by project
+val mavenArtifactId: String by project
+val mavenVersion: String by project
+val androidNamespace: String by project
+
+group = mavenGroupId
 
 kotlin {
   jvmToolchain(21)
 
   androidLibrary {
-    namespace = "dev.ohs.fhir.datacapture"
-    compileSdk = Sdk.COMPILE_SDK
-    minSdk = Sdk.MIN_SDK
+    namespace = androidNamespace
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    minSdk = libs.versions.minSdk.get().toInt()
     withJava()
     withHostTestBuilder {}
     withDeviceTestBuilder { sourceSetTreeName = "test" }
