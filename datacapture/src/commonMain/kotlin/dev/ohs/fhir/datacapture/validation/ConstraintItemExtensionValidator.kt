@@ -39,13 +39,14 @@ internal class ConstraintItemExtensionValidator(
   override suspend fun validate(
     questionnaireItem: Questionnaire.Item,
     questionnaireResponseItem: QuestionnaireResponse.Item,
-  ): List<ConstraintValidator.Result> {
-    return questionnaireItem.extension
+  ): List<ConstraintValidator.Result> =
+    questionnaireItem.extension
       .filter { extension ->
 
-//          TODO: Add constraint support for warning case, update the [ConstraintValidator.Result]
-//            data class to also include warning state,
-//            https://github.com/google/android-fhir/issues/2480
+        //          TODO: Add constraint support for warning case, update the
+        // [ConstraintValidator.Result]
+        //            data class to also include warning state,
+        //            https://github.com/google/android-fhir/issues/2480
 
         extension.url == EXTENSION_QUESTIONNAIRE_CONSTRAINT_URL &&
           ConstraintSeverityTypes.ERROR.code ==
@@ -95,5 +96,4 @@ internal class ConstraintItemExtensionValidator(
           ConstraintValidator.Result(false, errorMessage)
         }
       }
-  }
 }

@@ -33,7 +33,7 @@ spotless {
     )
   }
   kotlinGradle {
-    target("*.gradle.kts")
+    target("**/*.gradle.kts")
     ktlint(ktLintVersion).editorConfigOverride(ktLintOptions)
     ktfmt().googleStyle()
   }

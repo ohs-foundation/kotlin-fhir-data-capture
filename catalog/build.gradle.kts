@@ -40,7 +40,7 @@ android {
   }
   packaging {
     resources.excludes.addAll(
-      listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt"),
+      listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
     )
   }
 }
@@ -50,31 +50,26 @@ kotlin {
 
   jvm("desktop")
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-      browser {
-        val rootProjectDir = rootProject.projectDir.path
-        commonWebpackConfig {
-          devServer =
-            (devServer ?: KotlinWebpackConfig.DevServer()).copy(
-              static = (devServer?.static ?: mutableListOf()).apply { add(rootProjectDir) },
-            )
-        }
+  @OptIn(ExperimentalWasmDsl::class)
+  wasmJs {
+    browser {
+      val rootProjectDir = rootProject.projectDir.path
+      commonWebpackConfig {
+        devServer =
+          (devServer ?: KotlinWebpackConfig.DevServer()).copy(
+            static = (devServer?.static ?: mutableListOf()).apply { add(rootProjectDir) }
+          )
       }
-      binaries.executable()
     }
+    binaries.executable()
+  }
 
-  listOf(
-      iosX64(),
-      iosArm64(),
-      iosSimulatorArm64(),
-    )
-    .forEach { iosTarget ->
-      iosTarget.binaries.framework {
-        baseName = "CatalogKit"
-        isStatic = true
-      }
+  listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+    iosTarget.binaries.framework {
+      baseName = "CatalogKit"
+      isStatic = true
     }
+  }
 
   sourceSets {
     androidMain {
@@ -107,7 +102,8 @@ kotlin {
       implementation(project(":datacapture"))
     }
 
-    @Suppress("unused") val desktopMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
+    @Suppress("unused")
+    val desktopMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
 
     iosMain {
       dependencies {

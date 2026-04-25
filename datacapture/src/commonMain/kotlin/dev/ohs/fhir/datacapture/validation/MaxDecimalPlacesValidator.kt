@@ -16,10 +16,10 @@
 
 package dev.ohs.fhir.datacapture.validation
 
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.max_decimal_validation_error_msg
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.max_decimal_validation_error_msg
 import org.jetbrains.compose.resources.getString
 
 private const val MAX_DECIMAL_URL = "http://hl7.org/fhir/StructureDefinition/maxDecimalPlaces"

@@ -16,9 +16,9 @@
 
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.model.r4.Extension
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.min_length_validation_error_msg
-import dev.ohs.fhir.model.r4.Extension
 import org.jetbrains.compose.resources.getString
 
 internal const val MIN_LENGTH_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/minLength"

@@ -26,8 +26,6 @@ import androidx.compose.ui.Modifier
 import dev.ohs.fhir.datacapture.extensions.FhirR4Integer
 import dev.ohs.fhir.datacapture.extensions.itemMedia
 import dev.ohs.fhir.datacapture.extensions.sliderStepValue
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_less_than_max_value_validation_error_msg
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
@@ -40,6 +38,8 @@ import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.components.SliderItem
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_less_than_max_value_validation_error_msg
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

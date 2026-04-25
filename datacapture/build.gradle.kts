@@ -30,16 +30,12 @@ kotlin {
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
 
     compilations.configureEach {
-      compilerOptions.configure {
-        jvmTarget.set(
-          org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11,
-        )
-      }
+      compilerOptions.configure { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
     }
 
     packaging {
       resources.excludes.addAll(
-        listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt"),
+        listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
       )
     }
   }
@@ -131,7 +127,8 @@ kotlin {
       }
     }
 
-    @Suppress("unused") val desktopMain by getting {
+    @Suppress("unused")
+    val desktopMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutines.swing)
@@ -141,14 +138,15 @@ kotlin {
 }
 
 licensee {
-    allow("Apache-2.0")
-    allow("BSD-2-Clause")
-    allow("BSD-3-Clause")
-    allow("MIT")
+  allow("Apache-2.0")
+  allow("BSD-2-Clause")
+  allow("BSD-3-Clause")
+  allow("MIT")
 
   listOf(
-    //FileKit
-    "https://github.com/vinceglb/FileKit/blob/main/LICENSE",
-    "https://github.com/hypfvieh/dbus-java/blob/master/LICENSE"
-  ).forEach { allowUrl(it) }
+      // FileKit
+      "https://github.com/vinceglb/FileKit/blob/main/LICENSE",
+      "https://github.com/hypfvieh/dbus-java/blob/master/LICENSE",
+    )
+    .forEach { allowUrl(it) }
 }

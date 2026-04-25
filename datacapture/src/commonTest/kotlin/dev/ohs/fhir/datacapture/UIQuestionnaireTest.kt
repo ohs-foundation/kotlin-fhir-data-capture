@@ -42,12 +42,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.testing.TestLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_next
-import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_previous
-import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
-import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
-import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
 import dev.ohs.fhir.datacapture.views.components.ADD_REPEATED_GROUP_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.components.DELETE_REPEATED_GROUP_ITEM_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.components.HINT_HEADER_TAG
@@ -64,6 +58,12 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_next
+import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_previous
+import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
+import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
+import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTestApi::class)

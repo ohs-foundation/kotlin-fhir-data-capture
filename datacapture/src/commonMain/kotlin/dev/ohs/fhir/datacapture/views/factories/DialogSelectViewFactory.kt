@@ -42,8 +42,6 @@ import dev.ohs.fhir.datacapture.extensions.itemControl
 import dev.ohs.fhir.datacapture.extensions.itemMedia
 import dev.ohs.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.toQuestionnaireResponseItemAnswer
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
@@ -58,6 +56,8 @@ import dev.ohs.fhir.datacapture.views.components.getRequiredOrOptionalText
 import dev.ohs.fhir.datacapture.views.isAnswerOptionSelected
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

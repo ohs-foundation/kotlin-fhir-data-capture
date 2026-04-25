@@ -19,10 +19,10 @@ package dev.ohs.fhir.datacapture.validation
 import dev.ohs.fhir.datacapture.extensions.compareTo
 import dev.ohs.fhir.datacapture.extensions.elementDeepValue
 import dev.ohs.fhir.datacapture.extensions.elementValue
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_validation_error_msg
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_validation_error_msg
 import org.jetbrains.compose.resources.getString
 
 internal const val MIN_VALUE_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/minValue"

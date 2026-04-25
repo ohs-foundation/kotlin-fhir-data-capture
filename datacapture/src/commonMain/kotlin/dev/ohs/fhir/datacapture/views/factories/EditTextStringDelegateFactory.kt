@@ -20,10 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.String as FhirString
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 
 /**
  * Implementation of [EditTextViewFactoryDelegate] used in [EditTextSingleLineViewFactory] and

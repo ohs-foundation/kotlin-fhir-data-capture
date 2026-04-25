@@ -20,10 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import dev.ohs.fhir.datacapture.NumberFormatter
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.integer_format_validation_error_msg
 import dev.ohs.fhir.model.r4.Integer as FhirInteger
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.integer_format_validation_error_msg
 
 internal val EditTextIntegerViewFactory =
   EditTextViewFactoryDelegate(

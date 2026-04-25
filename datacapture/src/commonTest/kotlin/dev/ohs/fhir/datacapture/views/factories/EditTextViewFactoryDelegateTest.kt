@@ -30,8 +30,6 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
-import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
@@ -41,6 +39,8 @@ import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 
 @OptIn(ExperimentalTestApi::class)
 class EditTextViewFactoryDelegateTest {
