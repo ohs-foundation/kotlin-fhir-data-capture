@@ -40,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
@@ -49,8 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.catalog.ui.questionnaire.components.ErrorStateToggleAction
 import dev.ohs.fhir.catalog.views.barcode.BarcodeItemViewFactoryMatcher
-import dev.ohs.fhir.catalog.views.locationwidget.LocationDataItemViewFactoryMatcher
-import dev.ohs.fhir.catalog.views.locationwidget.LocationItemViewFactoryMatcher
+import dev.ohs.fhir.catalog.views.locationwidget.LocationCaptureItemViewFactoryMatcher
+import dev.ohs.fhir.catalog.views.locationwidget.LocationCoordinateItemViewFactoryMatcher
 import dev.ohs.fhir.datacapture.Questionnaire
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatchersProvider
@@ -70,10 +71,9 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionnaireScreen(
-  viewModel: dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireViewModel,
+  viewModel: QuestionnaireViewModel,
   title: String,
   fileName: String,
-  coroutineScope: CoroutineScope,
   validationFileName: String? = null,
   showReviewPage: Boolean = false,
   showReviewPageFirst: Boolean = false,
@@ -81,13 +81,14 @@ fun QuestionnaireScreen(
   onBackClick: () -> Unit,
   navigateToResponse: (String) -> Unit,
 ) {
+  val coroutineScope = rememberCoroutineScope()
   val viewItemMatchersProvider = remember {
     object : QuestionnaireItemViewFactoryMatchersProvider {
       override fun get(): List<QuestionnaireItemViewFactoryMatcher> =
         listOf(
           BarcodeItemViewFactoryMatcher,
-          LocationItemViewFactoryMatcher,
-          LocationDataItemViewFactoryMatcher,
+          LocationCaptureItemViewFactoryMatcher,
+          LocationCoordinateItemViewFactoryMatcher,
         )
     }
   }

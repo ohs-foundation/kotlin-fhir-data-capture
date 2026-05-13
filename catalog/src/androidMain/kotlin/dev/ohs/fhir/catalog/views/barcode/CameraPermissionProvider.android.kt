@@ -19,6 +19,7 @@ package dev.ohs.fhir.catalog.views.barcode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.camera.CAMERA
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -32,6 +33,14 @@ internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider
   BindEffect(controller)
 
   return remember(lifecycleOwner) {
-    CameraPermissionProvider { controller.providePermission(Permission.CAMERA) }
+    object : CameraPermissionProvider {
+      override suspend fun providePermission() {
+        controller.providePermission(Permission.CAMERA)
+      }
+
+      override fun openSettings() {
+        controller.openAppSettings()
+      }
+    }
   }
 }

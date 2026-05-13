@@ -146,11 +146,11 @@ internal fun TimeFieldItem(
 internal fun PreviewTimePickerItem() {
   TimeFieldItem(
     Modifier,
-    null,
-    LocalTime(11, 38),
-    true,
-    stringResource(Res.string.time),
-    null,
-    false,
+    timeSelectedDisplay = null,
+    initialStartTime = LocalTime(11, 38),
+    enabled = true,
+    hint = stringResource(Res.string.time),
+    supportingHelperText = null,
+    isError = false,
   ) {}
 }

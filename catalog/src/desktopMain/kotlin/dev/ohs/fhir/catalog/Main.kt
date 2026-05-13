@@ -20,11 +20,14 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.app_name
+import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
   Window(
     onCloseRequest = ::exitApplication,
-    title = "Structured data capture catalog",
+    title = stringResource(Res.string.app_name),
     state = WindowState(placement = WindowPlacement.Maximized),
   ) {
     App()

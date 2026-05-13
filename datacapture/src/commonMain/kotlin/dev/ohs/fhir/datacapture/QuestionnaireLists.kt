@@ -60,11 +60,11 @@ import dev.ohs.fhir.datacapture.views.factories.DateViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DialogSelectViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DisplayViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DropDownViewFactory
-import dev.ohs.fhir.datacapture.views.factories.EditTextDecimalViewFactory
-import dev.ohs.fhir.datacapture.views.factories.EditTextIntegerViewFactory
-import dev.ohs.fhir.datacapture.views.factories.EditTextMultiLineViewFactory
-import dev.ohs.fhir.datacapture.views.factories.EditTextPhoneNumberViewFactory
-import dev.ohs.fhir.datacapture.views.factories.EditTextSingleLineViewFactory
+import dev.ohs.fhir.datacapture.views.factories.DecimalTextInputFactory
+import dev.ohs.fhir.datacapture.views.factories.IntegerTextInputFactory
+import dev.ohs.fhir.datacapture.views.factories.MultiLineTextInputFactory
+import dev.ohs.fhir.datacapture.views.factories.PhoneNumberTextInputFactory
+import dev.ohs.fhir.datacapture.views.factories.SingleLineTextInputFactory
 import dev.ohs.fhir.datacapture.views.factories.GroupViewFactory
 import dev.ohs.fhir.datacapture.views.factories.QuantityViewFactory
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
@@ -87,6 +87,8 @@ const val MINIMUM_NUMBER_OF_ANSWER_OPTIONS_FOR_DROP_DOWN = 4
 
 // Test tag for QuestionnaireEditList
 const val QUESTIONNAIRE_EDIT_LIST = "questionnaire_edit_list"
+
+private const val NAVIGATION_ITEM_KEY = "navigation"
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
@@ -125,7 +127,7 @@ internal fun QuestionnaireEditList(
 
           is QuestionnaireAdapterItem.RepeatedGroupHeader -> item.id
 
-          is QuestionnaireAdapterItem.Navigation -> "navigation"
+          is QuestionnaireAdapterItem.Navigation -> NAVIGATION_ITEM_KEY
 
           is QuestionnaireAdapterItem.RepeatedGroupAddButton ->
             item.id
@@ -140,8 +142,8 @@ internal fun QuestionnaireEditList(
           val questionnaireItemViewHolderDelegate =
             getQuestionnaireItemViewFactory(
               questionnaireItem = adapterItem.item.questionnaireItem,
-              questionnaireViewHolderType = questionnaireViewHolderType,
-              questionnaireItemViewHolderMatchers = questionnaireItemViewHolderMatchers,
+              questionnaireItemViewType = questionnaireViewHolderType,
+              questionnaireItemViewFactoryMatchers = questionnaireItemViewHolderMatchers,
             )
           questionnaireItemViewHolderDelegate.Content(adapterItem.item)
         }
@@ -172,7 +174,7 @@ internal fun QuestionnaireReviewList(items: List<QuestionnaireReviewItem>) {
           is QuestionnaireAdapterItem.Question ->
             item.id ?: throw IllegalStateException("Missing id for the Question: $item")
 
-          is QuestionnaireAdapterItem.Navigation -> "navigation"
+          is QuestionnaireAdapterItem.Navigation -> NAVIGATION_ITEM_KEY
         }
       },
       contentType = { it::class.simpleName },
@@ -339,34 +341,34 @@ private fun QuestionnaireReviewItem(
 
 fun getQuestionnaireItemViewFactory(
   questionnaireItem: Questionnaire.Item,
-  questionnaireViewHolderType: QuestionnaireViewHolderType,
-  questionnaireItemViewHolderMatchers: List<QuestionnaireItemViewFactoryMatcher>,
+  questionnaireItemViewType: QuestionnaireItemViewType,
+  questionnaireItemViewFactoryMatchers: List<QuestionnaireItemViewFactoryMatcher>,
 ): QuestionnaireItemViewFactory =
-  questionnaireItemViewHolderMatchers.find { it.matches(questionnaireItem) }?.factory
-    ?: when (questionnaireViewHolderType) {
-      QuestionnaireViewHolderType.EDIT_TEXT_SINGLE_LINE -> EditTextSingleLineViewFactory
-      QuestionnaireViewHolderType.EDIT_TEXT_MULTI_LINE -> EditTextMultiLineViewFactory
-      QuestionnaireViewHolderType.EDIT_TEXT_INTEGER -> EditTextIntegerViewFactory
-      QuestionnaireViewHolderType.EDIT_TEXT_DECIMAL -> EditTextDecimalViewFactory
-      QuestionnaireViewHolderType.QUANTITY -> QuantityViewFactory
-      QuestionnaireViewHolderType.DISPLAY -> DisplayViewFactory
-      QuestionnaireViewHolderType.SLIDER -> SliderViewFactory
-      QuestionnaireViewHolderType.PHONE_NUMBER -> EditTextPhoneNumberViewFactory
-      QuestionnaireViewHolderType.BOOLEAN_TYPE_PICKER -> BooleanChoiceViewFactory
-      QuestionnaireViewHolderType.RADIO_GROUP -> RadioGroupViewFactory
-      QuestionnaireViewHolderType.CHECK_BOX_GROUP -> CheckBoxGroupViewFactory
-      QuestionnaireViewHolderType.DIALOG_SELECT -> DialogSelectViewFactory
-      QuestionnaireViewHolderType.DROP_DOWN -> DropDownViewFactory
-      QuestionnaireViewHolderType.AUTO_COMPLETE -> AutoCompleteViewFactory
-      QuestionnaireViewHolderType.DATE_PICKER -> DateViewFactory
-      QuestionnaireViewHolderType.TIME_PICKER -> TimeViewFactory
-      QuestionnaireViewHolderType.DATE_TIME_PICKER -> DateTimeViewFactory
-      QuestionnaireViewHolderType.GROUP -> GroupViewFactory
-      QuestionnaireViewHolderType.ATTACHMENT -> AttachmentViewFactory
+  questionnaireItemViewFactoryMatchers.find { it.matches(questionnaireItem) }?.factory
+    ?: when (questionnaireItemViewType) {
+      QuestionnaireItemViewType.EDIT_TEXT_SINGLE_LINE -> SingleLineTextInputFactory
+      QuestionnaireItemViewType.EDIT_TEXT_MULTI_LINE -> MultiLineTextInputFactory
+      QuestionnaireItemViewType.EDIT_TEXT_INTEGER -> IntegerTextInputFactory
+      QuestionnaireItemViewType.EDIT_TEXT_DECIMAL -> DecimalTextInputFactory
+      QuestionnaireItemViewType.QUANTITY -> QuantityViewFactory
+      QuestionnaireItemViewType.DISPLAY -> DisplayViewFactory
+      QuestionnaireItemViewType.SLIDER -> SliderViewFactory
+      QuestionnaireItemViewType.PHONE_NUMBER -> PhoneNumberTextInputFactory
+      QuestionnaireItemViewType.BOOLEAN_TYPE_PICKER -> BooleanChoiceViewFactory
+      QuestionnaireItemViewType.RADIO_GROUP -> RadioGroupViewFactory
+      QuestionnaireItemViewType.CHECK_BOX_GROUP -> CheckBoxGroupViewFactory
+      QuestionnaireItemViewType.DIALOG_SELECT -> DialogSelectViewFactory
+      QuestionnaireItemViewType.DROP_DOWN -> DropDownViewFactory
+      QuestionnaireItemViewType.AUTO_COMPLETE -> AutoCompleteViewFactory
+      QuestionnaireItemViewType.DATE_PICKER -> DateViewFactory
+      QuestionnaireItemViewType.TIME_PICKER -> TimeViewFactory
+      QuestionnaireItemViewType.DATE_TIME_PICKER -> DateTimeViewFactory
+      QuestionnaireItemViewType.GROUP -> GroupViewFactory
+      QuestionnaireItemViewType.ATTACHMENT -> AttachmentViewFactory
     }
 
 /**
- * Returns the [QuestionnaireViewHolderType] that will be used to render the
+ * Returns the [QuestionnaireItemViewType] that will be used to render the
  * [QuestionnaireViewItem]. This is determined by a combination of the data type of the question and
  * any additional Questionnaire Item UI Control Codes
  * (http://hl7.org/fhir/R4/valueset-questionnaire-item-control.html) used in the itemControl
@@ -374,7 +376,7 @@ fun getQuestionnaireItemViewFactory(
  */
 private fun getItemViewTypeForQuestion(
   questionnaireViewItem: QuestionnaireViewItem
-): QuestionnaireViewHolderType {
+): QuestionnaireItemViewType {
   val questionnaireItem = questionnaireViewItem.questionnaireItem
 
   if (questionnaireViewItem.enabledAnswerOptions.isNotEmpty()) {
@@ -382,32 +384,32 @@ private fun getItemViewTypeForQuestion(
   }
 
   return when (val type = questionnaireItem.type.value) {
-    Questionnaire.QuestionnaireItemType.Group -> QuestionnaireViewHolderType.GROUP
+    Questionnaire.QuestionnaireItemType.Group -> QuestionnaireItemViewType.GROUP
 
-    Questionnaire.QuestionnaireItemType.Boolean -> QuestionnaireViewHolderType.BOOLEAN_TYPE_PICKER
+    Questionnaire.QuestionnaireItemType.Boolean -> QuestionnaireItemViewType.BOOLEAN_TYPE_PICKER
 
-    Questionnaire.QuestionnaireItemType.Date -> QuestionnaireViewHolderType.DATE_PICKER
+    Questionnaire.QuestionnaireItemType.Date -> QuestionnaireItemViewType.DATE_PICKER
 
-    Questionnaire.QuestionnaireItemType.Time -> QuestionnaireViewHolderType.TIME_PICKER
+    Questionnaire.QuestionnaireItemType.Time -> QuestionnaireItemViewType.TIME_PICKER
 
-    Questionnaire.QuestionnaireItemType.DateTime -> QuestionnaireViewHolderType.DATE_TIME_PICKER
+    Questionnaire.QuestionnaireItemType.DateTime -> QuestionnaireItemViewType.DATE_TIME_PICKER
 
     Questionnaire.QuestionnaireItemType.String -> getStringViewHolderType(questionnaireViewItem)
 
-    Questionnaire.QuestionnaireItemType.Text -> QuestionnaireViewHolderType.EDIT_TEXT_MULTI_LINE
+    Questionnaire.QuestionnaireItemType.Text -> QuestionnaireItemViewType.EDIT_TEXT_MULTI_LINE
 
     Questionnaire.QuestionnaireItemType.Integer -> getIntegerViewHolderType(questionnaireViewItem)
 
-    Questionnaire.QuestionnaireItemType.Decimal -> QuestionnaireViewHolderType.EDIT_TEXT_DECIMAL
+    Questionnaire.QuestionnaireItemType.Decimal -> QuestionnaireItemViewType.EDIT_TEXT_DECIMAL
 
     Questionnaire.QuestionnaireItemType.Choice,
     Questionnaire.QuestionnaireItemType.Reference -> getChoiceViewHolderType(questionnaireViewItem)
 
-    Questionnaire.QuestionnaireItemType.Display -> QuestionnaireViewHolderType.DISPLAY
+    Questionnaire.QuestionnaireItemType.Display -> QuestionnaireItemViewType.DISPLAY
 
-    Questionnaire.QuestionnaireItemType.Quantity -> QuestionnaireViewHolderType.QUANTITY
+    Questionnaire.QuestionnaireItemType.Quantity -> QuestionnaireItemViewType.QUANTITY
 
-    Questionnaire.QuestionnaireItemType.Attachment -> QuestionnaireViewHolderType.ATTACHMENT
+    Questionnaire.QuestionnaireItemType.Attachment -> QuestionnaireItemViewType.ATTACHMENT
 
     else -> throw NotImplementedError("Question type $type not supported.")
   }
@@ -415,12 +417,12 @@ private fun getItemViewTypeForQuestion(
 
 private fun getChoiceViewHolderType(
   questionnaireViewItem: QuestionnaireViewItem
-): QuestionnaireViewHolderType {
+): QuestionnaireItemViewType {
   val questionnaireItem = questionnaireViewItem.questionnaireItem
 
   // Use the view type that the client wants if they specified an itemControl or dialog extension
   return when {
-    questionnaireItem.shouldUseDialog -> QuestionnaireViewHolderType.DIALOG_SELECT
+    questionnaireItem.shouldUseDialog -> QuestionnaireItemViewType.DIALOG_SELECT
     else -> questionnaireItem.itemControl?.viewHolderType
   }
     // Otherwise, choose a sensible UI element automatically
@@ -429,35 +431,35 @@ private fun getChoiceViewHolderType(
       when {
         // Always use a dialog for questions with a large number of options
         numOptions >= MINIMUM_NUMBER_OF_ANSWER_OPTIONS_FOR_DIALOG ->
-          QuestionnaireViewHolderType.DIALOG_SELECT
+          QuestionnaireItemViewType.DIALOG_SELECT
 
         // Use a check box group if repeated answers are permitted
-        questionnaireItem.repeats?.value == true -> QuestionnaireViewHolderType.CHECK_BOX_GROUP
+        questionnaireItem.repeats?.value == true -> QuestionnaireItemViewType.CHECK_BOX_GROUP
 
         // Use a dropdown if there are a medium number of options
         numOptions >= MINIMUM_NUMBER_OF_ANSWER_OPTIONS_FOR_DROP_DOWN ->
-          QuestionnaireViewHolderType.DROP_DOWN
+          QuestionnaireItemViewType.DROP_DOWN
 
         // Use a radio group only if there are a small number of options
-        else -> QuestionnaireViewHolderType.RADIO_GROUP
+        else -> QuestionnaireItemViewType.RADIO_GROUP
       }
     }
 }
 
 private fun getIntegerViewHolderType(
   questionnaireViewItem: QuestionnaireViewItem
-): QuestionnaireViewHolderType {
+): QuestionnaireItemViewType {
   val questionnaireItem = questionnaireViewItem.questionnaireItem
   // Use the view type that the client wants if they specified an itemControl
   return questionnaireItem.itemControl?.viewHolderType
-    ?: QuestionnaireViewHolderType.EDIT_TEXT_INTEGER
+    ?: QuestionnaireItemViewType.EDIT_TEXT_INTEGER
 }
 
 private fun getStringViewHolderType(
   questionnaireViewItem: QuestionnaireViewItem
-): QuestionnaireViewHolderType {
+): QuestionnaireItemViewType {
   val questionnaireItem = questionnaireViewItem.questionnaireItem
   // Use the view type that the client wants if they specified an itemControl
   return questionnaireItem.itemControl?.viewHolderType
-    ?: QuestionnaireViewHolderType.EDIT_TEXT_SINGLE_LINE
+    ?: QuestionnaireItemViewType.EDIT_TEXT_SINGLE_LINE
 }

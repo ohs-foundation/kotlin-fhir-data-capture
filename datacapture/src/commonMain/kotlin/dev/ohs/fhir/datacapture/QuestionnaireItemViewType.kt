@@ -19,37 +19,31 @@ package dev.ohs.fhir.datacapture
 /**
  * Questionnaire item view holder types supported by default by the data capture library.
  *
- * This is used by the [dev.ohs.fhir.datacapture.QuestionnaireFragment] lists to determine how each
+ * This is used by the [dev.ohs.fhir.datacapture.QuestionnaireEditList] lists to determine how each
  * [dev.ohs.fhir.model.r4.Questionnaire.Item] is rendered.
  *
  * This list should provide sufficient coverage for values in
  * https://www.hl7.org/fhir/valueset-item-type.html and
  * http://hl7.org/fhir/R4/valueset-questionnaire-item-control.html.
  */
-enum class QuestionnaireViewHolderType(val value: Int) {
-  GROUP(0),
-  BOOLEAN_TYPE_PICKER(1),
-  DATE_PICKER(2),
-  DATE_TIME_PICKER(3),
-  EDIT_TEXT_SINGLE_LINE(4),
-  EDIT_TEXT_MULTI_LINE(5),
-  EDIT_TEXT_INTEGER(6),
-  EDIT_TEXT_DECIMAL(7),
-  RADIO_GROUP(8),
-  DROP_DOWN(9),
-  DISPLAY(10),
-  QUANTITY(11),
-  CHECK_BOX_GROUP(12),
-  AUTO_COMPLETE(13),
-  DIALOG_SELECT(14),
-  SLIDER(15),
-  PHONE_NUMBER(16),
-  ATTACHMENT(17),
-  TIME_PICKER(18);
-
-  companion object {
-    private val VALUES = values()
-
-    fun fromInt(value: Int) = VALUES[value]
-  }
+enum class QuestionnaireItemViewType {
+  GROUP,
+  BOOLEAN_TYPE_PICKER,
+  DATE_PICKER,
+  DATE_TIME_PICKER,
+  EDIT_TEXT_SINGLE_LINE,
+  EDIT_TEXT_MULTI_LINE,
+  EDIT_TEXT_INTEGER,
+  EDIT_TEXT_DECIMAL,
+  RADIO_GROUP,
+  DROP_DOWN,
+  DISPLAY,
+  QUANTITY,
+  CHECK_BOX_GROUP,
+  AUTO_COMPLETE,
+  DIALOG_SELECT,
+  SLIDER,
+  PHONE_NUMBER,
+  ATTACHMENT,
+  TIME_PICKER;
 }

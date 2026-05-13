@@ -53,7 +53,14 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-object LocationItemViewFactory : QuestionnaireItemViewFactory {
+/**
+ * Renders the "Record GPS Location" button for a questionnaire item with item control code
+ * `location-widget`. Triggers a one-shot device location fetch and broadcasts the result via
+ * [LocationEventBus]; does not display coordinate values itself.
+ *
+ * @see LocationCoordinateItemViewFactory for the read-only fields that display the captured coordinates.
+ */
+object LocationCaptureItemViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
@@ -83,7 +90,7 @@ object LocationItemViewFactory : QuestionnaireItemViewFactory {
             if (result is GeolocatorResult.Success) {
               geolocatorError = null
               val loc = result.data
-              LocationEventEmitter.emit(
+              LocationEventBus.emit(
                 LocationData(
                   latitude = loc.coordinates.latitude,
                   longitude = loc.coordinates.longitude,
@@ -125,7 +132,7 @@ object LocationItemViewFactory : QuestionnaireItemViewFactory {
   }
 }
 
-val LocationItemViewFactoryMatcher =
-  QuestionnaireItemViewFactoryMatcher(LocationItemViewFactory) {
+val LocationCaptureItemViewFactoryMatcher =
+  QuestionnaireItemViewFactoryMatcher(LocationCaptureItemViewFactory) {
     it.itemControlCode == "location-widget"
   }

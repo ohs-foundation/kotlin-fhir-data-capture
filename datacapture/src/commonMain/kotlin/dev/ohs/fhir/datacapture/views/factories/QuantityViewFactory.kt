@@ -165,34 +165,26 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
     input.value?.let { decimal = it.toBigDecimalOrNull() }
     input.unitDropDown?.let { unit = it }
 
-    when {
-      decimal == null && unit == null -> {
-        questionnaireViewItem.clearAnswer()
-      }
-
-      decimal == null -> {
-        questionnaireViewItem.setDraftAnswer(unit)
-      }
-
-      unit == null -> {
-        questionnaireViewItem.setDraftAnswer(decimal)
-      }
-
-      else -> {
-        questionnaireViewItem.setAnswer(
-          QuestionnaireResponse.Item.Answer(
-            value =
-              QuestionnaireResponse.Item.Answer.Value.Quantity(
-                Quantity(
-                  value = Decimal(value = decimal),
-                  unit = unit.display,
-                  code = unit.code,
-                  system = unit.system,
-                )
-              )
+    val answer = if (decimal != null && unit != null) {
+      // Both exist: Create the full Quantity Answer
+      QuestionnaireResponse.Item.Answer(
+        value = QuestionnaireResponse.Item.Answer.Value.Quantity(
+          Quantity(
+            value = Decimal(value = decimal),
+            unit = unit.display,
+            code = unit.code,
+            system = unit.system,
           )
         )
-      }
+      )
+    } else {
+      // One or both are null: Use the non-null one as a draft, or clear if both null
+      decimal ?: unit
+    }
+    when (answer) {
+      null -> questionnaireViewItem.clearAnswer()
+      is QuestionnaireResponse.Item.Answer -> questionnaireViewItem.setAnswer(answer)
+      else -> questionnaireViewItem.setDraftAnswer(answer)
     }
   }
 

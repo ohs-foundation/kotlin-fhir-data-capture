@@ -19,44 +19,37 @@ package dev.ohs.fhir.datacapture.views.factories
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import dev.ohs.fhir.datacapture.NumberFormatter
-import dev.ohs.fhir.model.r4.Integer as FhirInteger
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
-import kotlin_fhir_data_capture.datacapture.generated.resources.integer_format_validation_error_msg
+import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 
-internal val EditTextIntegerViewFactory =
-  EditTextViewFactoryDelegate(
-    KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+internal val DecimalTextInputFactory =
+  TextInputFactory(
+    KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
     uiInputText = {
-      val answer = it.answers.singleOrNull()?.value?.asInteger()?.value?.value?.toString()
+      val questionnaireItemViewItemDecimalAnswer = it.answers.singleOrNull()?.value?.asDecimal()
       val draftAnswer = it.draftAnswer?.toString()
+
       when {
-        answer.isNullOrEmpty() && draftAnswer.isNullOrEmpty() -> ""
-        answer?.toIntOrNull() != null -> answer
+        questionnaireItemViewItemDecimalAnswer == null && draftAnswer.isNullOrEmpty() -> ""
+
+        questionnaireItemViewItemDecimalAnswer != null ->
+          questionnaireItemViewItemDecimalAnswer.value.value?.toStringExpanded()
+
         else -> draftAnswer
       }
     },
     handleInput = { inputText, questionnaireViewItem ->
-      if (inputText.isEmpty()) {
-        questionnaireViewItem.clearAnswer()
-      } else if (inputText.toIntOrNull() != null) {
+      inputText.toDoubleOrNull()?.let {
         questionnaireViewItem.setAnswer(
           QuestionnaireResponse.Item.Answer(
             value =
-              QuestionnaireResponse.Item.Answer.Value.Integer(
-                FhirInteger(value = inputText.toInt())
-              )
+              QuestionnaireResponse.Item.Answer.Value.Decimal(Decimal(value = it.toBigDecimal()))
           )
         )
-      } else {
-        questionnaireViewItem.setDraftAnswer(inputText)
-      }
+      } ?: questionnaireViewItem.setDraftAnswer(inputText)
     },
-    validationMessageStringRes = Res.string.integer_format_validation_error_msg,
-    validationMessageStringResArgs =
-      arrayOf(
-        NumberFormatter.formatInteger(Int.MIN_VALUE),
-        NumberFormatter.formatInteger(Int.MAX_VALUE),
-      ),
+    validationMessageStringRes = Res.string.decimal_format_validation_error_msg,
   )

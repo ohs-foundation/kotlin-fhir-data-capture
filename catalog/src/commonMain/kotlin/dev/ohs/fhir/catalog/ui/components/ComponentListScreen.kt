@@ -39,9 +39,9 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComponentListScreen(
-  viewModel: dev.ohs.fhir.catalog.ui.components.ComponentListViewModel,
+  viewModel: ComponentListViewModel,
   onComponentClick:
-    (dev.ohs.fhir.catalog.ui.components.ComponentListViewModel.Component, String) -> Unit,
+    (ComponentListViewModel.Component, String) -> Unit,
 ) {
   Scaffold(topBar = { CatalogTopAppBar() }) { padding ->
     LazyVerticalGrid(
@@ -51,7 +51,7 @@ fun ComponentListScreen(
     ) {
       viewModel.viewItemList.forEach { item ->
         when (item) {
-          is dev.ohs.fhir.catalog.ui.components.ComponentListViewModel.ViewItem.HeaderItem -> {
+          is ComponentListViewModel.ViewItem.HeaderItem -> {
             item(span = { GridItemSpan(2) }) {
               Text(
                 text = stringResource(item.header.title),
@@ -63,7 +63,7 @@ fun ComponentListScreen(
             }
           }
 
-          is dev.ohs.fhir.catalog.ui.components.ComponentListViewModel.ViewItem.ComponentItem -> {
+          is ComponentListViewModel.ViewItem.ComponentItem -> {
             item {
               val title = stringResource(item.component.text)
               CatalogItemCard(

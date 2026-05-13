@@ -47,13 +47,10 @@ class AndroidLocalDateFormatter(private val context: Context) : LocalDateTimeFor
         DateTimeFormatter.ofPattern(pattern, Locale.current.platformLocale),
       )
 
-    // Throw ParseException if year is less than 4 digits.
-    if (localDate.year.length() < 4) {
-      throw ParseException("Year has less than 4 digits.", str.indexOf('y'))
-    }
-    // date/localDate with year more than 4 digits
-    if (localDate.year.length() > 4) {
-      throw ParseException("Year has more than 4 digits.", str.indexOf('y'))
+    // Throw ParseException if year is less or more than 4 digits.
+    val yearLengthDiff = localDate.year.length() - 4
+    if (yearLengthDiff != 0) {
+      throw ParseException("Year has ${if (yearLengthDiff < 0) "less than" else "more than" } 4 digits.", str.indexOf('y'))
     }
 
     return localDate.toKotlinLocalDate()
@@ -78,11 +75,13 @@ class AndroidLocalDateFormatter(private val context: Context) : LocalDateTimeFor
         Locale.current.platformLocale,
       )
 
-  // ICU on Android does not observe the user's 24h/12h time format setting (obtained from
-  // DateFormat.is24HourFormat()). In order to observe the setting, we are using DateFormat as
-  // suggested in the docs. See
-  // https://developer.android.com/guide/topics/resources/internationalization#24h-setting for
-  // details.
+  /**
+   * ICU on Android does not observe the user's 24h/12h time format setting (obtained from
+   * DateFormat.is24HourFormat()). In order to observe the setting, we are using DateFormat as
+   * suggested in the docs. See
+   * [Android Internationalization Guide](https://developer.android.com/guide/topics/resources/internationalization#24h-setting)
+   * for details.
+   */
   override fun localizedTimeString(time: LocalTime): String {
     val date =
       Date.from(

@@ -43,13 +43,13 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 
 @OptIn(ExperimentalTestApi::class)
-class EditTextViewFactoryDelegateTest {
+class TextInputFactoryTest {
 
   private var programmaticUpdateCounter = 0
 
-  val editTextFactory: EditTextViewFactoryDelegate
+  val editTextFactory: TextInputFactory
     get() {
-      return EditTextViewFactoryDelegate(
+      return TextInputFactory(
         keyboardOptions = KeyboardOptions.Default,
         uiInputText = {
           programmaticUpdateCounter += 1

@@ -44,29 +44,30 @@ import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class EditTextIntegerViewFactoryTest {
+class SingleLineTextInputFactoryTest {
 
   @Composable
-  fun QuestionnaireEditTextIntegerView(questionnaireViewItem: QuestionnaireViewItem) {
-    QuestionnaireTheme { EditTextIntegerViewFactory.Content(questionnaireViewItem) }
+  fun QuestionnaireEditTextSingleLineView(questionnaireViewItem: QuestionnaireViewItem) {
+    QuestionnaireTheme { SingleLineTextInputFactory.Content(questionnaireViewItem) }
   }
 
   @Test
   fun shouldSetQuestionnaireHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               text = FhirR4String(value = "Question?"),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -79,20 +80,22 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun shouldSetInputText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "integer-item"),
+              linkId = FhirR4String(value = "string-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 5))
+                      QuestionnaireResponse.Item.Answer.Value.String(
+                        value = FhirR4String(value = "Answer")
+                      )
                   )
                 ),
             ),
@@ -102,7 +105,7 @@ class EditTextIntegerViewFactoryTest {
       )
     }
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("5")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Answer")
   }
 
   @Test
@@ -111,16 +114,18 @@ class EditTextIntegerViewFactoryTest {
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "integer-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+            linkId = FhirR4String(value = "string-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
           ),
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "integer-item"),
+            linkId = FhirR4String(value = "string-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 5))
+                    QuestionnaireResponse.Item.Answer.Value.String(
+                      value = FhirR4String(value = "Answer")
+                    )
                 )
               ),
           ),
@@ -129,17 +134,17 @@ class EditTextIntegerViewFactoryTest {
         )
       )
 
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("5")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Answer")
 
     questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "integer-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+          linkId = FhirR4String(value = "string-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
@@ -148,24 +153,24 @@ class EditTextIntegerViewFactoryTest {
   }
 
   @Test
-  fun shouldSetQuestionnaireResponseItemAnswerIfTextIsValid() = runComposeUiTest {
+  fun shouldSetQuestionnaireResponseItemAnswer() = runComposeUiTest {
     var answers: List<QuestionnaireResponse.Item.Answer>? = null
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "integer-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+          linkId = FhirR4String(value = "string-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, result, _ -> answers = result },
       )
 
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("13")
+    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("Answer")
     waitUntil { answers != null }
 
-    answers!!.single().value!!.asInteger()!!.value.value.shouldBe(13)
+    answers!!.single().value!!.asString()!!.value.value!!.shouldBe("Answer")
   }
 
   @Test
@@ -173,68 +178,46 @@ class EditTextIntegerViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "integer-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+          linkId = FhirR4String(value = "string-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("")
     waitForIdle()
 
-    questionnaireViewItem.answers.isEmpty()
+    questionnaireViewItem.answers.shouldBeEmpty()
   }
 
   @Test
-  fun shouldSetDraftAnswerIfTextIsInvalid() = runComposeUiTest {
-    var draftAnswer: Any? = null
-    val questionnaireViewItem =
-      QuestionnaireViewItem(
-        Questionnaire.Item(
-          linkId = FhirR4String(value = "integer-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
-        ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
-        validationResult = NotValidated,
-        answersChangedCallback = { _, _, _, result -> draftAnswer = result },
-      )
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
-    // The character in 1O2 is the letter O, not the number 0
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1O2")
-    waitUntil { draftAnswer != null }
-    (draftAnswer as String).shouldBe("1O2")
-  }
-
-  @Test
-  fun displayValidationResultShouldShowNoErrorMessage() = runComposeUiTest {
+  fun displayValidationResult_noError_shouldShowNoErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               extension =
                 listOf(
                   Extension(
-                    url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Integer(value = Integer(value = 2)),
-                  ),
-                  Extension(
-                    url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Integer(value = Integer(value = 4)),
-                  ),
+                    url = "http://hl7.org/fhir/StructureDefinition/minLength",
+                    value = Extension.Value.Integer(value = Integer(value = 10)),
+                  )
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "integer-item"),
+              linkId = FhirR4String(value = "string-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 3))
+                      QuestionnaireResponse.Item.Answer.Value.String(
+                        value = FhirR4String(value = "hello there")
+                      )
                   )
                 ),
             ),
@@ -248,57 +231,59 @@ class EditTextIntegerViewFactoryTest {
   }
 
   @Test
-  fun displayValidationResultShouldShowErrorMessage() = runComposeUiTest {
+  fun displayValidationResult_error_shouldShowErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               extension =
                 listOf(
                   Extension(
-                    url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Integer(value = Integer(value = 2)),
-                  ),
-                  Extension(
-                    url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Integer(value = Integer(value = 4)),
-                  ),
+                    url = "http://hl7.org/fhir/StructureDefinition/minLength",
+                    value = Extension.Value.Integer(value = Integer(value = 10)),
+                  )
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "integer-item"),
+              linkId = FhirR4String(value = "string-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 1))
+                      QuestionnaireResponse.Item.Answer.Value.String(
+                        value = FhirR4String(value = "hello")
+                      )
                   )
                 ),
             ),
-            validationResult = Invalid(listOf("Minimum value allowed is:2")),
+            validationResult =
+              Invalid(
+                listOf("The minimum number of characters that are permitted in the answer is: 10")
+              ),
             answersChangedCallback = { _, _, _, _ -> },
           )
       )
     }
 
     onNodeWithContentDescription("Error").assertIsDisplayed()
-    onNodeWithText("Minimum value allowed is:2").assertIsDisplayed()
+    onNodeWithText("The minimum number of characters that are permitted in the answer is: 10")
+      .assertIsDisplayed()
   }
 
   @Test
   fun hidesErrorTextviewInTheHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -311,15 +296,15 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun bindReadOnlyShouldDisableView() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               readOnly = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -332,16 +317,16 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun showAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = true),
@@ -355,16 +340,16 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun hideAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = false),
@@ -378,15 +363,15 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun showsRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = true),
@@ -400,15 +385,15 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun hideRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = false),
@@ -422,14 +407,14 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun showOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = true),
@@ -443,14 +428,14 @@ class EditTextIntegerViewFactoryTest {
   @Test
   fun hideOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextIntegerView(
+      QuestionnaireEditTextSingleLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "integer-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+              linkId = FhirR4String(value = "string-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = false),
@@ -462,56 +447,24 @@ class EditTextIntegerViewFactoryTest {
   }
 
   @Test
-  fun bindAgainShouldRemovePreviousText() = runComposeUiTest {
-    var questionnaireViewItem by
-      mutableStateOf(
-        QuestionnaireViewItem(
-          Questionnaire.Item(
-            linkId = FhirR4String(value = "integer-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
-          ),
-          QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
-          validationResult = NotValidated,
-          answersChangedCallback = { _, _, _, _ -> },
-          draftAnswer = "9999999999",
-        )
-      )
-
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
-
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG, useUnmergedTree = true).assertTextEquals("9999999999")
-
-    questionnaireViewItem =
-      QuestionnaireViewItem(
-        Questionnaire.Item(
-          linkId = FhirR4String(value = "integer-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
-        ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
-        validationResult = NotValidated,
-        answersChangedCallback = { _, _, _, _ -> },
-      )
-
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG, useUnmergedTree = true).assertTextEquals("")
-  }
-
-  @Test
   fun displaysCorrectTextOnQuestionnaireViewItemAnswerUpdate() = runComposeUiTest {
     var questionnaireViewItem by
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "integer-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
-            text = FhirR4String(value = "Age"),
+            linkId = FhirR4String(value = "string-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            text = FhirR4String(value = "First Name"),
           ),
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "integer-item"),
+            linkId = FhirR4String(value = "string-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 12))
+                    QuestionnaireResponse.Item.Answer.Value.String(
+                      value = FhirR4String(value = "Jane")
+                    )
                 )
               ),
           ),
@@ -520,24 +473,26 @@ class EditTextIntegerViewFactoryTest {
         )
       )
 
-    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("12")
+    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Jane")
 
     questionnaireViewItem =
       questionnaireViewItem.copy(
         questionnaireResponseItem =
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "integer-item"),
+            linkId = FhirR4String(value = "string-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 120))
+                    QuestionnaireResponse.Item.Answer.Value.String(
+                      value = FhirR4String(value = "Janette")
+                    )
                 )
               ),
           )
       )
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("120")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Janette")
   }
 }

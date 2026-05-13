@@ -20,11 +20,16 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 
-// TODO: Add platform-specific time formatting that observes user's 24h/12h format preferences
-//  On Android, ICU does not observe DateFormat.is24HourFormat() setting.
-//  On iOS, should respect NSLocale time format preferences.
-//  See: https://developer.android.com/guide/topics/resources/internationalization#24h-setting
-//  Currently using basic 24h format as fallback.
+
+/**
+ * TODO: Add platform-specific time formatting that observes user's 24h/12h format preferences
+ * On Android, ICU does not observe the user's 24h/12h time format setting (obtained from
+ * DateFormat.is24HourFormat()). In order to observe the setting, we must use DateFormat as
+ * suggested in the docs. On iOS, we should respect NSLocale time format preferences.
+ *
+ * See the [Android Internationalization Guide](https://developer.android.com/guide/topics/resources/internationalization#24h-setting)
+ * for details. Currently using basic 24h format as fallback
+ */
 @OptIn(FormatStringsInDatetimeFormats::class)
 internal fun LocalDateTime.toLocalizedTimeString(): String =
   LocalDateTime.Format { byUnicodePattern("HH:mm") }.format(this)

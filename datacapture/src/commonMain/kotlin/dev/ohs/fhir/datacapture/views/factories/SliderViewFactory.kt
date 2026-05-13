@@ -62,11 +62,11 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
     val answer = remember(questionnaireViewItem) { questionnaireViewItem.answers.singleOrNull() }
     val minValue =
       remember(answer) {
-        getFloatValue(questionnaireViewItem.minAnswerValue, ifNull = SLIDER_DEFAULT_VALUE_FROM)
+        getExtensionValueFloat(questionnaireViewItem.minAnswerValue, default = SLIDER_DEFAULT_VALUE_FROM)
       }
     val maxValue =
       remember(answer) {
-        getFloatValue(questionnaireViewItem.maxAnswerValue, ifNull = SLIDER_DEFAULT_VALUE_TO)
+        getExtensionValueFloat(questionnaireViewItem.maxAnswerValue, default = SLIDER_DEFAULT_VALUE_TO)
       }
 
     check(minValue < maxValue) {
@@ -123,12 +123,12 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
       is Invalid -> validationResult.singleStringValidationMessage
     }
 
-  private fun getFloatValue(extensionValue: Extension.Value?, ifNull: Float) =
+  private fun getExtensionValueFloat(extensionValue: Extension.Value?, default: Float) =
     extensionValue?.let {
       when (it) {
         is Extension.Value.Decimal -> it.value.value?.floatValue()
         is Extension.Value.Integer -> it.value.value?.toFloat()
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("Unexpected Extension.value: $extensionValue")
       }
-    } ?: ifNull
+    } ?: default
 }

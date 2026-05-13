@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Google LLC
+ * Copyright 2022-2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-package dev.ohs.fhir.catalog.views.locationwidget
+package dev.ohs.fhir.datacapture.views.factories
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-
-internal data class LocationData(
-  val latitude: Double,
-  val longitude: Double,
-  val altitude: Double? = null,
-)
-
-internal object LocationEventEmitter {
-  private val _locationUpdates = MutableSharedFlow<LocationData>(extraBufferCapacity = 1)
-  val locationUpdates = _locationUpdates.asSharedFlow()
-
-  fun emit(locationData: LocationData) {
-    _locationUpdates.tryEmit(locationData)
-  }
-}
+internal val MultiLineTextInputFactory = createStringTextInputFactory(multiLine = true)

@@ -18,13 +18,13 @@ package dev.ohs.fhir.datacapture
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.intl.Locale
 import dev.ohs.fhir.datacapture.extensions.length
 import java.text.ParseException
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
-import java.util.Locale
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
@@ -33,16 +33,14 @@ import kotlinx.datetime.toKotlinLocalDate
 
 object JVMLocalDateTimeFormatter : LocalDateTimeFormatter {
   override fun parseStringToLocalDate(str: String, pattern: String): LocalDate {
-    val localDate = java.time.LocalDate.parse(str, DateTimeFormatter.ofPattern(pattern))
+    val localDate = java.time.LocalDate.parse(str, DateTimeFormatter.ofPattern(pattern, Locale.current.platformLocale))
 
-    // Throw ParseException if year is less than 4 digits.
-    if (localDate.year.length() < 4) {
-      throw ParseException("Year has less than 4 digits.", str.indexOf('y'))
+    // Throw ParseException if year is less or more than 4 digits.
+    val yearLengthDiff = localDate.year.length() - 4
+    if (yearLengthDiff != 0) {
+      throw ParseException("Year has ${if (yearLengthDiff < 0) "less than" else "more than" } 4 digits.", str.indexOf('y'))
     }
-    // date/localDate with year more than 4 digits
-    if (localDate.year.length() > 4) {
-      throw ParseException("Year has more than 4 digits.", str.indexOf('y'))
-    }
+
     return localDate.toKotlinLocalDate()
   }
 
@@ -59,7 +57,7 @@ object JVMLocalDateTimeFormatter : LocalDateTimeFormatter {
         FormatStyle.SHORT,
         null,
         IsoChronology.INSTANCE,
-        Locale.getDefault(),
+        Locale.current.platformLocale,
       )
 
   override fun localizedTimeString(time: LocalTime): String =

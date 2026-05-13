@@ -32,6 +32,14 @@ internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider
   BindEffect(controller)
 
   return remember(lifecycleOwner) {
-    CameraPermissionProvider { controller.providePermission(Permission.CAMERA) }
+    object : CameraPermissionProvider {
+      override suspend fun providePermission() {
+        controller.providePermission(Permission.CAMERA)
+      }
+
+      override fun openSettings() {
+        controller.openAppSettings()
+      }
+    }
   }
 }

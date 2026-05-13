@@ -19,6 +19,7 @@ package dev.ohs.fhir.datacapture.extensions
 import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
 
 internal const val EXTENSION_LAST_LAUNCHED_TIMESTAMP: String =
   "http://github.com/google-android/questionnaire-lastLaunched-timestamp"
@@ -144,13 +145,13 @@ private fun unpackRepeatedGroups(
   return if (questionnaireItem.isRepeatedGroup) {
     questionnaireResponseItem.answer.map {
       QuestionnaireResponse.Item.Builder(
-          dev.ohs.fhir.model.r4.String.Builder().apply { value = questionnaireItem.linkId.value }
+          FhirString.Builder().apply { value = questionnaireItem.linkId.value }
         )
         .apply {
           linkId =
-            dev.ohs.fhir.model.r4.String.Builder().apply { value = questionnaireItem.linkId.value }
+            FhirString.Builder().apply { value = questionnaireItem.linkId.value }
           text =
-            dev.ohs.fhir.model.r4.String.Builder().apply {
+            FhirString.Builder().apply {
               value = questionnaireItem.localizedTextAnnotatedString?.toString()
             }
           item = it.item

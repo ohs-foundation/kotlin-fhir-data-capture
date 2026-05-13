@@ -32,9 +32,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BehaviorListScreen(
-  viewModel: dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel,
+  viewModel: BehaviorListViewModel,
   onBehaviorClick:
-    (dev.ohs.fhir.catalog.ui.behaviors.BehaviorListViewModel.Behavior, String) -> Unit,
+    (BehaviorListViewModel.Behavior, String) -> Unit,
 ) {
   Scaffold(topBar = { CatalogTopAppBar() }) { padding ->
     LazyVerticalGrid(

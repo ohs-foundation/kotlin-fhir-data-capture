@@ -16,9 +16,11 @@
 
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -30,9 +32,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfMaxLengthIsNull() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .build()
     val answer =
@@ -40,7 +42,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "some answer")
+              value = FhirString(value = "some answer")
             )
         }
         .build()
@@ -54,9 +56,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsLessThanMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { maxLength = Integer.Builder().apply { value = 10 } }
         .build()
@@ -65,7 +67,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "short")
+              value = FhirString(value = "short")
             )
         }
         .build()
@@ -79,9 +81,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsEqualToMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { maxLength = Integer.Builder().apply { value = 10 } }
         .build()
@@ -90,7 +92,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "1234567890")
+              value = FhirString(value = "1234567890")
             )
         }
         .build()
@@ -104,9 +106,9 @@ class MaxLengthValidatorTest {
   fun shouldReturnInvalidResultIfAnswerLengthIsGreaterThanMaxLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { maxLength = Integer.Builder().apply { value = 10 } }
         .build()
@@ -115,7 +117,7 @@ class MaxLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "very long answer")
+              value = FhirString(value = "very long answer")
             )
         }
         .build()

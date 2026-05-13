@@ -15,14 +15,18 @@ val androidNamespace: String by project
 val applicationId: String by project
 val applicationVersionCode: String by project
 val applicationVersionName: String by project
+val androidCompileSdk: String by project
+val androidMinSdk: String by project
+val androidTargetSdk: String by project
 
 android {
   namespace = androidNamespace
-  compileSdk = libs.versions.compileSdk.get().toInt()
+  compileSdk = androidCompileSdk.toInt()
 
   defaultConfig {
     applicationId = applicationId
-    minSdk = libs.versions.minSdk.get().toInt()
+    minSdk = androidMinSdk.toInt()
+    targetSdk = androidTargetSdk.toInt()
     versionCode = applicationVersionCode.toInt()
     versionName = applicationVersionName
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

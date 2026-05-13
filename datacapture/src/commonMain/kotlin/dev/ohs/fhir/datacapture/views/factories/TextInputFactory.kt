@@ -43,7 +43,7 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_an
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-class EditTextViewFactoryDelegate(
+class TextInputFactory(
   private val keyboardOptions: KeyboardOptions,
   private val uiInputText: (QuestionnaireViewItem) -> String?,
   private val handleInput: suspend (String, QuestionnaireViewItem) -> Unit,

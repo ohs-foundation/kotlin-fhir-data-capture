@@ -49,25 +49,25 @@ import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class EditTextSingleLineViewFactoryTest {
+class MultiLineTextInputFactoryTest {
 
   @Composable
-  fun QuestionnaireEditTextSingleLineView(questionnaireViewItem: QuestionnaireViewItem) {
-    QuestionnaireTheme { EditTextSingleLineViewFactory.Content(questionnaireViewItem) }
+  fun QuestionnaireEditTextMultiLineView(questionnaireViewItem: QuestionnaireViewItem) {
+    QuestionnaireTheme { MultiLineTextInputFactory.Content(questionnaireViewItem) }
   }
 
   @Test
   fun shouldSetQuestionnaireHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               text = FhirR4String(value = "Question?"),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -80,15 +80,15 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun shouldSetInputText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "string-item"),
+              linkId = FhirR4String(value = "text-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
@@ -114,11 +114,11 @@ class EditTextSingleLineViewFactoryTest {
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "string-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            linkId = FhirR4String(value = "text-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
           ),
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "string-item"),
+            linkId = FhirR4String(value = "text-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
@@ -134,17 +134,17 @@ class EditTextSingleLineViewFactoryTest {
         )
       )
 
-    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextMultiLineView(questionnaireViewItem) }
 
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Answer")
 
     questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "string-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirR4String(value = "text-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
@@ -158,15 +158,15 @@ class EditTextSingleLineViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "string-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirR4String(value = "text-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, result, _ -> answers = result },
       )
 
-    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextMultiLineView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("Answer")
     waitUntil { answers != null }
 
@@ -178,14 +178,14 @@ class EditTextSingleLineViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "string-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirR4String(value = "text-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
-    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextMultiLineView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("")
     waitForIdle()
 
@@ -193,14 +193,14 @@ class EditTextSingleLineViewFactoryTest {
   }
 
   @Test
-  fun displayValidationResult_noError_shouldShowNoErrorMessage() = runComposeUiTest {
+  fun displayValidationResultNoErrorShouldShowNoErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               extension =
                 listOf(
                   Extension(
@@ -210,7 +210,7 @@ class EditTextSingleLineViewFactoryTest {
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "string-item"),
+              linkId = FhirR4String(value = "text-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
@@ -231,14 +231,14 @@ class EditTextSingleLineViewFactoryTest {
   }
 
   @Test
-  fun displayValidationResult_error_shouldShowErrorMessage() = runComposeUiTest {
+  fun displayValidationResultErrorShouldShowErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               extension =
                 listOf(
                   Extension(
@@ -248,7 +248,7 @@ class EditTextSingleLineViewFactoryTest {
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "string-item"),
+              linkId = FhirR4String(value = "text-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
@@ -276,14 +276,14 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun hidesErrorTextviewInTheHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -296,15 +296,15 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun bindReadOnlyShouldDisableView() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               readOnly = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -317,16 +317,16 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun showAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = true),
@@ -340,16 +340,16 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun hideAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = false),
@@ -363,15 +363,15 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun showsRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = true),
@@ -385,15 +385,15 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun hideRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = false),
@@ -407,14 +407,14 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun showOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = true),
@@ -428,14 +428,14 @@ class EditTextSingleLineViewFactoryTest {
   @Test
   fun hideOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextSingleLineView(
+      QuestionnaireEditTextMultiLineView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "string-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+              linkId = FhirR4String(value = "text-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Text),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "string-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "text-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = false),
@@ -444,55 +444,5 @@ class EditTextSingleLineViewFactoryTest {
     }
 
     onNodeWithText("Optional").assertDoesNotExist()
-  }
-
-  @Test
-  fun displaysCorrectTextOnQuestionnaireViewItemAnswerUpdate() = runComposeUiTest {
-    var questionnaireViewItem by
-      mutableStateOf(
-        QuestionnaireViewItem(
-          Questionnaire.Item(
-            linkId = FhirR4String(value = "string-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
-            text = FhirR4String(value = "First Name"),
-          ),
-          QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "string-item"),
-            answer =
-              listOf(
-                QuestionnaireResponse.Item.Answer(
-                  value =
-                    QuestionnaireResponse.Item.Answer.Value.String(
-                      value = FhirR4String(value = "Jane")
-                    )
-                )
-              ),
-          ),
-          validationResult = NotValidated,
-          answersChangedCallback = { _, _, _, _ -> },
-        )
-      )
-
-    setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Jane")
-
-    questionnaireViewItem =
-      questionnaireViewItem.copy(
-        questionnaireResponseItem =
-          QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "string-item"),
-            answer =
-              listOf(
-                QuestionnaireResponse.Item.Answer(
-                  value =
-                    QuestionnaireResponse.Item.Answer.Value.String(
-                      value = FhirR4String(value = "Janette")
-                    )
-                )
-              ),
-          )
-      )
-
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("Janette")
   }
 }

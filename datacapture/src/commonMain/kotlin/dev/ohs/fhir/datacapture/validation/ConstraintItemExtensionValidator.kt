@@ -43,11 +43,7 @@ internal class ConstraintItemExtensionValidator(
     questionnaireItem.extension
       .filter { extension ->
 
-        //          TODO: Add constraint support for warning case, update the
-        // [ConstraintValidator.Result]
-        //            data class to also include warning state,
-        //            https://github.com/google/android-fhir/issues/2480
-
+        // TODO: Add constraint support for warning case, update the [ConstraintValidator.Result] data class to also include warning state, https://github.com/ohs-foundation/android-fhir/issues/2480
         extension.url == EXTENSION_QUESTIONNAIRE_CONSTRAINT_URL &&
           ConstraintSeverityTypes.ERROR.code ==
             extension.extension

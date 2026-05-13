@@ -53,10 +53,10 @@ import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class EditTextPhoneNumberViewFactoryTest {
+class PhoneNumberTextInputFactoryTest {
   @Composable
   fun QuestionnaireEditTextPhoneNumberView(questionnaireViewItem: QuestionnaireViewItem) {
-    QuestionnaireTheme { EditTextPhoneNumberViewFactory.Content(questionnaireViewItem) }
+    QuestionnaireTheme { PhoneNumberTextInputFactory.Content(questionnaireViewItem) }
   }
 
   @Test

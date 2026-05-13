@@ -16,4 +16,4 @@
 
 package dev.ohs.fhir.datacapture.views.factories
 
-internal val EditTextSingleLineViewFactory = createEditTextStringViewHolderDelegate()
+internal val SingleLineTextInputFactory = createStringTextInputFactory()

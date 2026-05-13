@@ -29,7 +29,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
-import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
@@ -40,37 +39,34 @@ import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.ERROR_TEXT_AT_HEADER_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
-import dev.ohs.fhir.datacapture.views.components.UNIT_TEXT_TEST_TAG
-import dev.ohs.fhir.model.r4.Code
-import dev.ohs.fhir.model.r4.Coding
-import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class EditTextDecimalViewFactoryTest {
+class IntegerTextInputFactoryTest {
+
   @Composable
-  fun QuestionnaireEditTextDecimalView(questionnaireViewItem: QuestionnaireViewItem) {
-    QuestionnaireTheme { EditTextDecimalViewFactory.Content(questionnaireViewItem) }
+  fun QuestionnaireEditTextIntegerView(questionnaireViewItem: QuestionnaireViewItem) {
+    QuestionnaireTheme { IntegerTextInputFactory.Content(questionnaireViewItem) }
   }
 
   @Test
   fun shouldSetQuestionnaireHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               text = FhirR4String(value = "Question?"),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -83,22 +79,20 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun shouldSetInputText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "decimal-item"),
+              linkId = FhirR4String(value = "integer-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "1.1".toBigDecimal())
-                      )
+                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 5))
                   )
                 ),
             ),
@@ -108,7 +102,7 @@ class EditTextDecimalViewFactoryTest {
       )
     }
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("1.1")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("5")
   }
 
   @Test
@@ -117,18 +111,16 @@ class EditTextDecimalViewFactoryTest {
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "decimal-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+            linkId = FhirR4String(value = "integer-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
           ),
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "decimal-item"),
+            linkId = FhirR4String(value = "integer-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "1.1".toBigDecimal())
-                    )
+                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 5))
                 )
               ),
           ),
@@ -137,107 +129,22 @@ class EditTextDecimalViewFactoryTest {
         )
       )
 
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("1.1")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("5")
 
     questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+          linkId = FhirR4String(value = "integer-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
 
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("")
-  }
-
-  @Test
-  fun shouldSetUnitText() = runComposeUiTest {
-    val questionnaireViewItem =
-      QuestionnaireViewItem(
-        Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
-          extension =
-            listOf(
-              Extension(
-                url = "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
-                value = Extension.Value.Coding(value = Coding(code = Code(value = "kg"))),
-              )
-            ),
-        ),
-        QuestionnaireResponse.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          answer =
-            listOf(
-              QuestionnaireResponse.Item.Answer(
-                value =
-                  QuestionnaireResponse.Item.Answer.Value.Decimal(
-                    value = Decimal(value = "1.1".toBigDecimal())
-                  )
-              )
-            ),
-        ),
-        validationResult = NotValidated,
-        answersChangedCallback = { _, _, _, _ -> },
-      )
-
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
-
-    onNodeWithTag(UNIT_TEXT_TEST_TAG).assertIsDisplayed().assertTextEquals("kg")
-  }
-
-  @Test
-  fun shouldClearUnitText() = runComposeUiTest {
-    var questionnaireViewItem by
-      mutableStateOf(
-        QuestionnaireViewItem(
-          Questionnaire.Item(
-            linkId = FhirR4String(value = "decimal-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
-            extension =
-              listOf(
-                Extension(
-                  url = "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
-                  value = Extension.Value.Coding(value = Coding(code = Code("kg"))),
-                )
-              ),
-          ),
-          QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "decimal-item"),
-            answer =
-              listOf(
-                QuestionnaireResponse.Item.Answer(
-                  value =
-                    QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "1.1".toBigDecimal())
-                    )
-                )
-              ),
-          ),
-          validationResult = NotValidated,
-          answersChangedCallback = { _, _, _, _ -> },
-        )
-      )
-
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
-    questionnaireViewItem =
-      QuestionnaireViewItem(
-        Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
-        ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
-        validationResult = NotValidated,
-        answersChangedCallback = { _, _, _, _ -> },
-      )
-
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("")
-    onNodeWithTag(UNIT_TEXT_TEST_TAG).assertDoesNotExist()
   }
 
   @Test
@@ -246,19 +153,19 @@ class EditTextDecimalViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+          linkId = FhirR4String(value = "integer-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, result, _ -> answers = result },
       )
 
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1.1")
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("13")
     waitUntil { answers != null }
 
-    answers!!.single().value?.asDecimal()?.value?.value.shouldBe(1.1.toBigDecimal())
+    answers!!.single().value!!.asInteger()!!.value.value.shouldBe(13)
   }
 
   @Test
@@ -266,18 +173,18 @@ class EditTextDecimalViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+          linkId = FhirR4String(value = "integer-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("")
     waitForIdle()
 
-    questionnaireViewItem.answers.shouldBeEmpty()
+    questionnaireViewItem.answers.isEmpty()
   }
 
   @Test
@@ -286,50 +193,48 @@ class EditTextDecimalViewFactoryTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+          linkId = FhirR4String(value = "integer-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, result -> draftAnswer = result },
       )
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1.1.1.1")
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
+    // The character in 1O2 is the letter O, not the number 0
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1O2")
     waitUntil { draftAnswer != null }
-
-    (draftAnswer as String).shouldBe("1.1.1.1")
+    (draftAnswer as String).shouldBe("1O2")
   }
 
   @Test
   fun displayValidationResultShouldShowNoErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               extension =
                 listOf(
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "2.2".toBigDecimal())),
+                    value = Extension.Value.Integer(value = Integer(value = 2)),
                   ),
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "4.4".toBigDecimal())),
+                    value = Extension.Value.Integer(value = Integer(value = 4)),
                   ),
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "decimal-item"),
+              linkId = FhirR4String(value = "integer-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "3.3".toBigDecimal())
-                      )
+                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 3))
                   )
                 ),
             ),
@@ -345,57 +250,55 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun displayValidationResultShouldShowErrorMessage() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               extension =
                 listOf(
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "2.1".toBigDecimal())),
+                    value = Extension.Value.Integer(value = Integer(value = 2)),
                   ),
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "4.2".toBigDecimal())),
+                    value = Extension.Value.Integer(value = Integer(value = 4)),
                   ),
                 ),
             ),
             QuestionnaireResponse.Item(
-              linkId = FhirR4String(value = "decimal-item"),
+              linkId = FhirR4String(value = "integer-item"),
               answer =
                 listOf(
                   QuestionnaireResponse.Item.Answer(
                     value =
-                      QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "1.1".toBigDecimal())
-                      )
+                      QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 1))
                   )
                 ),
             ),
-            validationResult = Invalid(listOf("Minimum value allowed is:2.1")),
+            validationResult = Invalid(listOf("Minimum value allowed is:2")),
             answersChangedCallback = { _, _, _, _ -> },
           )
       )
     }
 
     onNodeWithContentDescription("Error").assertIsDisplayed()
-    onNodeWithText("Minimum value allowed is:2.1").assertIsDisplayed()
+    onNodeWithText("Minimum value allowed is:2").assertIsDisplayed()
   }
 
   @Test
   fun hidesErrorTextviewInTheHeader() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -408,15 +311,15 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun bindReadOnlyShouldDisableView() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               readOnly = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
           )
@@ -429,16 +332,16 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun showAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = true),
@@ -452,16 +355,16 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun hideAsterisk() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               text = FhirR4String(value = "Question?"),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showAsterisk = false),
@@ -475,15 +378,15 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun showsRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = true),
@@ -497,15 +400,15 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun hideRequiredText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
               required = FhirR4Boolean(value = true),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showRequiredText = false),
@@ -519,14 +422,14 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun showOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = true),
@@ -540,14 +443,14 @@ class EditTextDecimalViewFactoryTest {
   @Test
   fun hideOptionalText() = runComposeUiTest {
     setContent {
-      QuestionnaireEditTextDecimalView(
+      QuestionnaireEditTextIntegerView(
         questionnaireViewItem =
           QuestionnaireViewItem(
             Questionnaire.Item(
-              linkId = FhirR4String(value = "decimal-item"),
-              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+              linkId = FhirR4String(value = "integer-item"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
             ),
-            QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
             validationResult = NotValidated,
             answersChangedCallback = { _, _, _, _ -> },
             questionViewTextConfiguration = QuestionTextConfiguration(showOptionalText = false),
@@ -564,27 +467,27 @@ class EditTextDecimalViewFactoryTest {
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "decimal-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+            linkId = FhirR4String(value = "integer-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
           ),
-          QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+          QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
           validationResult = NotValidated,
           answersChangedCallback = { _, _, _, _ -> },
-          draftAnswer = "1.1.1.1",
+          draftAnswer = "9999999999",
         )
       )
 
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
 
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG, useUnmergedTree = true).assertTextEquals("1.1.1.1")
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG, useUnmergedTree = true).assertTextEquals("9999999999")
 
     questionnaireViewItem =
       QuestionnaireViewItem(
         Questionnaire.Item(
-          linkId = FhirR4String(value = "decimal-item"),
-          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
+          linkId = FhirR4String(value = "integer-item"),
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         ),
-        QuestionnaireResponse.Item(linkId = FhirR4String(value = "decimal-item")),
+        QuestionnaireResponse.Item(linkId = FhirR4String(value = "integer-item")),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, _, _ -> },
       )
@@ -598,19 +501,17 @@ class EditTextDecimalViewFactoryTest {
       mutableStateOf(
         QuestionnaireViewItem(
           Questionnaire.Item(
-            linkId = FhirR4String(value = "decimal-item"),
-            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Decimal),
-            text = FhirR4String(value = "Weight"),
+            linkId = FhirR4String(value = "integer-item"),
+            type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
+            text = FhirR4String(value = "Age"),
           ),
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "decimal-item"),
+            linkId = FhirR4String(value = "integer-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "124.5".toBigDecimal())
-                    )
+                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 12))
                 )
               ),
           ),
@@ -619,25 +520,24 @@ class EditTextDecimalViewFactoryTest {
         )
       )
 
-    setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("124.5")
+    setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("12")
 
     questionnaireViewItem =
       questionnaireViewItem.copy(
         questionnaireResponseItem =
           QuestionnaireResponse.Item(
-            linkId = FhirR4String(value = "decimal-item"),
+            linkId = FhirR4String(value = "integer-item"),
             answer =
               listOf(
                 QuestionnaireResponse.Item.Answer(
                   value =
-                    QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "124.578".toBigDecimal())
-                    )
+                    QuestionnaireResponse.Item.Answer.Value.Integer(value = Integer(value = 120))
                 )
               ),
           )
       )
-    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("124.578")
+
+    onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).assertTextEquals("120")
   }
 }

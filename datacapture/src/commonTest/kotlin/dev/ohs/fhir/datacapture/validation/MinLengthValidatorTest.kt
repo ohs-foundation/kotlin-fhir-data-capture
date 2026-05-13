@@ -16,10 +16,12 @@
 
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -31,9 +33,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfMinLengthExtensionIsNotPresent() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .build()
     val answer =
@@ -41,7 +43,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "some answer")
+              value = FhirString(value = "some answer")
             )
         }
         .build()
@@ -55,9 +57,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsGreaterThanMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply {
           extension =
@@ -74,7 +76,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "longer than 5")
+              value = FhirString(value = "longer than 5")
             )
         }
         .build()
@@ -88,9 +90,9 @@ class MinLengthValidatorTest {
   fun shouldReturnValidResultIfAnswerLengthIsEqualToMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply {
           extension =
@@ -107,7 +109,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "12345")
+              value = FhirString(value = "12345")
             )
         }
         .build()
@@ -121,9 +123,9 @@ class MinLengthValidatorTest {
   fun shouldReturnInvalidResultIfAnswerLengthIsLessThanMinLength() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply {
           extension =
@@ -140,7 +142,7 @@ class MinLengthValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.String(
-              value = dev.ohs.fhir.model.r4.String(value = "123")
+              value = FhirString(value = "123")
             )
         }
         .build()

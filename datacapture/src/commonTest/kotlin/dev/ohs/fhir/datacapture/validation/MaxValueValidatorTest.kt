@@ -28,6 +28,7 @@ import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.QuestionnaireResponse.QuestionnaireResponseStatus
+import dev.ohs.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -47,7 +48,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfMaxValueExtensionIsNotPresent() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         )
         .build()
@@ -67,7 +68,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfAnswerValueIsLessThanMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         )
         .apply {
@@ -96,7 +97,7 @@ class MaxValueValidatorTest {
   fun shouldReturnValidResultIfAnswerValueIsEqualToMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         )
         .apply {
@@ -125,7 +126,7 @@ class MaxValueValidatorTest {
   fun shouldReturnInvalidResultIfAnswerValueIsGreaterThanMaxValue() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
+          linkId = FhirString.Builder().apply { value = "link-id" },
           type = Enumeration(value = Questionnaire.QuestionnaireItemType.Integer),
         )
         .apply {

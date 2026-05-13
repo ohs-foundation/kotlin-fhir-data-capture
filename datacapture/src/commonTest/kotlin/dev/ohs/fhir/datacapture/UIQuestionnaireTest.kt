@@ -18,6 +18,7 @@ package dev.ohs.fhir.datacapture
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
@@ -38,7 +39,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.testing.TestLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
@@ -70,8 +70,7 @@ import org.jetbrains.compose.resources.getString
 class UIQuestionnaireTest {
 
   private val fhirR4Json = FhirR4Json()
-
-  @BeforeTest
+  
   @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {
     setQuestionnaireContent("files/paginated_questionnaire_with_dependent_answer.json", true)

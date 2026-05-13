@@ -18,8 +18,10 @@ package dev.ohs.fhir.catalog.views.barcode
 
 import androidx.compose.runtime.Composable
 
-internal fun interface CameraPermissionProvider {
+internal interface CameraPermissionProvider {
   suspend fun providePermission()
+
+  fun openSettings()
 }
 
 @Composable internal expect fun rememberCameraPermissionProvider(): CameraPermissionProvider

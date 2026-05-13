@@ -16,6 +16,7 @@
 
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
@@ -33,7 +34,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .build()
     val answer =
@@ -57,7 +58,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply {
           extension =
@@ -90,7 +91,7 @@ class RegexValidatorTest {
       Questionnaire.Item.Builder(
           linkId = FhirString.Builder().apply { value = "link-id" },
           type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+            Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply {
           extension =

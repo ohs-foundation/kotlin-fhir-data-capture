@@ -20,7 +20,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
-import dev.ohs.fhir.datacapture.QuestionnaireViewHolderType
+import dev.ohs.fhir.datacapture.QuestionnaireItemViewType
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Coding
@@ -175,19 +175,19 @@ internal const val ITEM_INITIAL_EXPRESSION_URL: String =
 /**
  * Item control types supported by the SDC library with `extensionCode` from the value set
  * http://hl7.org/fhir/R4/valueset-questionnaire-item-control.html and `viewHolderType` as the
- * [QuestionnaireViewHolderType] to be used to render the question.
+ * [QuestionnaireItemViewType] to be used to render the question.
  */
 enum class ItemControlTypes(
   val extensionCode: String,
-  val viewHolderType: QuestionnaireViewHolderType,
+  val viewHolderType: QuestionnaireItemViewType,
 ) {
-  AUTO_COMPLETE("autocomplete", QuestionnaireViewHolderType.AUTO_COMPLETE),
-  CHECK_BOX("check-box", QuestionnaireViewHolderType.CHECK_BOX_GROUP),
-  DROP_DOWN("drop-down", QuestionnaireViewHolderType.DROP_DOWN),
-  OPEN_CHOICE("open-choice", QuestionnaireViewHolderType.DIALOG_SELECT),
-  RADIO_BUTTON("radio-button", QuestionnaireViewHolderType.RADIO_GROUP),
-  SLIDER("slider", QuestionnaireViewHolderType.SLIDER),
-  PHONE_NUMBER("phone-number", QuestionnaireViewHolderType.PHONE_NUMBER),
+  AUTO_COMPLETE("autocomplete", QuestionnaireItemViewType.AUTO_COMPLETE),
+  CHECK_BOX("check-box", QuestionnaireItemViewType.CHECK_BOX_GROUP),
+  DROP_DOWN("drop-down", QuestionnaireItemViewType.DROP_DOWN),
+  OPEN_CHOICE("open-choice", QuestionnaireItemViewType.DIALOG_SELECT),
+  RADIO_BUTTON("radio-button", QuestionnaireItemViewType.RADIO_GROUP),
+  SLIDER("slider", QuestionnaireItemViewType.SLIDER),
+  PHONE_NUMBER("phone-number", QuestionnaireItemViewType.PHONE_NUMBER),
 }
 
 /**
@@ -236,8 +236,8 @@ private val Questionnaire.Item.hasDialogExtension: Boolean
 val Questionnaire.Item.shouldUseDialog: Boolean
   get() =
     this.hasDialogExtension &&
-      (this.itemControl?.viewHolderType == QuestionnaireViewHolderType.CHECK_BOX_GROUP ||
-        this.itemControl?.viewHolderType == QuestionnaireViewHolderType.RADIO_GROUP)
+      (this.itemControl?.viewHolderType == QuestionnaireItemViewType.CHECK_BOX_GROUP ||
+        this.itemControl?.viewHolderType == QuestionnaireItemViewType.RADIO_GROUP)
 
 /**
  * The desired orientation for the list of choices.

@@ -32,8 +32,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LayoutListScreen(
-  viewModel: dev.ohs.fhir.catalog.ui.layouts.LayoutListViewModel,
-  onLayoutClick: (dev.ohs.fhir.catalog.ui.layouts.LayoutListViewModel.Layout, String) -> Unit,
+  viewModel: LayoutListViewModel,
+  onLayoutClick: (LayoutListViewModel.Layout, String) -> Unit,
 ) {
   Scaffold(topBar = { CatalogTopAppBar() }) { padding ->
     LazyVerticalGrid(

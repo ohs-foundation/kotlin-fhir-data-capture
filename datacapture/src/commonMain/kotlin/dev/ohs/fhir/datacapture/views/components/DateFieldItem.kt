@@ -60,6 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Duration.Companion.milliseconds
 
 internal const val DATE_TEXT_INPUT_FIELD = "date_picker_text_field"
 
@@ -101,7 +102,7 @@ internal fun DateFieldItem(
         typingJob?.cancel() // Cancel previous debounce
         typingJob =
           coroutineScope.launch {
-            delay(delayInMillis) // Debounce delay
+            delay(delayInMillis.milliseconds) // Debounce delay
             if (newDateInput != dateInput) {
               onDateInputEntry(newDateInput)
             }

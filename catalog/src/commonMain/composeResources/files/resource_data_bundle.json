@@ -1,5 +1,6 @@
 {
   "resourceType": "Bundle",
+  "type": "collection",
   "entry": [
     {
       "resource": {
@@ -12,6 +13,7 @@
         "resourceType": "Task",
         "id": "b8e13d21-1a62-4172-a9ef-57670e6ac238",
         "status": "ready",
+        "intent": "order",
         "code": {
           "coding": [
             {
@@ -47,6 +49,7 @@
         "resourceType": "Task",
         "id": "4090ba9a-fbbb-4634-a06d-0cbe938ab090",
         "status": "cancelled",
+        "intent": "order",
         "code": {
           "coding": [
             {
@@ -82,6 +85,7 @@
         "resourceType": "Task",
         "id": "087e82c6-e346-4725-8db1-7e10aec99be9",
         "status": "ready",
+        "intent": "order",
         "code": {
           "coding": [
             {

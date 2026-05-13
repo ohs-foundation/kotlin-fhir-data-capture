@@ -17,9 +17,17 @@
 package dev.ohs.fhir.catalog.views.barcode
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
 @Composable
-internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider =
-  CameraPermissionProvider {
-    throw NotImplementedError("Not supported")
+internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember{
+  object : CameraPermissionProvider {
+    override suspend fun providePermission() {
+      throw NotImplementedError("Not supported")
+    }
+
+    override fun openSettings() {
+      throw NotImplementedError("Not supported")
+    }
   }
+}

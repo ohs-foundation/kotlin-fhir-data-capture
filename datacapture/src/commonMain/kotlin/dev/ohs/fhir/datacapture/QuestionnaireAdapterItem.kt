@@ -27,14 +27,19 @@ internal sealed interface QuestionnaireAdapterItem {
     var id: String? = item.questionnaireItem.linkId.value
   }
 
-  /** A row for a repeated group response instance's header. */
+  /**
+   * A row for a repeated group response instance's header.
+   *
+   * @property id Unique identifier for this header row.
+   * @property index The response index. 0-indexed, but should be rendered as 1-indexed in the UI.
+   * @property onDeleteClicked Callback invoked when the user clicks the delete button.
+   * @property responses Responses nested under this header.
+   * @property title Display title shown in the header.
+   */
   data class RepeatedGroupHeader(
     val id: String,
-    /** The response index. This is 0-indexed, but should be 1-indexed when rendered in the UI. */
     val index: Int,
-    /** Callback that is invoked when the user clicks the delete button. */
     val onDeleteClicked: () -> Unit,
-    /** Responses nested under this header. */
     val responses: List<QuestionnaireResponse.Item>,
     val title: String,
   ) : QuestionnaireAdapterItem

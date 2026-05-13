@@ -24,8 +24,8 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 
-internal val EditTextPhoneNumberViewFactory =
-  EditTextViewFactoryDelegate(
+internal val PhoneNumberTextInputFactory =
+  TextInputFactory(
     KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Done),
     uiInputText = { it.answers.singleOrNull()?.value?.asString()?.value?.value ?: "" },
     handleInput = { inputText, questionnaireViewItem ->

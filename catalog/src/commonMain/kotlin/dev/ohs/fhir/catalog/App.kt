@@ -60,21 +60,21 @@ import org.jetbrains.compose.resources.painterResource
 
 sealed class Screen(val route: String, val label: String, val icon: @Composable () -> Unit) {
   object Components :
-    dev.ohs.fhir.catalog.Screen(
+    Screen(
       "component_list",
       "Components",
       { Icon(painterResource(Res.drawable.ic_components), contentDescription = null) },
     )
 
   object Layouts :
-    dev.ohs.fhir.catalog.Screen(
+    Screen(
       "layout_list",
       "Layouts",
       { Icon(painterResource(Res.drawable.ic_layouts), contentDescription = null) },
     )
 
   object Behaviors :
-    dev.ohs.fhir.catalog.Screen(
+    Screen(
       "behavior_list",
       "Behaviors",
       { Icon(painterResource(Res.drawable.ic_behaviors), contentDescription = null) },
@@ -86,7 +86,6 @@ fun App() {
   AppTheme {
     Surface {
       val navController: NavHostController = rememberNavController()
-      val scope: CoroutineScope = rememberCoroutineScope()
       val componentViewModel: ComponentListViewModel = viewModel { ComponentListViewModel() }
       val layoutViewModel: LayoutListViewModel = viewModel { LayoutListViewModel() }
       val behaviorViewModel: BehaviorListViewModel = viewModel { BehaviorListViewModel() }
@@ -133,7 +132,7 @@ fun App() {
                 val validationPart =
                   component.questionnaireFileWithValidation?.let { "?validationFile=$it" } ?: ""
                 navController.navigate(
-                  "questionnaire/${component.questionnaireFile}/$title/false/false/false$validationPart"
+                  "questionnaire/${component.questionnaireFile}/$title$validationPart"
                 )
               },
             )
@@ -143,7 +142,7 @@ fun App() {
               viewModel = layoutViewModel,
               onLayoutClick = { layout, title ->
                 navController.navigate(
-                  "questionnaire/${layout.questionnaireFileName}/$title/${layout.showReviewPage}/${layout.showReviewPageFirst}/${layout.isReadOnly}"
+                  "questionnaire/${layout.questionnaireFileName}/$title?showReviewPage=${layout.showReviewPage}&showReviewPageFirst=${layout.showReviewPageFirst}&isReadOnly=${layout.isReadOnly}"
                 )
               },
             )
@@ -153,44 +152,51 @@ fun App() {
               viewModel = behaviorViewModel,
               onBehaviorClick = { behavior, title ->
                 navController.navigate(
-                  "questionnaire/${behavior.questionnaireFileName}/$title/false/false/false"
+                  "questionnaire/${behavior.questionnaireFileName}/$title"
                 )
               },
             )
           }
           composable(
             route =
-              "questionnaire/{fileName}/{title}/{review}/{reviewFirst}/{readOnly}?validationFile={validationFile}",
+              "questionnaire/{fileName}/{title}?showReviewPage={review}&showReviewPageFirst={reviewFirst}&isReadOnly={readOnly}&validationFile={validationFile}",
             arguments =
               listOf(
                 navArgument("fileName") { type = NavType.StringType },
                 navArgument("title") { type = NavType.StringType },
-                navArgument("review") { type = NavType.BoolType },
-                navArgument("reviewFirst") { type = NavType.BoolType },
-                navArgument("readOnly") { type = NavType.BoolType },
+                navArgument("review") {
+                  type = NavType.BoolType
+                  defaultValue = false
+                },
+                navArgument("reviewFirst") {
+                  type = NavType.BoolType
+                  defaultValue = false
+                },
+                navArgument("readOnly") {
+                  type = NavType.BoolType
+                  defaultValue = false
+                },
                 navArgument("validationFile") {
                   type = NavType.StringType
                   nullable = true
                 },
               ),
           ) { backStackEntry ->
-            val arguments = backStackEntry.arguments
+            val arguments = backStackEntry.arguments!!
             val fileName =
-              arguments?.read { if (contains("fileName")) getString("fileName") else null } ?: ""
+                arguments.read { if (contains("fileName")) getString("fileName") else "" }
             val title =
-              arguments?.read { if (contains("title")) getString("title") else null } ?: ""
+                arguments.read { if (contains("title")) getString("title") else "" }
             val review =
-              arguments?.read { if (contains("review")) getBoolean("review") else null } ?: false
+                arguments.read { if (contains("review")) getBoolean("review") else false }
             val reviewFirst =
-              arguments?.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else null }
-                ?: false
+                arguments.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else false }
             val readOnly =
-              arguments?.read { if (contains("readOnly")) getBoolean("readOnly") else null }
-                ?: false
+                arguments.read { if (contains("readOnly")) getBoolean("readOnly") else false }
             val validationFile =
-              arguments?.read {
-                if (contains("validationFile")) getString("validationFile") else null
-              }
+                arguments.read {
+                    if (contains("validationFile")) getString("validationFile") else null
+                }
 
             QuestionnaireScreen(
               viewModel = viewModel { QuestionnaireViewModel() },
@@ -200,7 +206,6 @@ fun App() {
               showReviewPage = review,
               showReviewPageFirst = reviewFirst,
               isReadOnly = readOnly,
-              coroutineScope = scope,
               onBackClick = { navController.popBackStack() },
               navigateToResponse = { responseJson ->
                 submittedResponseJson = responseJson

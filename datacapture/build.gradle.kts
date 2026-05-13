@@ -14,14 +14,16 @@ plugins {
 }
 
 val androidNamespace: String by project
+val androidCompileSdk: String by project
+val androidMinSdk: String by project
 
 kotlin {
   jvmToolchain(21)
 
   androidLibrary {
     namespace = androidNamespace
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    minSdk = libs.versions.minSdk.get().toInt()
+    compileSdk = androidCompileSdk.toInt()
+    minSdk = androidMinSdk.toInt()
     withJava()
     withHostTestBuilder {}
     withDeviceTestBuilder { sourceSetTreeName = "test" }

@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
@@ -49,7 +50,14 @@ internal const val GPS_COORDINATE_EXTENSION_VALUE_LATITUDE = "latitude"
 internal const val GPS_COORDINATE_EXTENSION_VALUE_LONGITUDE = "longitude"
 internal const val GPS_COORDINATE_EXTENSION_VALUE_ALTITUDE = "altitude"
 
-object LocationDataItemViewFactory : QuestionnaireItemViewFactory {
+/**
+ * Renders a read-only coordinate field for a questionnaire item carrying a GPS coordinate
+ * extension (`latitude`, `longitude`, or `altitude`). Subscribes to [LocationEventBus] and
+ * writes the relevant coordinate value to the questionnaire answer when a location is captured.
+ *
+ * @see LocationCaptureItemViewFactory for the button that triggers the location fetch.
+ */
+object LocationCoordinateItemViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
@@ -86,10 +94,12 @@ object LocationDataItemViewFactory : QuestionnaireItemViewFactory {
 
     var textState by remember(answer) { mutableStateOf(answer) }
 
+    val currentViewItem by rememberUpdatedState(questionnaireViewItem)
+
     LaunchedEffect(Unit) {
-      LocationEventEmitter.locationUpdates.collect { locationData ->
+      LocationEventBus.locationUpdates.collect { locationData ->
         val gpsCoordinateExtensionValue =
-          questionnaireViewItem.questionnaireItem.gpsCoordinateValueString
+          currentViewItem.questionnaireItem.gpsCoordinateValueString
 
         val questionnaireResponseAnswerValue =
           when (gpsCoordinateExtensionValue) {
@@ -114,7 +124,7 @@ object LocationDataItemViewFactory : QuestionnaireItemViewFactory {
           }
 
         if (questionnaireResponseAnswerValue != null) {
-          questionnaireViewItem.setAnswer(
+          currentViewItem.setAnswer(
             QuestionnaireResponse.Item.Answer(value = questionnaireResponseAnswerValue)
           )
         }
@@ -156,8 +166,8 @@ internal val Questionnaire.Item.gpsCoordinateValueString: String?
       ?.value
       ?.value
 
-val LocationDataItemViewFactoryMatcher =
-  QuestionnaireItemViewFactoryMatcher(LocationDataItemViewFactory) {
+val LocationCoordinateItemViewFactoryMatcher =
+  QuestionnaireItemViewFactoryMatcher(LocationCoordinateItemViewFactory) {
     it.extension.any { extension ->
       extension.url == PRIMARY_GPS_COORDINATE_EXTENSION_URL ||
         extension.url == GPS_COORDINATE_EXTENSION_URL

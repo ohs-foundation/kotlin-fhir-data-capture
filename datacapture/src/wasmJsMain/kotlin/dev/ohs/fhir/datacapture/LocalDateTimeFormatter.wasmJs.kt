@@ -38,14 +38,12 @@ object WasmJsLocalDateTimeFormatter : LocalDateTimeFormatter {
     val dateFormat = LocalDate.Format { byUnicodePattern(pattern) }
     val localDate = LocalDate.parse(str, dateFormat)
 
-    // Validate year has exactly 4 digits
-    if (localDate.year.length() < 4) {
-      throw IllegalArgumentException("Year has less than 4 digits.")
+    // Throw if year is less or more than 4 digits.
+    val yearLengthDiff = localDate.year.length() - 4
+    if (yearLengthDiff != 0) {
+      throw IllegalArgumentException("Year has ${if (yearLengthDiff < 0) "less than" else "more than" } 4 digits.")
     }
-    // date/localDate with year more than 4 digits
-    if (localDate.year.length() > 4) {
-      throw IllegalArgumentException("Year has more than 4 digits.")
-    }
+
     return localDate
   }
 

@@ -26,13 +26,13 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 
 /**
- * Implementation of [EditTextViewFactoryDelegate] used in [EditTextSingleLineViewFactory] and
- * [EditTextMultiLineViewFactory].
+ * Implementation of [TextInputFactory] used in [SingleLineTextInputFactory] and
+ * [MultiLineTextInputFactory].
  *
  * Any `ViewHolder` containing a `EditText` view that collects text data should use this class.
  */
-internal fun createEditTextStringViewHolderDelegate(multiLine: Boolean = false) =
-  EditTextViewFactoryDelegate(
+internal fun createStringTextInputFactory(multiLine: Boolean = false) =
+  TextInputFactory(
     KeyboardOptions(
       keyboardType = KeyboardType.Text,
       capitalization = KeyboardCapitalization.Sentences,

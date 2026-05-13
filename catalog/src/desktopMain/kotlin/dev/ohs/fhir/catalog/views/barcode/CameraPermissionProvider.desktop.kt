@@ -21,5 +21,11 @@ import androidx.compose.runtime.remember
 
 @Composable
 internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember {
-  CameraPermissionProvider {}
+  object : CameraPermissionProvider {
+    override suspend fun providePermission() {
+    }
+
+    override fun openSettings() {
+    }
+  }
 }

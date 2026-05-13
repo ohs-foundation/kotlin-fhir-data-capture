@@ -79,7 +79,7 @@ internal fun OptionDialogSelect(
   title: AnnotatedString,
   multiSelect: Boolean,
   otherOptionsAllowed:
-    Boolean, // Client had to specify that they want an open-choice control to use "Other" options
+    Boolean,
   selectedOptions: SelectedOptions,
   onDismiss: () -> Unit,
   onConfirm: (SelectedOptions) -> Unit,
@@ -103,16 +103,10 @@ internal fun OptionDialogSelect(
 
   LaunchedEffect(otherOptionRowSelected, otherOptionEditTexts.size) {
     if (otherOptionRowSelected) {
-      val listSize =
-        choiceOptions.size +
-          if (otherOptionsAllowed) {
-            1
-          } else {
-            0
-          } +
-          otherOptionEditTexts.size +
-          if (showAddAnother) 1 else 0
-      listState.animateScrollToItem(listSize - 1)
+      var lastIndex = choiceOptions.size + otherOptionEditTexts.size - 1
+      if (otherOptionsAllowed) lastIndex++
+      if (showAddAnother) lastIndex++
+      listState.animateScrollToItem(lastIndex)
     }
   }
 

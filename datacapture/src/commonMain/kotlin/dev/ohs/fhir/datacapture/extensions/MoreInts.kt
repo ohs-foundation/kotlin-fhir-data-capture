@@ -16,12 +16,7 @@
 
 package dev.ohs.fhir.datacapture.extensions
 
-import kotlin.math.abs
-import kotlin.math.log10
+import kotlin.math.absoluteValue
 
 // Count the number of digits in an Integer
-fun Int.length() =
-  when (this) {
-    0 -> 1
-    else -> log10(abs(toDouble())).toInt() + 1
-  }
+fun Int.length() = this.absoluteValue.toString().length
