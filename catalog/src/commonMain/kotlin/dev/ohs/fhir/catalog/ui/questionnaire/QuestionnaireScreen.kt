@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 Google LLC
+ * Copyright 2025-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.catalog.ui.questionnaire
 
 import androidx.compose.foundation.layout.Box
@@ -63,7 +62,6 @@ import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_skip_l
 import kotlin_fhir_data_capture.catalog.generated.resources.behavior_name_skip_logic_info
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_info_24
 import kotlin_fhir_data_capture.catalog.generated.resources.loading
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

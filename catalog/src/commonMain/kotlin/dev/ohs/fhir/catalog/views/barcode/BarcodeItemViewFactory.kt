@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Google LLC
+ * Copyright 2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.catalog.views.barcode
 
 import androidx.compose.foundation.clickable
@@ -151,9 +150,7 @@ internal object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
             Button(
               onClick = {
                 showPermissionError = false
-                coroutineScope.launch {
-                    cameraPermissionProvider.openSettings()
-                }
+                coroutineScope.launch { cameraPermissionProvider.openSettings() }
               }
             ) {
               Text(stringResource(Res.string.open_settings))

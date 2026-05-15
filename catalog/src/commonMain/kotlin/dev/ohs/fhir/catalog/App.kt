@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 Google LLC
+ * Copyright 2025-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.catalog
 
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,7 +53,6 @@ import kotlin_fhir_data_capture.catalog.generated.resources.Res
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_behaviors
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_components
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_layouts
-import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.painterResource
 
 sealed class Screen(val route: String, val label: String, val icon: @Composable () -> Unit) {
@@ -151,9 +148,7 @@ fun App() {
             BehaviorListScreen(
               viewModel = behaviorViewModel,
               onBehaviorClick = { behavior, title ->
-                navController.navigate(
-                  "questionnaire/${behavior.questionnaireFileName}/$title"
-                )
+                navController.navigate("questionnaire/${behavior.questionnaireFileName}/$title")
               },
             )
           }
@@ -184,19 +179,17 @@ fun App() {
           ) { backStackEntry ->
             val arguments = backStackEntry.arguments!!
             val fileName =
-                arguments.read { if (contains("fileName")) getString("fileName") else "" }
-            val title =
-                arguments.read { if (contains("title")) getString("title") else "" }
-            val review =
-                arguments.read { if (contains("review")) getBoolean("review") else false }
+              arguments.read { if (contains("fileName")) getString("fileName") else "" }
+            val title = arguments.read { if (contains("title")) getString("title") else "" }
+            val review = arguments.read { if (contains("review")) getBoolean("review") else false }
             val reviewFirst =
-                arguments.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else false }
+              arguments.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else false }
             val readOnly =
-                arguments.read { if (contains("readOnly")) getBoolean("readOnly") else false }
+              arguments.read { if (contains("readOnly")) getBoolean("readOnly") else false }
             val validationFile =
-                arguments.read {
-                    if (contains("validationFile")) getString("validationFile") else null
-                }
+              arguments.read {
+                if (contains("validationFile")) getString("validationFile") else null
+              }
 
             QuestionnaireScreen(
               viewModel = viewModel { QuestionnaireViewModel() },

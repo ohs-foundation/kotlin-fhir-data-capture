@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Google LLC
+ * Copyright 2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.catalog.views.locationwidget
 
 import androidx.compose.foundation.layout.Column
@@ -51,9 +50,9 @@ internal const val GPS_COORDINATE_EXTENSION_VALUE_LONGITUDE = "longitude"
 internal const val GPS_COORDINATE_EXTENSION_VALUE_ALTITUDE = "altitude"
 
 /**
- * Renders a read-only coordinate field for a questionnaire item carrying a GPS coordinate
- * extension (`latitude`, `longitude`, or `altitude`). Subscribes to [LocationEventBus] and
- * writes the relevant coordinate value to the questionnaire answer when a location is captured.
+ * Renders a read-only coordinate field for a questionnaire item carrying a GPS coordinate extension
+ * (`latitude`, `longitude`, or `altitude`). Subscribes to [LocationEventBus] and writes the
+ * relevant coordinate value to the questionnaire answer when a location is captured.
  *
  * @see LocationCaptureItemViewFactory for the button that triggers the location fetch.
  */
@@ -98,8 +97,7 @@ object LocationCoordinateItemViewFactory : QuestionnaireItemViewFactory {
 
     LaunchedEffect(Unit) {
       LocationEventBus.locationUpdates.collect { locationData ->
-        val gpsCoordinateExtensionValue =
-          currentViewItem.questionnaireItem.gpsCoordinateValueString
+        val gpsCoordinateExtensionValue = currentViewItem.questionnaireItem.gpsCoordinateValueString
 
         val questionnaireResponseAnswerValue =
           when (gpsCoordinateExtensionValue) {

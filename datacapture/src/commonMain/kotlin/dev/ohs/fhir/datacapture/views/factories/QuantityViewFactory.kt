@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2026 Google LLC
+ * Copyright 2022-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture.views.factories
 
 import androidx.compose.foundation.layout.Column
@@ -165,22 +164,24 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
     input.value?.let { decimal = it.toBigDecimalOrNull() }
     input.unitDropDown?.let { unit = it }
 
-    val answer = if (decimal != null && unit != null) {
-      // Both exist: Create the full Quantity Answer
-      QuestionnaireResponse.Item.Answer(
-        value = QuestionnaireResponse.Item.Answer.Value.Quantity(
-          Quantity(
-            value = Decimal(value = decimal),
-            unit = unit.display,
-            code = unit.code,
-            system = unit.system,
-          )
+    val answer =
+      if (decimal != null && unit != null) {
+        // Both exist: Create the full Quantity Answer
+        QuestionnaireResponse.Item.Answer(
+          value =
+            QuestionnaireResponse.Item.Answer.Value.Quantity(
+              Quantity(
+                value = Decimal(value = decimal),
+                unit = unit.display,
+                code = unit.code,
+                system = unit.system,
+              )
+            )
         )
-      )
-    } else {
-      // One or both are null: Use the non-null one as a draft, or clear if both null
-      decimal ?: unit
-    }
+      } else {
+        // One or both are null: Use the non-null one as a draft, or clear if both null
+        decimal ?: unit
+      }
     when (answer) {
       null -> questionnaireViewItem.clearAnswer()
       is QuestionnaireResponse.Item.Answer -> questionnaireViewItem.setAnswer(answer)

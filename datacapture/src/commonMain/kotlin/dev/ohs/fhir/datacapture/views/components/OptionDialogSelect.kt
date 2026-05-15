@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 Google LLC
+ * Copyright 2025-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture.views.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -78,8 +77,7 @@ internal const val OTHER_OPTION_TEXT_FIELD_TAG = "other_option_edit_text_field"
 internal fun OptionDialogSelect(
   title: AnnotatedString,
   multiSelect: Boolean,
-  otherOptionsAllowed:
-    Boolean,
+  otherOptionsAllowed: Boolean,
   selectedOptions: SelectedOptions,
   onDismiss: () -> Unit,
   onConfirm: (SelectedOptions) -> Unit,

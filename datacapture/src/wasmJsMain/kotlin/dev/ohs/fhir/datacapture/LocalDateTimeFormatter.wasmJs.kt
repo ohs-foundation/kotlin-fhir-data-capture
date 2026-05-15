@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Google LLC
+ * Copyright 2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture
 
 import androidx.compose.runtime.Composable
@@ -41,7 +40,9 @@ object WasmJsLocalDateTimeFormatter : LocalDateTimeFormatter {
     // Throw if year is less or more than 4 digits.
     val yearLengthDiff = localDate.year.length() - 4
     if (yearLengthDiff != 0) {
-      throw IllegalArgumentException("Year has ${if (yearLengthDiff < 0) "less than" else "more than" } 4 digits.")
+      throw IllegalArgumentException(
+        "Year has ${if (yearLengthDiff < 0) "less than" else "more than" } 4 digits."
+      )
     }
 
     return localDate

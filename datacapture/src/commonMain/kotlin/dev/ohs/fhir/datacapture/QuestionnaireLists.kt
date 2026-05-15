@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2026 Google LLC
+ * Copyright 2024-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture
 
 import androidx.compose.foundation.layout.Arrangement
@@ -57,18 +56,18 @@ import dev.ohs.fhir.datacapture.views.factories.BooleanChoiceViewFactory
 import dev.ohs.fhir.datacapture.views.factories.CheckBoxGroupViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DateTimeViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DateViewFactory
+import dev.ohs.fhir.datacapture.views.factories.DecimalTextInputFactory
 import dev.ohs.fhir.datacapture.views.factories.DialogSelectViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DisplayViewFactory
 import dev.ohs.fhir.datacapture.views.factories.DropDownViewFactory
-import dev.ohs.fhir.datacapture.views.factories.DecimalTextInputFactory
+import dev.ohs.fhir.datacapture.views.factories.GroupViewFactory
 import dev.ohs.fhir.datacapture.views.factories.IntegerTextInputFactory
 import dev.ohs.fhir.datacapture.views.factories.MultiLineTextInputFactory
 import dev.ohs.fhir.datacapture.views.factories.PhoneNumberTextInputFactory
-import dev.ohs.fhir.datacapture.views.factories.SingleLineTextInputFactory
-import dev.ohs.fhir.datacapture.views.factories.GroupViewFactory
 import dev.ohs.fhir.datacapture.views.factories.QuantityViewFactory
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
 import dev.ohs.fhir.datacapture.views.factories.RadioGroupViewFactory
+import dev.ohs.fhir.datacapture.views.factories.SingleLineTextInputFactory
 import dev.ohs.fhir.datacapture.views.factories.SliderViewFactory
 import dev.ohs.fhir.datacapture.views.factories.TimeViewFactory
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -368,9 +367,9 @@ fun getQuestionnaireItemViewFactory(
     }
 
 /**
- * Returns the [QuestionnaireItemViewType] that will be used to render the
- * [QuestionnaireViewItem]. This is determined by a combination of the data type of the question and
- * any additional Questionnaire Item UI Control Codes
+ * Returns the [QuestionnaireItemViewType] that will be used to render the [QuestionnaireViewItem].
+ * This is determined by a combination of the data type of the question and any additional
+ * Questionnaire Item UI Control Codes
  * (http://hl7.org/fhir/R4/valueset-questionnaire-item-control.html) used in the itemControl
  * extension (http://hl7.org/fhir/R4/extension-questionnaire-itemcontrol.html).
  */

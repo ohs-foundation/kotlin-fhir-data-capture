@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2026 Google LLC
+ * Copyright 2022-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture.views.factories
 
 import androidx.compose.foundation.layout.Column
@@ -62,11 +61,17 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
     val answer = remember(questionnaireViewItem) { questionnaireViewItem.answers.singleOrNull() }
     val minValue =
       remember(answer) {
-        getExtensionValueFloat(questionnaireViewItem.minAnswerValue, default = SLIDER_DEFAULT_VALUE_FROM)
+        getExtensionValueFloat(
+          questionnaireViewItem.minAnswerValue,
+          default = SLIDER_DEFAULT_VALUE_FROM,
+        )
       }
     val maxValue =
       remember(answer) {
-        getExtensionValueFloat(questionnaireViewItem.maxAnswerValue, default = SLIDER_DEFAULT_VALUE_TO)
+        getExtensionValueFloat(
+          questionnaireViewItem.maxAnswerValue,
+          default = SLIDER_DEFAULT_VALUE_TO,
+        )
       }
 
     check(minValue < maxValue) {

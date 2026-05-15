@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Google LLC
+ * Copyright 2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.catalog.views.barcode
 
 import androidx.compose.runtime.Composable
@@ -22,10 +21,8 @@ import androidx.compose.runtime.remember
 @Composable
 internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember {
   object : CameraPermissionProvider {
-    override suspend fun providePermission() {
-    }
+    override suspend fun providePermission() {}
 
-    override fun openSettings() {
-    }
+    override fun openSettings() {}
   }
 }

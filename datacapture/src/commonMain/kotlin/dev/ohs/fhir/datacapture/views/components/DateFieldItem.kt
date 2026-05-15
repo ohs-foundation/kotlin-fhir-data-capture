@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 Google LLC
+ * Copyright 2025-2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.ohs.fhir.datacapture.views.components
 
 import androidx.compose.foundation.text.KeyboardActions
@@ -50,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import dev.ohs.fhir.datacapture.extensions.toLocalDate
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.gm_calendar_today_24
 import kotlin_fhir_data_capture.datacapture.generated.resources.select_date
@@ -60,7 +60,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Duration.Companion.milliseconds
 
 internal const val DATE_TEXT_INPUT_FIELD = "date_picker_text_field"
 
