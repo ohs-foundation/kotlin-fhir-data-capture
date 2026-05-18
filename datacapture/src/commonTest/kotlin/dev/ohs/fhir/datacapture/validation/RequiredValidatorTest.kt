@@ -16,8 +16,10 @@
 package dev.ohs.fhir.datacapture.validation
 
 import dev.ohs.fhir.model.r4.Boolean
+import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -29,16 +31,13 @@ class RequiredValidatorTest {
   fun shouldReturnValidResultIfItemIsNotRequired() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
-          type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { required = Boolean.Builder().apply { value = false } }
         .build()
     val questionnaireResponseItem =
-      QuestionnaireResponse.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" }
-        )
+      QuestionnaireResponse.Item.Builder(linkId = FhirString.Builder().apply { value = "link-id" })
         .build()
 
     val result = RequiredValidator.validate(questionnaireItem, questionnaireResponseItem)
@@ -50,23 +49,20 @@ class RequiredValidatorTest {
   fun shouldReturnValidResultIfItemIsRequiredAndHasAnswer() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
-          type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { required = Boolean.Builder().apply { value = true } }
         .build()
     val questionnaireResponseItem =
-      QuestionnaireResponse.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" }
-        )
+      QuestionnaireResponse.Item.Builder(linkId = FhirString.Builder().apply { value = "link-id" })
         .apply {
           answer =
             mutableListOf(
               QuestionnaireResponse.Item.Answer.Builder().apply {
                 value =
                   QuestionnaireResponse.Item.Answer.Value.String(
-                    value = dev.ohs.fhir.model.r4.String(value = "some answer")
+                    value = FhirString(value = "some answer")
                   )
               }
             )
@@ -82,16 +78,13 @@ class RequiredValidatorTest {
   fun shouldReturnInvalidResultIfItemIsRequiredAndHasNoAnswer() = runTest {
     val questionnaireItem =
       Questionnaire.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" },
-          type =
-            dev.ohs.fhir.model.r4.Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
         )
         .apply { required = Boolean.Builder().apply { value = true } }
         .build()
     val questionnaireResponseItem =
-      QuestionnaireResponse.Item.Builder(
-          linkId = dev.ohs.fhir.model.r4.String.Builder().apply { value = "link-id" }
-        )
+      QuestionnaireResponse.Item.Builder(linkId = FhirString.Builder().apply { value = "link-id" })
         .build()
 
     val result = RequiredValidator.validate(questionnaireItem, questionnaireResponseItem)

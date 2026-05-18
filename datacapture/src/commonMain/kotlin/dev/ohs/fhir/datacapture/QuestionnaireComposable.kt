@@ -31,97 +31,59 @@ import dev.ohs.fhir.datacapture.views.components.ValidationErrorDialog
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.coroutines.cancellation.CancellationException
 
+/** Display configuration for [Questionnaire]. All fields have defaults matching prior behaviour. */
+data class QuestionnaireConfig(
+  val showSubmitButton: Boolean = true,
+  val showCancelButton: Boolean = true,
+  val showReviewPage: Boolean = false,
+  val showReviewPageFirst: Boolean = false,
+  val isReadOnly: Boolean = false,
+  val showAsterisk: Boolean = false,
+  val showRequiredText: Boolean = true,
+  val showOptionalText: Boolean = false,
+  val showNavigationLongScroll: Boolean = false,
+  val submitButtonText: String? = null,
+  val showSubmitAnywayWhenValidationFails: Boolean = true,
+)
+
 /**
  * Public composable function for displaying a FHIR Questionnaire in KMP applications.
  *
- * This provides a builder-like API similar to QuestionnaireFragment.Builder but for Compose.
- *
  * @param questionnaireJson JSON string of the FHIR Questionnaire to display
  * @param questionnaireResponseJson Optional JSON string of a pre-filled QuestionnaireResponse
- * @param showSubmitButton Whether to show the submit button (default: true)
- * @param showCancelButton Whether to show the cancel button (default: true)
- * @param showReviewPage Whether to show a review page before submission (default: false)
- * @param isReadOnly Whether the questionnaire is read-only (default: false)
- * @param showAsterisk Whether to show asterisk for required fields (default: true)
- * @param showRequiredText Whether to show "required" text (default: false)
- * @param showNavigationLongScroll: Boolean = false,
- * @param showOptionalText Whether to show "optional" text (default: false)
- * @param submitButtonText Custom text for submit button (optional)
- * @param showSubmitAnywayWhenValidationFails: Boolean = true,
+ * @param questionnaireLaunchContextMap Optional launch context map
+ * @param config Display configuration; see [QuestionnaireConfig] for defaults
  * @param matchersProvider Custom matchers provider for custom question types (optional)
  * @param onSubmit Callback invoked when user submits the questionnaire with the response
  * @param onCancel Callback invoked when user cancels the questionnaire
- *
- * Example usage:
- * ```
- * Questionnaire(
- *   questionnaireJson = myQuestionnaireJson,
- *   showSubmitButton = true,
- *   showCancelButton = true,
- *   onSubmit = { response ->
- *     // Handle the questionnaire response
- *     println("Received response: $response")
- *   },
- *   onCancel = {
- *     // Handle cancellation
- *     navController.popBackStack()
- *   }
- * )
- * ```
  */
 @Composable
 fun Questionnaire(
   questionnaireJson: String,
   questionnaireResponseJson: String? = null,
   questionnaireLaunchContextMap: Map<String, String>? = null,
-  showSubmitButton: Boolean = true,
-  showCancelButton: Boolean = true,
-  showReviewPage: Boolean = false,
-  showReviewPageFirst: Boolean = false,
-  isReadOnly: Boolean = false,
-  showAsterisk: Boolean = false,
-  showRequiredText: Boolean = true,
-  showOptionalText: Boolean = false,
-  showNavigationLongScroll: Boolean = false,
-  submitButtonText: String? = null,
-  showSubmitAnywayWhenValidationFails: Boolean = true,
+  config: QuestionnaireConfig = QuestionnaireConfig(),
   matchersProvider: QuestionnaireItemViewFactoryMatchersProvider? = null,
   onSubmit: (suspend () -> QuestionnaireResponse) -> Unit,
   onCancel: () -> Unit,
 ) {
   val stateMap =
-    remember(
-      questionnaireJson,
-      questionnaireResponseJson,
-      questionnaireLaunchContextMap,
-      showSubmitButton,
-      showCancelButton,
-      showReviewPage,
-      showReviewPageFirst,
-      isReadOnly,
-      showAsterisk,
-      showRequiredText,
-      showOptionalText,
-      showNavigationLongScroll,
-      submitButtonText,
-      showSubmitAnywayWhenValidationFails,
-    ) {
+    remember(questionnaireJson, questionnaireResponseJson, questionnaireLaunchContextMap, config) {
       buildMap<String, Any> {
         put(EXTRA_QUESTIONNAIRE_JSON_STRING, questionnaireJson)
         questionnaireResponseJson?.let { put(EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING, it) }
         questionnaireLaunchContextMap?.let { put(EXTRA_QUESTIONNAIRE_LAUNCH_CONTEXT_MAP, it) }
-        put(EXTRA_SHOW_SUBMIT_BUTTON, showSubmitButton)
-        put(EXTRA_SHOW_CANCEL_BUTTON, showCancelButton)
-        put(EXTRA_ENABLE_REVIEW_PAGE, showReviewPage)
-        put(EXTRA_SHOW_REVIEW_PAGE_FIRST, showReviewPageFirst)
-        put(EXTRA_READ_ONLY, isReadOnly)
-        put(EXTRA_SHOW_ASTERISK_TEXT, showAsterisk)
-        put(EXTRA_SHOW_REQUIRED_TEXT, showRequiredText)
-        put(EXTRA_SHOW_OPTIONAL_TEXT, showOptionalText)
-        put(EXTRA_SHOW_REVIEW_PAGE_FIRST, showReviewPageFirst)
-        put(EXTRA_SHOW_NAVIGATION_IN_DEFAULT_LONG_SCROLL, showNavigationLongScroll)
-        submitButtonText?.let { put(EXTRA_SUBMIT_BUTTON_TEXT, it) }
-        put(EXTRA_SHOW_SUBMIT_ANYWAY_BUTTON, showSubmitAnywayWhenValidationFails)
+        put(EXTRA_SHOW_SUBMIT_BUTTON, config.showSubmitButton)
+        put(EXTRA_SHOW_CANCEL_BUTTON, config.showCancelButton)
+        put(EXTRA_ENABLE_REVIEW_PAGE, config.showReviewPage)
+        put(EXTRA_SHOW_REVIEW_PAGE_FIRST, config.showReviewPageFirst)
+        put(EXTRA_READ_ONLY, config.isReadOnly)
+        put(EXTRA_SHOW_ASTERISK_TEXT, config.showAsterisk)
+        put(EXTRA_SHOW_REQUIRED_TEXT, config.showRequiredText)
+        put(EXTRA_SHOW_OPTIONAL_TEXT, config.showOptionalText)
+        put(EXTRA_SHOW_NAVIGATION_IN_DEFAULT_LONG_SCROLL, config.showNavigationLongScroll)
+        config.submitButtonText?.let { put(EXTRA_SUBMIT_BUTTON_TEXT, it) }
+        put(EXTRA_SHOW_SUBMIT_ANYWAY_BUTTON, config.showSubmitAnywayWhenValidationFails)
       }
     }
   val effectiveMatchersProvider =
@@ -163,7 +125,7 @@ fun Questionnaire(
         invalidFields = invalidFields,
         onDismiss = { showValidationDialog = false },
         onFixQuestions = { showValidationDialog = false },
-        showSubmitAnyway = showSubmitAnywayWhenValidationFails,
+        showSubmitAnyway = config.showSubmitAnywayWhenValidationFails,
         onSubmitAnyway = {
           showValidationDialog = false
           onSubmit { viewModel.getQuestionnaireResponse() }

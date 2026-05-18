@@ -52,6 +52,7 @@ import dev.ohs.fhir.catalog.views.barcode.BarcodeItemViewFactoryMatcher
 import dev.ohs.fhir.catalog.views.locationwidget.LocationCaptureItemViewFactoryMatcher
 import dev.ohs.fhir.catalog.views.locationwidget.LocationCoordinateItemViewFactoryMatcher
 import dev.ohs.fhir.datacapture.Questionnaire
+import dev.ohs.fhir.datacapture.QuestionnaireConfig
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatcher
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewFactoryMatchersProvider
 import kotlin_fhir_data_capture.catalog.generated.resources.Res
@@ -138,11 +139,13 @@ fun QuestionnaireScreen(
             Questionnaire(
               questionnaireJson = json,
               questionnaireLaunchContextMap = launchContextMap,
-              showSubmitButton = true,
-              showReviewPage = showReviewPage,
-              showReviewPageFirst = showReviewPageFirst,
-              isReadOnly = isReadOnly,
-              showCancelButton = false,
+              config =
+                QuestionnaireConfig(
+                  showReviewPage = showReviewPage,
+                  showReviewPageFirst = showReviewPageFirst,
+                  isReadOnly = isReadOnly,
+                  showCancelButton = false,
+                ),
               onSubmit = { getResponse ->
                 coroutineScope.launch {
                   val response = getResponse()

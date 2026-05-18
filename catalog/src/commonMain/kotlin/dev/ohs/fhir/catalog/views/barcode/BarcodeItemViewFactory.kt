@@ -188,7 +188,7 @@ internal object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
                 result.exception.printStackTrace()
               }
 
-              is BarcodeResult.OnCanceled -> {}
+              is BarcodeResult.OnCanceled -> {} // user canceled scanning, nothing to do
             }
           }
         }

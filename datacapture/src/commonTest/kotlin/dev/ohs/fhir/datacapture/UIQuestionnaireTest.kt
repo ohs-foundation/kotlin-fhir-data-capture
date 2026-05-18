@@ -540,8 +540,7 @@ class UIQuestionnaireTest {
         Questionnaire(
           questionnaireJson = questionnaireJsonString,
           questionnaireResponseJson = questionnaireResponseJsonString,
-          showCancelButton = true,
-          showReviewPage = isReviewMode,
+          config = QuestionnaireConfig(showCancelButton = true, showReviewPage = isReviewMode),
           onSubmit = { _ -> },
           onCancel = {},
         )
@@ -572,10 +571,13 @@ class UIQuestionnaireTest {
       ) {
         Questionnaire(
           questionnaireJson = questionnaireJsonString,
-          showReviewPage = isReviewMode,
-          showReviewPageFirst = showReviewPageFirst,
-          showNavigationLongScroll = showNavigationLongScroll,
-          submitButtonText = submitText,
+          config =
+            QuestionnaireConfig(
+              showReviewPage = isReviewMode,
+              showReviewPageFirst = showReviewPageFirst,
+              showNavigationLongScroll = showNavigationLongScroll,
+              submitButtonText = submitText,
+            ),
           onSubmit = { _ -> },
           onCancel = {},
         )
