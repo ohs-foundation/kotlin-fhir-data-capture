@@ -1,0 +1,495 @@
+/*
+ * Copyright 2023-2026 Open Health Stack Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package dev.ohs.fhir.datacapture.fhirpath
+
+import co.touchlab.kermit.Logger
+import dev.ohs.fhir.datacapture.XFhirQueryResolver
+import dev.ohs.fhir.datacapture.extensions.calculatedExpression
+import dev.ohs.fhir.datacapture.extensions.findVariableExpression
+import dev.ohs.fhir.datacapture.extensions.flattened
+import dev.ohs.fhir.datacapture.extensions.isFhirPath
+import dev.ohs.fhir.datacapture.extensions.isReferencedBy
+import dev.ohs.fhir.datacapture.extensions.isXFhirQuery
+import dev.ohs.fhir.datacapture.extensions.variableExpressions
+import dev.ohs.fhir.model.r4.Bundle
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Resource
+import kotlin.let
+
+/**
+ * Evaluates an expression and returns its result.
+ *
+ * The evaluator works in the context of a [Questionnaire] and the corresponding
+ * [QuestionnaireResponse]. It is the caller's responsibility to make sure to call the evaluator
+ * with [Questionnaire.item] and [QuestionnaireResponse.item] that belong to the [Questionnaire] and
+ * the [QuestionnaireResponse].
+ *
+ * Expressions can be defined at questionnaire level and questionnaire item level. This
+ * [ExpressionEvaluator] supports evaluation of
+ * [variable expression](http://hl7.org/fhir/R4/extension-variable.html) defined at either
+ * questionnaire level or questionnaire item level.
+ *
+ * @param questionnaire the [Questionnaire] where the expression belong to
+ * @param questionnaireResponse the [QuestionnaireResponse] related to the [Questionnaire]
+ * @param questionnaireItemParentMap the [Map] of items parent
+ * @param questionnaireLaunchContextMap the [Map] of launchContext names to their resource values
+ */
+internal class ExpressionEvaluator(
+  private val questionnaire: Questionnaire,
+  private val questionnaireResponse: QuestionnaireResponse,
+  private val questionnaireItemParentMap: Map<Questionnaire.Item, Questionnaire.Item> = emptyMap(),
+  private val questionnaireLaunchContextMap: Map<String, Resource>? = emptyMap(),
+  private val xFhirQueryResolver: XFhirQueryResolver? = null,
+) {
+
+  private val reservedItemVariables =
+    listOf(
+      "sct",
+      "loinc",
+      "ucum",
+      "resource",
+      "rootResource",
+      "context",
+      "map-codes",
+      "questionnaire",
+      "qItem",
+    )
+
+  private val reservedRootVariables =
+    listOf(
+      "sct",
+      "loinc",
+      "ucum",
+      "resource",
+      "rootResource",
+      "context",
+      "map-codes",
+      "questionnaire",
+    )
+
+  /**
+   * Finds all the matching occurrences of variables. For example, when we apply regex to the
+   * expression "%X + %Y", if we simply groupValues, it returns [%X, X], [%Y, Y] The group with
+   * index 0 is always the entire matched string (%X and %Y). The indices greater than 0 represent
+   * groups in the regular expression (X and Y) so we groupValues by first index to get only the
+   * variables name without % as prefix i.e, ([X, Y])
+   *
+   * If we apply regex to the expression "X + Y", it returns nothing as there are no matching groups
+   * in this expression
+   */
+  private val variableRegex = Regex("%([A-Za-z0-9\\-']{1,64})")
+
+  /**
+   * Finds all the matching occurrences of FHIRPaths in x-fhir-query. See:
+   * https://build.fhir.org/ig/HL7/sdc/expressions.html#x-fhir-query-enhancements
+   */
+  private val xFhirQueryEnhancementRegex = Regex("\\{\\{(.*?)\\}\\}")
+
+  /**
+   * Variable %questionnaire corresponds to the Questionnaire resource into
+   * QuestionnaireResponse.questionnaire element.
+   * https://build.fhir.org/ig/HL7/sdc/expressions.html#fhirpath-supplements
+   */
+  private val questionnaireFhirPathSupplement = "questionnaire"
+
+  /**
+   * Variable %qitem refer to [Questionnaire.Item] that corresponds to context
+   * QuestionnaireResponse.item. It is only valid for FHIRPath expressions defined within a
+   * Questionnaire item. https://build.fhir.org/ig/HL7/sdc/expressions.html#fhirpath-supplements
+   */
+  private val questionnaireItemFhirPathSupplement = "qItem"
+
+  /** Detects if any item into list is referencing a dependent item in its calculated expression */
+  internal fun detectExpressionCyclicDependency(items: List<Questionnaire.Item>) {
+    items
+      .flattened()
+      .filter { it.calculatedExpression != null }
+      .run {
+        forEach { current ->
+          // no calculable item depending on current item should be used as dependency into current
+          // item
+          this.forEach { dependent ->
+            check(!(current.isReferencedBy(dependent) && dependent.isReferencedBy(current))) {
+              "${current.linkId} and ${dependent.linkId} have cyclic dependency in expression based extension"
+            }
+          }
+        }
+      }
+  }
+
+  /**
+   * Returns the evaluation result of the expression.
+   *
+   * FHIRPath supplements are handled according to
+   * https://build.fhir.org/ig/HL7/sdc/expressions.html#fhirpath-supplements.
+   *
+   * %resource = [QuestionnaireResponse] %context = [QuestionnaireResponse.Item]
+   */
+  suspend fun evaluateExpression(
+    questionnaireItem: Questionnaire.Item,
+    questionnaireResponseItem: QuestionnaireResponse.Item?,
+    expression: Expression?,
+  ): List<Any> {
+    if (expression == null) return emptyList()
+    val variables =
+      extractItemDependentVariables(expression, questionnaireItem, questionnaireResponseItem)
+    return FhirPathService.evaluate(
+      expression.expression?.value ?: "",
+      questionnaireResponse,
+      variables,
+    )
+  }
+
+  /**
+   * Returns a list of [Any] evaluation value result of an expression, including cqf-expression and
+   * cqf-calculatedValue expressions
+   */
+  suspend fun evaluateExpressionValue(
+    questionnaireItem: Questionnaire.Item,
+    questionnaireResponseItem: QuestionnaireResponse.Item?,
+    expression: Expression,
+  ): List<Any>? {
+    if (!expression.isFhirPath) {
+      throw UnsupportedOperationException("${expression.language} not supported yet")
+    }
+    return try {
+      evaluateExpression(questionnaireItem, questionnaireResponseItem, expression)
+    } catch (e: Exception) {
+      Logger.w("Could not evaluate expression ${expression.expression} with FHIRPathEngine", e)
+      null
+    }
+  }
+
+  /**
+   * Returns a list of pair of item and the calculated and evaluated value for all items with
+   * calculated expression extension, which is dependent on value of updated response
+   */
+  suspend fun evaluateAllAffectedCalculatedExpressions(
+    questionnaireItem: Questionnaire.Item,
+    questionnaireResponseItem: QuestionnaireResponse.Item?,
+  ): List<ItemToAnswersPair> =
+    questionnaire.item
+      .flattened()
+      .filter { item ->
+        // Condition 1. item is calculable
+        // Condition 2. item answer depends on the updated item answer OR has a variable dependency
+        item.calculatedExpression != null &&
+          (questionnaireItem.isReferencedBy(item) ||
+            findDependentVariables(item.calculatedExpression!!).isNotEmpty())
+      }
+      .map { item ->
+        // TODO: Pass the questionnaire response item corresponding to the
+        //  questionnaire item with the calculated expression for the FHIRPath supplement
+        //  `%context`.
+        val updatedAnswer =
+          evaluateExpression(
+            questionnaireItem,
+            questionnaireResponseItem,
+            item.calculatedExpression!!,
+          )
+        item to updatedAnswer
+      }
+
+  /**
+   * Returns the evaluated value of [calculatedExpression] from the given [questionnaireItem]. A
+   * [NullPointerException] will be thrown if [calculatedExpression] is not present.
+   */
+  suspend fun evaluateCalculatedExpression(
+    questionnaireItem: Questionnaire.Item,
+    questionnaireResponseItem: QuestionnaireResponse.Item? = null,
+  ): List<Any> {
+    val expression = questionnaireItem.calculatedExpression ?: return emptyList<Any>()
+    return evaluateExpression(questionnaireItem, questionnaireResponseItem, expression)
+  }
+
+  /**
+   * Evaluates variable expression defined at questionnaire item level and returns the evaluated
+   * result.
+   *
+   * Parses the expression using regex [Regex] for variable (For example: A variable name could be
+   * %weight) and build a list of variables that the expression contains and for every variable, we
+   * first find it at questionnaire item, then up in the ancestors and then at questionnaire level,
+   * if found we get their expressions and pass them into the same function to evaluate its value
+   * recursively, we put the variable name and its evaluated value into the map [Map] to use this
+   * map to pass into fhirPathEngine's evaluate method to apply the evaluated values to the
+   * expression being evaluated.
+   *
+   * @param expression the [Expression] Variable expression Questionnaire.Questionnaire.Item>] of
+   *   child to parent
+   * @param questionnaireItem the [Questionnaire.Item] where this expression is defined,
+   * @return [Any] the result of expression
+   */
+  internal suspend fun evaluateQuestionnaireItemVariableExpression(
+    expression: Expression,
+    questionnaireItem: Questionnaire.Item,
+  ): Any? {
+    require(
+      questionnaireItem.variableExpressions.any {
+        it.name == expression.name && it.expression == expression.expression
+      }
+    ) {
+      "The expression should come from the same questionnaire item"
+    }
+    val variablesMap = extractItemDependentVariables(expression, questionnaireItem, null)
+    return evaluateVariable(expression, variablesMap)
+  }
+
+  /**
+   * Parses the expression using regex [Regex] for variable and build a map of variables and its
+   * values respecting the scope and hierarchy level
+   *
+   * @param expression the [Expression] expression to find variables applicable
+   * @param questionnaireItem the [Questionnaire.Item] where this expression
+   */
+  internal suspend fun extractItemDependentVariables(
+    expression: Expression,
+    questionnaireItem: Questionnaire.Item,
+    questionnaireResponseItem: QuestionnaireResponse.Item?,
+  ): MutableMap<String, Any?> =
+    buildMap {
+        put(questionnaireFhirPathSupplement, questionnaire)
+        put(questionnaireItemFhirPathSupplement, questionnaireItem)
+        put("resource", questionnaireResponse)
+        put("context", questionnaireResponseItem)
+        questionnaireLaunchContextMap?.let { putAll(it) }
+        findDependentVariables(expression)
+          .filterNot { variable -> reservedItemVariables.contains(variable) }
+          .forEach { variableName ->
+            if (this[variableName] == null) {
+              findAndEvaluateVariable(variableName, questionnaireItem, this)
+            }
+          }
+      }
+      .toMutableMap()
+
+  /**
+   * Evaluates variable expression defined at questionnaire level and returns the evaluated result.
+   *
+   * Parses the expression using [Regex] for variable (For example: A variable name could be
+   * %weight) and build a list of variables that the expression contains and for every variable, we
+   * first find it at questionnaire level, if found we get their expressions and pass them into the
+   * same function to evaluate its value recursively, we put the variable name and its evaluated
+   * value into the map [Map] to use this map to pass into fhirPathEngine's evaluate method to apply
+   * the evaluated values to the expression being evaluated.
+   *
+   * @param expression the [Expression] Variable expression
+   * @param variablesMap the [Map<String, Any>] of variables, the default value is empty map
+   * @return [Any] the result of expression
+   */
+  internal suspend fun evaluateQuestionnaireVariableExpression(
+    expression: Expression,
+    variablesMap: MutableMap<String, Any?> = mutableMapOf(),
+  ): Any? {
+    findDependentVariables(expression)
+      .filterNot { variable -> reservedRootVariables.contains(variable) }
+      .forEach { variableName ->
+        questionnaire.findVariableExpression(variableName)?.let { expression ->
+          if (expression.name?.value != null && variablesMap[expression.name!!.value] == null) {
+            variablesMap[expression.name!!.value!!] =
+              evaluateQuestionnaireVariableExpression(expression, variablesMap)
+          }
+        }
+      }
+
+    return evaluateVariable(expression, variablesMap)
+  }
+
+  /**
+   * Creates an x-fhir-query string for evaluation. For this, it evaluates both variables and
+   * fhir-paths in the expression.
+   */
+  internal fun createXFhirQueryFromExpression(
+    expression: Expression,
+    variablesMap: Map<String, Any?> = emptyMap(),
+  ): String? {
+    // get all dependent variables and their evaluated values
+    val variablesEvaluatedPairs =
+      variablesMap
+        .filterKeys { expression.expression?.value?.contains("{{%$it}}") == true }
+        .map { Pair("{{%${it.key}}}", it.value ?: "") }
+
+    val fhirPathsEvaluatedPairs =
+      questionnaireLaunchContextMap
+        ?.toMutableMap()
+        .takeIf { !it.isNullOrEmpty() }
+        ?.also { it[questionnaireFhirPathSupplement] = questionnaire }
+        ?.let { evaluateXFhirEnhancement(expression, it) } ?: emptyList()
+
+    return (variablesEvaluatedPairs + fhirPathsEvaluatedPairs).fold(expression.expression?.value) {
+      acc: String?,
+      pair: Pair<String, Any> ->
+      acc?.replace(pair.first, pair.second as String)
+    }
+  }
+
+  /**
+   * Evaluates an x-fhir-query that contains fhir-paths, returning a list of pairs. The first
+   * element in the pair is the FhirPath expression surrounded by curly brackets {{ fhir.path }},
+   * and the second element is the evaluated string result from evaluating the resource passed in.
+   *
+   * @param expression x-fhir-query expression containing a FHIRpath, e.g.
+   *   Practitioner?active=true&{{Practitioner.name.family}}
+   * @param launchContextMap the launch context to evaluate the expression against
+   */
+  private fun evaluateXFhirEnhancement(
+    expression: Expression,
+    launchContextMap: Map<String, Resource>,
+  ): List<Pair<String, String>> =
+    xFhirQueryEnhancementRegex
+      .findAll(expression.expression?.value.toString())
+      .map { it.groupValues }
+      .map { (fhirPathWithParentheses, fhirPath) ->
+        val resourceType = FhirPathService.extractResourceTypeFromPath(fhirPath)
+        val evaluatedResult =
+          FhirPathService.evaluateFhirPathToString(
+            expression = fhirPath,
+            resource = launchContextMap[resourceType],
+          )
+
+        // If the result of evaluating the FHIRPath expressions is an invalid query, it returns
+        // null. As per the spec:
+        // Systems SHOULD log it and continue with extraction as if the query had returned no
+        // data.
+        // See : http://build.fhir.org/ig/HL7/sdc/extraction.html#structuremap-based-extraction
+        if (evaluatedResult.isEmpty()) {
+          Logger.w(
+            "$fhirPath evaluated to null. The expression is either invalid, or the " +
+              "expression returned no, or more than one resource. The expression will be " +
+              "replaced with a blank string."
+          )
+        }
+        fhirPathWithParentheses to evaluatedResult
+      }
+      .toList()
+
+  private fun findDependentVariables(expression: Expression) =
+    variableRegex
+      .findAll(expression.expression?.value.toString())
+      .map { it.groupValues[1] }
+      .toList()
+
+  /**
+   * Finds the dependent variables at questionnaire item level first, then in ancestors and then at
+   * questionnaire level
+   *
+   * @param variableName the [String] to match the variable in the ancestors
+   * @param questionnaireItem the [Questionnaire.Item] from where we have to track hierarchy up in
+   *   the ancestors
+   * @param variablesMap the [Map<String, Any>] of variables
+   */
+  private suspend fun findAndEvaluateVariable(
+    variableName: String,
+    questionnaireItem: Questionnaire.Item,
+    variablesMap: MutableMap<String, Any?> = mutableMapOf(),
+  ) {
+    // First, check the questionnaire item itself
+    val evaluatedValue =
+      questionnaireItem.findVariableExpression(variableName)?.let { expression ->
+        evaluateQuestionnaireItemVariableExpression(expression, questionnaireItem)
+      } // Secondly, check the ancestors of the questionnaire item
+      ?: findVariableInAncestors(variableName, questionnaireItem)?.let {
+          (questionnaireItem, expression) ->
+          evaluateQuestionnaireItemVariableExpression(expression, questionnaireItem)
+        } // Finally, check the variables defined on the questionnaire itself
+        ?: questionnaire.findVariableExpression(variableName)?.let { expression ->
+          evaluateQuestionnaireVariableExpression(expression, variablesMap)
+        }
+
+    evaluatedValue?.also { variablesMap[variableName] = it }
+  }
+
+  /**
+   * Finds the questionnaire item having specific variable name [String] in the ancestors of
+   * questionnaire item [Questionnaire.Item]
+   *
+   * @param variableName the [String] to match the variable in the ancestors
+   * @param questionnaireItem the [Questionnaire.Item] whose ancestors we visit
+   * @return [Pair] containing [Questionnaire.Item] and an [Expression]
+   */
+  private fun findVariableInAncestors(
+    variableName: String,
+    questionnaireItem: Questionnaire.Item,
+  ): Pair<Questionnaire.Item, Expression>? {
+    var parent = questionnaireItemParentMap[questionnaireItem]
+    while (parent != null) {
+      val expression = parent.findVariableExpression(variableName)
+      if (expression != null) return Pair(parent, expression)
+
+      parent = questionnaireItemParentMap[parent]
+    }
+    return null
+  }
+
+  /**
+   * Evaluates the value of variable expression and returns its evaluated value
+   *
+   * @param expression the [Expression] the expression to evaluate
+   * @param dependentVariables the [Map] of variable names to their values
+   * @return [Any] the result of an expression
+   */
+  private suspend fun evaluateVariable(
+    expression: Expression,
+    dependentVariables: Map<String, Any?>,
+  ) =
+    try {
+      require(expression.name?.value?.isNotBlank() == true) {
+        "Expression name should be a valid expression name"
+      }
+
+      if (expression.isXFhirQuery) {
+        checkNotNull(xFhirQueryResolver) {
+          "XFhirQueryResolver cannot be null. Please provide the XFhirQueryResolver via DataCaptureConfig."
+        }
+
+        val xFhirExpressionString =
+          createXFhirQueryFromExpression(expression, dependentVariables) ?: ""
+
+        if (dependentVariables.contains(expression.name!!.value)) {
+          dependentVariables[expression.name!!.value]!!
+        }
+
+        Bundle.Builder(type = Enumeration(value = Bundle.BundleType.Searchset))
+          .apply {
+            entry =
+              xFhirQueryResolver
+                .resolve(xFhirExpressionString)
+                .map { res -> Bundle.Entry.Builder().apply { resource = res.toBuilder() } }
+                .toMutableList()
+          }
+          .build()
+      } else if (expression.isFhirPath) {
+        FhirPathService.evaluate(
+            expression.expression?.value ?: "",
+            questionnaireResponse,
+            variables = dependentVariables,
+          )
+          .firstOrNull()
+      } else {
+        throw UnsupportedOperationException(
+          "${expression.language} not supported for variable-expression yet"
+        )
+      }
+    } catch (exception: Exception) {
+      Logger.w("Could not evaluate expression with FHIRPathEngine", exception)
+      null
+    }
+}
+
+/** Pair of a [Questionnaire.Item] with its evaluated answers */
+internal typealias ItemToAnswersPair = Pair<Questionnaire.Item, List<Any>>

@@ -1,0 +1,144 @@
+/*
+ * Copyright 2023-2026 Open Health Stack Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package dev.ohs.fhir.datacapture.validation
+
+import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.Integer
+import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.String as FhirString
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
+
+class MinLengthValidatorTest {
+
+  @Test
+  fun shouldReturnValidResultIfMinLengthExtensionIsNotPresent() = runTest {
+    val questionnaireItem =
+      Questionnaire.Item.Builder(
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+        )
+        .build()
+    val answer =
+      QuestionnaireResponse.Item.Answer.Builder()
+        .apply {
+          value =
+            QuestionnaireResponse.Item.Answer.Value.String(
+              value = FhirString(value = "some answer")
+            )
+        }
+        .build()
+
+    val result = MinLengthValidator.validate(questionnaireItem, answer) { null }
+
+    assertTrue(result.isValid)
+  }
+
+  @Test
+  fun shouldReturnValidResultIfAnswerLengthIsGreaterThanMinLength() = runTest {
+    val questionnaireItem =
+      Questionnaire.Item.Builder(
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+        )
+        .apply {
+          extension =
+            mutableListOf(
+              Extension.Builder(url = MIN_LENGTH_EXTENSION_URL).apply {
+                value =
+                  Extension.Value.Integer(value = Integer.Builder().apply { value = 5 }.build())
+              }
+            )
+        }
+        .build()
+    val answer =
+      QuestionnaireResponse.Item.Answer.Builder()
+        .apply {
+          value =
+            QuestionnaireResponse.Item.Answer.Value.String(
+              value = FhirString(value = "longer than 5")
+            )
+        }
+        .build()
+
+    val result = MinLengthValidator.validate(questionnaireItem, answer) { null }
+
+    assertTrue(result.isValid)
+  }
+
+  @Test
+  fun shouldReturnValidResultIfAnswerLengthIsEqualToMinLength() = runTest {
+    val questionnaireItem =
+      Questionnaire.Item.Builder(
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+        )
+        .apply {
+          extension =
+            mutableListOf(
+              Extension.Builder(url = MIN_LENGTH_EXTENSION_URL).apply {
+                value =
+                  Extension.Value.Integer(value = Integer.Builder().apply { value = 5 }.build())
+              }
+            )
+        }
+        .build()
+    val answer =
+      QuestionnaireResponse.Item.Answer.Builder()
+        .apply {
+          value =
+            QuestionnaireResponse.Item.Answer.Value.String(value = FhirString(value = "12345"))
+        }
+        .build()
+
+    val result = MinLengthValidator.validate(questionnaireItem, answer) { null }
+
+    assertTrue(result.isValid)
+  }
+
+  @Test
+  fun shouldReturnInvalidResultIfAnswerLengthIsLessThanMinLength() = runTest {
+    val questionnaireItem =
+      Questionnaire.Item.Builder(
+          linkId = FhirString.Builder().apply { value = "link-id" },
+          type = Enumeration(value = Questionnaire.QuestionnaireItemType.String),
+        )
+        .apply {
+          extension =
+            mutableListOf(
+              Extension.Builder(url = MIN_LENGTH_EXTENSION_URL).apply {
+                value =
+                  Extension.Value.Integer(value = Integer.Builder().apply { value = 5 }.build())
+              }
+            )
+        }
+        .build()
+    val answer =
+      QuestionnaireResponse.Item.Answer.Builder()
+        .apply {
+          value = QuestionnaireResponse.Item.Answer.Value.String(value = FhirString(value = "123"))
+        }
+        .build()
+
+    val result = MinLengthValidator.validate(questionnaireItem, answer) { null }
+
+    assertFalse(result.isValid)
+  }
+}

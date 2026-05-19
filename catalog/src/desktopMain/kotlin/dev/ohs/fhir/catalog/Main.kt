@@ -1,0 +1,34 @@
+/*
+ * Copyright 2025-2026 Open Health Stack Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package dev.ohs.fhir.catalog
+
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.application
+import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlin_fhir_data_capture.catalog.generated.resources.app_name
+import org.jetbrains.compose.resources.stringResource
+
+fun main() = application {
+  Window(
+    onCloseRequest = ::exitApplication,
+    title = stringResource(Res.string.app_name),
+    state = WindowState(placement = WindowPlacement.Maximized),
+  ) {
+    App()
+  }
+}

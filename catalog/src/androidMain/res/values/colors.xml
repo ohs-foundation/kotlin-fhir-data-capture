@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <color name="ic_card_file_box_background">#FFFFFF</color>
+
+    <color name="custom_style_primary_100">#000000</color>
+    <color name="custom_style_primary_200">#0C0A20</color>
+    <color name="custom_style_primary_300">#201441</color>
+    <color name="custom_style_primary_400">#341F63</color>
+    <color name="custom_style_primary_500">#482A85</color>
+    <color name="custom_style_primary_600">#5C35A6</color>
+    <color name="custom_style_primary_700">#7F5FBA</color>
+    <color name="custom_style_primary_800">#A289CF</color>
+    <color name="custom_style_primary_900">#C5B3E3</color>
+    <color name="custom_style_on_primary_100">#FFFFFF</color>
+    <color name="custom_style_on_primary_200">#FFFFFF</color>
+    <color name="custom_style_on_primary_300">#FFFFFF</color>
+    <color name="custom_style_on_primary_400">#FFFFFF</color>
+    <color name="custom_style_on_primary_500">#FFFFFF</color>
+    <color name="custom_style_on_primary_600">#FFFFFF</color>
+    <color name="custom_style_on_primary_700">#FFFFFF</color>
+    <color name="custom_style_on_primary_800">#000000</color>
+    <color name="custom_style_on_primary_900">#000000</color>
+</resources>

@@ -1,0 +1,88 @@
+# see https://docs.gradle.org/current/userguide/platforms.html
+
+[versions]
+android-gradle-plugin = "8.13.0"
+androidx-appcompat = "1.6.1"
+androidx-compose-ui = "1.9.4"
+androidx-core = "1.10.1"
+androidx-fragment = "1.6.0"
+androidx-lifecycle-viewmodel = "2.9.3"
+androidx-test-core = "1.6.1"
+androidx-test-ext-junit = "1.1.5"
+androidx-test-rules = "1.5.0"
+androidx-test-runner = "1.5.0"
+compass-geolocation = "3.0.2"
+compose-hotreload = "1.0.0-rc04"
+compose-multiplatform = "1.10.3"
+filekit = "0.12.0"
+junit = "4.13.2"
+kermit = "2.0.8"
+kotest = "6.1.11"
+kotlin = "2.3.21"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization-json = "1.9.0"
+kotlinx-coroutines-swing = "1.10.2"
+kotlinx-io-core = "0.8.0"
+kscan = "0.8.1"
+ksp = "2.3.7"
+kt-lint = "1.8.0"
+licensee-plugin = "1.14.1"
+material = "1.13.0"
+navigation = "2.9.8"
+navigation-compose = "2.9.1"
+ohs-fhir = "1.0.0-beta03"
+ohs-fhir-path = "1.0.0-beta02"
+permissions-camera = "0.20.1"
+spotless-plugin = "8.4.0"
+truth = "1.1.5"
+
+[libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "androidx-compose-ui" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "androidx-compose-ui" }
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "androidx-fragment" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle-viewmodel" }
+androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle-viewmodel" }
+androidx-lifecycle-runtime-testing = { module = "androidx.lifecycle:lifecycle-runtime-testing", version.ref = "androidx-lifecycle-viewmodel" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext-junit" }
+androidx-test-ext-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext-junit" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test-rules" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
+compass-geolocation = { module = "dev.jordond.compass:geolocation", version.ref = "compass-geolocation" }
+compass-geolocation-mobile = { module = "dev.jordond.compass:geolocation-mobile", version.ref = "compass-geolocation" }
+compass-geolocation-browser = { module = "dev.jordond.compass:geolocation-browser", version.ref = "compass-geolocation" }
+compass-permissions-mobile = { module = "dev.jordond.compass:permissions-mobile", version.ref = "compass-geolocation" }
+filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kotest-assertions-core = {module = "io.kotest:kotest-assertions-core", version.ref="kotest"}
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines-swing" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io-core" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+kscan = { module = "io.github.ismai117:KScan", version.ref = "kscan" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+moko-permissions-camera = { module = "dev.icerock.moko:permissions-camera", version.ref = "permissions-camera" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "permissions-camera" }
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+ohs-fhir-model = { module = "dev.ohs.fhir:fhir-model", version.ref = "ohs-fhir" }
+ohs-fhir-path = { module = "dev.ohs.fhir:fhir-path", version.ref = "ohs-fhir-path" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle-plugin" }
+androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+cashapp-licensee = { id = "app.cash.licensee", version.ref = "licensee-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-hotreload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hotreload" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
