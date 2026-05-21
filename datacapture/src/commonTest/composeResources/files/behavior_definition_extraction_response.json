@@ -1,0 +1,147 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "behavior-definition-extraction-response",
+  "questionnaire": "http://example.org/fhir/Questionnaire/behavior-definition-extraction",
+  "status": "completed",
+  "authored": "2026-05-21T09:30:00Z",
+  "author": {
+    "reference": "Practitioner/demo-author"
+  },
+  "item": [
+    {
+      "linkId": "patient",
+      "item": [
+        {
+          "linkId": "name",
+          "item": [
+            {
+              "linkId": "given",
+              "answer": [
+                {
+                  "valueString": "Amina"
+                }
+              ]
+            },
+            {
+              "linkId": "family",
+              "answer": [
+                {
+                  "valueString": "Odhiambo"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "gender",
+          "answer": [
+            {
+              "valueCoding": {
+                "code": "female",
+                "display": "Female"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "dob",
+          "answer": [
+            {
+              "valueDate": "1992-04-16"
+            }
+          ]
+        },
+        {
+          "linkId": "national-id",
+          "answer": [
+            {
+              "valueString": "NH-12345"
+            }
+          ]
+        },
+        {
+          "linkId": "mobile-phone",
+          "answer": [
+            {
+              "valueString": "+254700123456"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "contacts",
+      "item": [
+        {
+          "linkId": "contact-name",
+          "answer": [
+            {
+              "valueString": "Otieno Odhiambo"
+            }
+          ]
+        },
+        {
+          "linkId": "relationship",
+          "answer": [
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                "code": "N",
+                "display": "Next-of-kin"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "phone",
+          "answer": [
+            {
+              "valueString": "+254711000001"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "contacts",
+      "item": [
+        {
+          "linkId": "contact-name",
+          "answer": [
+            {
+              "valueString": "Martha Auma"
+            }
+          ]
+        },
+        {
+          "linkId": "relationship",
+          "answer": [
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                "code": "C",
+                "display": "Emergency contact"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "phone",
+          "answer": [
+            {
+              "valueString": "+254722000002"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "height",
+      "answer": [
+        {
+          "valueDecimal": 1.68
+        }
+      ]
+    }
+  ]
+}
