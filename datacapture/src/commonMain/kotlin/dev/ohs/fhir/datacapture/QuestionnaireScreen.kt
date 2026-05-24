@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.views.components.QuestionnaireBottomNavigation
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
@@ -61,7 +61,7 @@ import org.jetbrains.compose.resources.stringResource
 internal const val EXTRA_QUESTIONNAIRE_JSON_STRING = "questionnaire"
 
 /**
- * A [URI][android.net.Uri] extra for streaming a JSON encoded questionnaire.
+ * A URI extra for streaming a JSON encoded questionnaire.
  *
  * This is required unless [EXTRA_QUESTIONNAIRE_JSON_STRING] is provided.
  *
@@ -83,7 +83,7 @@ internal const val EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING = "questionnaire-res
 internal const val EXTRA_QUESTIONNAIRE_LAUNCH_CONTEXT_MAP = "questionnaire-launch-contexts"
 
 /**
- * A [URI][android.net.Uri] extra for streaming a JSON encoded questionnaire response.
+ * A URI extra for streaming a JSON encoded questionnaire response.
  *
  * If this and [EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING] are provided, this extra takes precedence.
  */
@@ -143,7 +143,7 @@ internal fun QuestionnaireScreen(
   viewModel: QuestionnaireViewModel,
   matchersProvider: QuestionnaireItemViewFactoryMatchersProvider,
 ) {
-  val questionnaireState by viewModel.questionnaireStateFlow.collectAsStateWithLifecycle()
+  val questionnaireState by viewModel.questionnaireStateFlow.collectAsState()
 
   Box(modifier = Modifier.fillMaxSize()) {
     when (val displayMode = questionnaireState.displayMode) {
