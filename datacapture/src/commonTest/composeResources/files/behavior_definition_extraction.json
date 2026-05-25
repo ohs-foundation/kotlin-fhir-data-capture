@@ -1,0 +1,435 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "behavior-definition-extraction",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extr-defn"
+    ]
+  },
+  "url": "http://example.org/fhir/Questionnaire/behavior-definition-extraction",
+  "title": "Definition Extraction Demo",
+  "status": "active",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId",
+      "valueString": "NewPatientId"
+    }
+  ],
+  "item": [
+    {
+      "linkId": "patient",
+      "text": "Patient information",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+          "extension": [
+            {
+              "url": "definition",
+              "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Patient"
+            },
+            {
+              "url": "fullUrl",
+              "valueString": "%NewPatientId"
+            }
+          ]
+        }
+      ],
+      "item": [
+        {
+          "linkId": "name",
+          "text": "Name",
+          "type": "group",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.text"
+                },
+                {
+                  "url": "expression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "item.where(linkId='given' or linkId='family').answer.value.join(' ')"
+                  }
+                }
+              ]
+            }
+          ],
+          "item": [
+            {
+              "linkId": "given",
+              "text": "Given name",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.given"
+            },
+            {
+              "linkId": "family",
+              "text": "Family name",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.family"
+            }
+          ]
+        },
+        {
+          "linkId": "gender",
+          "text": "Gender",
+          "type": "choice",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "female",
+                "display": "Female"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "male",
+                "display": "Male"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "other",
+                "display": "Other"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "unknown",
+                "display": "Unknown"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "dob",
+          "text": "Date of birth",
+          "type": "date",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.birthDate"
+        },
+        {
+          "linkId": "national-id",
+          "text": "National identifier",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.value",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.type"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueCodeableConcept": {
+                    "text": "National Identifier"
+                  }
+                }
+              ]
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.system"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueUri": "http://example.org/fhir/sid/national-id"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "mobile-phone",
+          "text": "Mobile phone",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.telecom.value",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.telecom.system"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueCode": "phone"
+                }
+              ]
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.telecom.use"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueCode": "mobile"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "contacts",
+      "text": "Emergency contacts",
+      "type": "group",
+      "repeats": true,
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+          "extension": [
+            {
+              "url": "definition",
+              "valueCanonical": "http://hl7.org/fhir/StructureDefinition/RelatedPerson"
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.patient.reference"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%NewPatientId"
+              }
+            }
+          ]
+        }
+      ],
+      "item": [
+        {
+          "linkId": "contact-name",
+          "text": "Contact name",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.name.text"
+        },
+        {
+          "linkId": "relationship",
+          "text": "Relationship",
+          "type": "choice",
+          "definition": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.relationship.coding",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                "code": "N",
+                "display": "Next-of-kin"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                "code": "E",
+                "display": "Employer"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+                "code": "C",
+                "display": "Emergency contact"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "phone",
+          "text": "Contact phone",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.telecom.value",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.telecom.system"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueCode": "phone"
+                }
+              ]
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueUri": "http://hl7.org/fhir/StructureDefinition/RelatedPerson#RelatedPerson.telecom.use"
+                },
+                {
+                  "url": "fixed-value",
+                  "valueCode": "mobile"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "height",
+      "text": "Current height (m)",
+      "type": "decimal",
+      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.value[x]:valueQuantity.value",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+          "extension": [
+            {
+              "url": "definition",
+              "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Observation"
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.status"
+            },
+            {
+              "url": "fixed-value",
+              "valueCode": "final"
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code.coding"
+            },
+            {
+              "url": "fixed-value",
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "8302-2",
+                "display": "Body height"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.subject.reference"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%NewPatientId"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.effective"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "(%resource.authored | %resource.meta.lastUpdated | now()).first()"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.issued"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "(%resource.authored | %resource.meta.lastUpdated | now()).first()"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.performer"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "%resource.author"
+              }
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.value[x]:valueQuantity.unit"
+            },
+            {
+              "url": "fixed-value",
+              "valueString": "m"
+            }
+          ]
+        },
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+          "extension": [
+            {
+              "url": "definition",
+              "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.derivedFrom.reference"
+            },
+            {
+              "url": "expression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "'QuestionnaireResponse/' + %resource.id"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

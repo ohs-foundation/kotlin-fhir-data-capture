@@ -33,9 +33,16 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class QuestionnaireResponseExtractorTest {
   private val json = FhirR4Json()
+  private val bundleJsonParser = Json { ignoreUnknownKeys = true }
 
   @Test
   fun extract_singleResourceTemplate_returnsTransactionBundleWithCleanPatient() = runTest {
@@ -175,6 +182,160 @@ class QuestionnaireResponseExtractorTest {
     assertFalse(serializedBundle.contains(EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL))
     assertFalse(serializedBundle.contains(EXTENSION_TEMPLATE_EXTRACT_VALUE_URL))
   }
+
+  @Test
+  fun extract_prefersTemplateBasedExtractionWhenQuestionnaireHasContainedResources() = runTest {
+    val bundle =
+      extract(
+        questionnaireJson =
+          """
+          {
+            "resourceType": "Questionnaire",
+            "status": "active",
+            "contained": [
+              {
+                "resourceType": "Patient",
+                "id": "patientTemplate",
+                "name": [
+                  {
+                    "_text": {
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                          "valueString": "item.where(linkId='name').answer.value.first()"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+                "extension": [
+                  {
+                    "url": "template",
+                    "valueReference": {
+                      "reference": "#patientTemplate"
+                    }
+                  }
+                ]
+              },
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                "extension": []
+              }
+            ],
+            "item": [
+              {
+                "linkId": "name",
+                "type": "string"
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+        questionnaireResponseJson =
+          """
+          {
+            "resourceType": "QuestionnaireResponse",
+            "status": "completed",
+            "item": [
+              {
+                "linkId": "name",
+                "answer": [
+                  {
+                    "valueString": "Template Priority Patient"
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+      )
+
+    assertEquals(Bundle.BundleType.Transaction, bundle.type.value)
+    assertEquals(
+      "Template Priority Patient",
+      bundle.resources().filterIsInstance<Patient>().single().name.single().text?.value,
+    )
+  }
+
+  @Test
+  fun extract_definitionBasedQuestionnaireWithoutContainedResources_usesDefinitionExtraction() =
+    runTest {
+      val questionnaire =
+        json.decodeFromString(loadFixture("behavior_definition_extraction.json")) as Questionnaire
+      val questionnaireResponse =
+        json.decodeFromString(loadFixture("behavior_definition_extraction_response.json"))
+          as QuestionnaireResponse
+
+      assertTrue(questionnaire.contained.isEmpty())
+      assertTrue(QuestionnaireResponseExtractor.canExtract(questionnaire))
+
+      val bundle = QuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
+      val bundleJson = bundleJsonParser.parseToJsonElement(json.encodeToString(bundle)).jsonObject
+      val entries = bundleJson.requireArray("entry")
+
+      assertEquals("transaction", bundleJson.requireString("type"))
+      assertEquals(4, entries.size)
+
+      val patientEntry = entries.singleByResourceType("Patient")
+      val patientResource = patientEntry.requireObject("resource")
+      val patientFullUrl = patientEntry.requireString("fullUrl")
+
+      assertTrue(patientFullUrl.startsWith("urn:uuid:"))
+      assertEquals("POST", patientEntry.requireObject("request").requireString("method"))
+      assertEquals(
+        "Amina Odhiambo",
+        patientResource.requireArray("name").single().jsonObject.requireString("text"),
+      )
+      assertEquals("female", patientResource.requireString("gender"))
+      assertEquals("1992-04-16", patientResource.requireString("birthDate"))
+      assertEquals(
+        "NH-12345",
+        patientResource.requireArray("identifier").single().jsonObject.requireString("value"),
+      )
+      assertEquals(
+        "+254700123456",
+        patientResource.requireArray("telecom").single().jsonObject.requireString("value"),
+      )
+
+      val relatedPersonEntries = entries.filterByResourceType("RelatedPerson")
+      assertEquals(2, relatedPersonEntries.size)
+      relatedPersonEntries.forEach { entry ->
+        val resource = entry.requireObject("resource")
+        assertEquals(patientFullUrl, resource.requireObject("patient").requireString("reference"))
+      }
+
+      val observationEntry = entries.singleByResourceType("Observation")
+      val observationResource = observationEntry.requireObject("resource")
+
+      assertEquals("final", observationResource.requireString("status"))
+      assertEquals(
+        patientFullUrl,
+        observationResource.requireObject("subject").requireString("reference"),
+      )
+      assertEquals(
+        "1.68",
+        observationResource.requireObject("valueQuantity").requireString("value"),
+      )
+      assertEquals("m", observationResource.requireObject("valueQuantity").requireString("unit"))
+      assertEquals(
+        "Practitioner/demo-author",
+        observationResource.requireArray("performer").single().jsonObject.requireString("reference"),
+      )
+      assertEquals(
+        "QuestionnaireResponse/behavior-definition-extraction-response",
+        observationResource
+          .requireArray("derivedFrom")
+          .single()
+          .jsonObject
+          .requireString("reference"),
+      )
+    }
 
   @Test
   fun extract_officialComplexTemplate_extractsExpectedResources() = runTest {
@@ -1281,6 +1442,20 @@ class QuestionnaireResponseExtractorTest {
 
   private suspend fun loadFixture(fileName: String): String =
     Res.readBytes("files/$fileName").decodeToString()
+
+  private fun JsonObject.requireArray(name: String): JsonArray = getValue(name).jsonArray
+
+  private fun JsonObject.requireObject(name: String): JsonObject = getValue(name).jsonObject
+
+  private fun JsonObject.requireString(name: String): String = getValue(name).jsonPrimitive.content
+
+  private fun JsonArray.singleByResourceType(resourceType: String): JsonObject =
+    single { it.jsonObject.requireObject("resource").requireString("resourceType") == resourceType }
+      .jsonObject
+
+  private fun JsonArray.filterByResourceType(resourceType: String): List<JsonObject> =
+    filter { it.jsonObject.requireObject("resource").requireString("resourceType") == resourceType }
+      .map { it.jsonObject }
 
   private fun officialComplexTemplateResponseJson(
     questionnaireResponseId: String,
