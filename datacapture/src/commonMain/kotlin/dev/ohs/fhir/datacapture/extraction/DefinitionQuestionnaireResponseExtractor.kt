@@ -17,6 +17,10 @@ package dev.ohs.fhir.datacapture.extraction
 
 import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.ohs.fhir.datacapture.extensions.CORE_STRUCTURE_DEFINITION_PREFIX
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_DEFINITION_EXTRACT_URL
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_DEFINITION_EXTRACT_VALUE_URL
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_EXTRACT_ALLOCATE_ID_URL
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.packRepeatedGroups
 import dev.ohs.fhir.fhirpath.FhirPathEngine
@@ -772,7 +776,11 @@ internal object DefinitionQuestionnaireResponseExtractor {
     anchorPath: List<String>,
   ): AnchorContext {
     require(anchorPath.startsWithPath(parentAnchor.path)) {
-      "Anchor path ${anchorPath.joinToString(".")} must extend parent anchor ${parentAnchor.path.joinToString(".")}"
+      "Anchor path ${anchorPath.joinToString(".")} must extend parent anchor ${
+        parentAnchor.path.joinToString(
+          "."
+        )
+      }"
     }
 
     var currentNode = parentAnchor.node
@@ -1166,7 +1174,12 @@ internal object DefinitionQuestionnaireResponseExtractor {
     bytes[8] = ((bytes[8].toInt() and 0x3F) or 0x80).toByte()
     val hex =
       bytes.joinToString(separator = "") { byte -> byte.toUByte().toString(16).padStart(2, '0') }
-    return "urn:uuid:${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}"
+    return "urn:uuid:${hex.substring(0, 8)}-${hex.substring(8, 12)}-${
+      hex.substring(
+        12,
+        16,
+      )
+    }-${hex.substring(16, 20)}-${hex.substring(20)}"
   }
 
   private fun stringifyValue(value: Any): String =
@@ -1336,12 +1349,4 @@ internal object DefinitionQuestionnaireResponseExtractor {
   private class MutableJsonLiteral(private val value: JsonElement) : MutableJsonValue {
     override fun toJsonElement(): JsonElement = value
   }
-
-  private const val CORE_STRUCTURE_DEFINITION_PREFIX = "http://hl7.org/fhir/StructureDefinition/"
-  private const val EXTENSION_DEFINITION_EXTRACT_URL =
-    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract"
-  private const val EXTENSION_DEFINITION_EXTRACT_VALUE_URL =
-    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue"
-  private const val EXTENSION_EXTRACT_ALLOCATE_ID_URL =
-    "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
 }
