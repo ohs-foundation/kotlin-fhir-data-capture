@@ -20,17 +20,49 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 
 /**
- * Public entry point for QuestionnaireResponse extraction.
+ * Entry point for QuestionnaireResponse extraction.
  *
- * This branch keeps the external API stable while the definition-based extractor moves into its
- * own implementation file.
+ * Definition-based extraction remains available through the existing [extract] API, while
+ * template-based extraction is exposed explicitly for callers that know which mechanism their
+ * questionnaire uses.
  */
 public object QuestionnaireResponseExtractor {
+  public fun canExtractTemplate(questionnaire: Questionnaire): Boolean =
+    TemplateQuestionnaireResponseExtractor.canExtract(questionnaire)
+
   public fun canExtract(questionnaire: Questionnaire): Boolean =
-    DefinitionQuestionnaireResponseExtractor.canExtract(questionnaire)
+    selectExtractionMode(questionnaire) != ExtractionMode.NONE
+
+  public fun extractTemplate(
+    questionnaire: Questionnaire,
+    questionnaireResponse: QuestionnaireResponse,
+  ): Bundle = TemplateQuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
 
   public fun extract(
     questionnaire: Questionnaire,
     questionnaireResponse: QuestionnaireResponse,
-  ): Bundle = DefinitionQuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
+  ): Bundle =
+    when (selectExtractionMode(questionnaire)) {
+      ExtractionMode.TEMPLATE -> extractTemplate(questionnaire, questionnaireResponse)
+      ExtractionMode.DEFINITION ->
+        DefinitionQuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
+
+      ExtractionMode.NONE -> error("No extraction instructions were found in the questionnaire.")
+    }
+
+  private fun selectExtractionMode(questionnaire: Questionnaire): ExtractionMode =
+    when {
+      canExtractTemplate(questionnaire) -> ExtractionMode.TEMPLATE
+
+      DefinitionQuestionnaireResponseExtractor.canExtract(questionnaire) ->
+        ExtractionMode.DEFINITION
+
+      else -> ExtractionMode.NONE
+    }
+}
+
+private enum class ExtractionMode {
+  TEMPLATE,
+  DEFINITION,
+  NONE,
 }

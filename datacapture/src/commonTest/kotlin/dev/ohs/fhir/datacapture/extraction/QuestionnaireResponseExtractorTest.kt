@@ -15,11 +15,17 @@
  */
 package dev.ohs.fhir.datacapture.extraction
 
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_TEMPLATE_EXTRACT_VALUE_URL
+import dev.ohs.fhir.model.r4.Bundle
 import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlinx.coroutines.test.runTest
@@ -33,6 +39,388 @@ import kotlinx.serialization.json.jsonPrimitive
 class QuestionnaireResponseExtractorTest {
   private val fhirJson = FhirR4Json()
   private val json = Json { ignoreUnknownKeys = true }
+
+  @Test
+  fun extract_singleResourceTemplate_returnsTransactionBundleWithCleanPatient() = runTest {
+    val questionnaire =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "status": "active",
+          "contained": [
+            {
+              "resourceType": "Patient",
+              "id": "patientTemplate",
+              "name": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext",
+                      "valueString": "item.where(linkId='name')"
+                    }
+                  ],
+                  "_family": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                        "valueString": "item.where(linkId='family').answer.value.first()"
+                      }
+                    ]
+                  },
+                  "_given": [
+                    {
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                          "valueString": "item.where(linkId='given').answer.value.first()"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "_active": {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                    "valueString": "item.where(linkId='active').answer.value.first()"
+                  }
+                ]
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+              "extension": [
+                {
+                  "url": "template",
+                  "valueReference": {
+                    "reference": "#patientTemplate"
+                  }
+                }
+              ]
+            }
+          ],
+          "item": [
+            {
+              "linkId": "name",
+              "type": "group",
+              "item": [
+                {
+                  "linkId": "given",
+                  "type": "string"
+                },
+                {
+                  "linkId": "family",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "linkId": "active",
+              "type": "boolean"
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as Questionnaire
+    val questionnaireResponse =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "status": "completed",
+          "item": [
+            {
+              "linkId": "name",
+              "item": [
+                {
+                  "linkId": "given",
+                  "answer": [
+                    {
+                      "valueString": "Jane"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "family",
+                  "answer": [
+                    {
+                      "valueString": "Doe"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "active",
+              "answer": [
+                {
+                  "valueBoolean": true
+                }
+              ]
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as QuestionnaireResponse
+
+    val bundle = QuestionnaireResponseExtractor.extractTemplate(questionnaire, questionnaireResponse)
+    val bundleJson = json.parseToJsonElement(fhirJson.encodeToString(bundle)).jsonObject
+    val patientResource = bundleJson.requireArray("entry").singleByResourceType("Patient")
+      .requireObject("resource")
+
+    assertEquals(Bundle.BundleType.Transaction, bundle.type.value)
+    assertFalse("id" in patientResource)
+    assertEquals(true, patientResource.requireString("active").toBoolean())
+
+    val serializedBundle = fhirJson.encodeToString(bundle)
+    assertFalse(serializedBundle.contains(EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL))
+    assertFalse(serializedBundle.contains(EXTENSION_TEMPLATE_EXTRACT_VALUE_URL))
+  }
+
+  @Test
+  fun extract_prefersTemplateBasedExtractionWhenQuestionnaireHasTemplateMetadata() = runTest {
+    val questionnaire =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "status": "active",
+          "contained": [
+            {
+              "resourceType": "Patient",
+              "id": "patientTemplate",
+              "name": [
+                {
+                  "_text": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue",
+                        "valueString": "item.where(linkId='name').answer.value.first()"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract",
+              "extension": [
+                {
+                  "url": "template",
+                  "valueReference": {
+                    "reference": "#patientTemplate"
+                  }
+                }
+              ]
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+              "extension": []
+            }
+          ],
+          "item": [
+            {
+              "linkId": "name",
+              "type": "string"
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as Questionnaire
+    val questionnaireResponse =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "status": "completed",
+          "item": [
+            {
+              "linkId": "name",
+              "answer": [
+                {
+                  "valueString": "Template Priority Patient"
+                }
+              ]
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as QuestionnaireResponse
+
+    val bundle = QuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
+    val bundleJson = json.parseToJsonElement(fhirJson.encodeToString(bundle)).jsonObject
+
+    assertEquals(Bundle.BundleType.Transaction, bundle.type.value)
+    assertEquals(
+      "Template Priority Patient",
+      bundleJson
+        .requireArray("entry")
+        .singleByResourceType("Patient")
+        .requireObject("resource")
+        .requireArray("name")
+        .single()
+        .jsonObject
+        .requireString("text"),
+    )
+  }
+
+  @Test
+  fun canExtract_containedResourcesWithoutExtractionMetadata_returnsFalse() = runTest {
+    val questionnaire =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "status": "active",
+          "contained": [
+            {
+              "resourceType": "Patient",
+              "id": "authoring-only-resource"
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as Questionnaire
+
+    assertFalse(QuestionnaireResponseExtractor.canExtract(questionnaire))
+    assertFalse(QuestionnaireResponseExtractor.canExtractTemplate(questionnaire))
+  }
+
+  @Test
+  fun extract_definitionBasedQuestionnaireWithContainedResources_usesDefinitionExtraction() =
+    runTest {
+      val questionnaire =
+        fhirJson.decodeFromString(
+          """
+          {
+            "resourceType": "Questionnaire",
+            "status": "active",
+            "contained": [
+              {
+                "resourceType": "Patient",
+                "id": "authoring-only-resource"
+              }
+            ],
+            "item": [
+              {
+                "linkId": "patient",
+                "type": "group",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Patient"
+                      }
+                    ]
+                  }
+                ],
+                "item": [
+                  {
+                    "linkId": "name",
+                    "type": "string",
+                    "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.text"
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent()
+        ) as Questionnaire
+      val questionnaireResponse =
+        fhirJson.decodeFromString(
+          """
+          {
+            "resourceType": "QuestionnaireResponse",
+            "status": "completed",
+            "item": [
+              {
+                "linkId": "patient",
+                "item": [
+                  {
+                    "linkId": "name",
+                    "answer": [
+                      {
+                        "valueString": "Amina Odhiambo"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent()
+        ) as QuestionnaireResponse
+
+      val bundle = QuestionnaireResponseExtractor.extract(questionnaire, questionnaireResponse)
+      val bundleJson = json.parseToJsonElement(fhirJson.encodeToString(bundle)).jsonObject
+
+      assertEquals(
+        "Amina Odhiambo",
+        bundleJson
+          .requireArray("entry")
+          .singleByResourceType("Patient")
+          .requireObject("resource")
+          .requireArray("name")
+          .single()
+          .jsonObject
+          .requireString("text"),
+      )
+    }
+
+  @Test
+  fun extractTemplate_questionnaireWithoutTemplateInstructions_throws() = runTest {
+    val questionnaire =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "status": "active",
+          "contained": [
+            {
+              "resourceType": "Patient",
+              "id": "authoring-only-resource"
+            }
+          ]
+        }
+        """
+          .trimIndent()
+      ) as Questionnaire
+    val questionnaireResponse =
+      fhirJson.decodeFromString(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "status": "completed"
+        }
+        """
+          .trimIndent()
+      ) as QuestionnaireResponse
+
+    val error =
+      assertFailsWith<IllegalArgumentException> {
+        QuestionnaireResponseExtractor.extractTemplate(questionnaire, questionnaireResponse)
+      }
+
+    assertEquals(
+      "No template-based extraction instructions were found in the questionnaire.",
+      error.message,
+    )
+  }
 
   @Test
   fun extractsTransactionBundleFromDefinitionBasedQuestionnaire() = runTest {
