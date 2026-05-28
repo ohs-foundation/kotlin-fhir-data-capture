@@ -141,13 +141,15 @@ kotlin {
 
 licensee {
   allow("Apache-2.0")
-  allow("BSD-2-Clause")
-  allow("BSD-3-Clause")
+
+  // slf4j (pulled in by dbus-java)
   allow("MIT")
 
   listOf(
       // FileKit
       "https://github.com/vinceglb/FileKit/blob/main/LICENSE",
+
+      // dbus-java (pulled in by FileKit)
       "https://github.com/hypfvieh/dbus-java/blob/master/LICENSE",
     )
     .forEach { allowUrl(it) }
