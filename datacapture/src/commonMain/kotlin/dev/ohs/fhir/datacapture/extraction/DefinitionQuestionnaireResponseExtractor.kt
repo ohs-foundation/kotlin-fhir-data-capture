@@ -75,7 +75,7 @@ import kotlinx.serialization.json.put
  * - `extractAllocateId`
  * - `Questionnaire.item.definition`
  */
-internal object DefinitionQuestionnaireResponseExtractor {
+public object DefinitionQuestionnaireResponseExtractor {
   private val fhirJson = FhirR4Json()
   private val json = Json {
     explicitNulls = false
