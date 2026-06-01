@@ -1,5 +1,3 @@
-# see https://docs.gradle.org/current/userguide/platforms.html
-
 [versions]
 android-gradle-plugin = "8.13.0"
 androidx-appcompat = "1.6.1"
@@ -28,6 +26,7 @@ ksp = "2.3.7"
 kt-lint = "1.8.0"
 licensee-plugin = "1.14.1"
 material = "1.13.0"
+maven-publish = "0.36.0"
 navigation = "2.9.8"
 navigation-compose = "2.9.1"
 ohs-fhir = "1.0.0-beta03"
@@ -85,4 +84,5 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-m
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }

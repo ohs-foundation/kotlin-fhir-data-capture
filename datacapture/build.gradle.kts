@@ -11,11 +11,16 @@ plugins {
   alias(libs.plugins.compose.hotreload)
   alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.maven.publish)
 }
 
-val androidNamespace: String by project
 val androidCompileSdk: String by project
 val androidMinSdk: String by project
+
+val androidNamespace: String by project
+val mavenGroupId: String by project
+val mavenArtifactId: String by project
+val mavenVersion: String by project
 
 kotlin {
   jvmToolchain(21)
@@ -153,4 +158,37 @@ licensee {
       "https://github.com/hypfvieh/dbus-java/blob/master/LICENSE",
     )
     .forEach { allowUrl(it) }
+}
+
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
+  coordinates(mavenGroupId, mavenArtifactId, mavenVersion)
+
+  pom {
+    name = "Kotlin FHIR Data Capture"
+    description = "A Kotlin Multiplatform library for FHIR Structured Data Capture (SDC)"
+    inceptionYear = "2026"
+    url = "https://github.com/ohs-foundation/kotlin-fhir-data-capture"
+    licenses {
+      license {
+        name = "The Apache License, Version 2.0"
+        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    }
+    developers {
+      developer {
+        id = "ohs-foundation"
+        name = "Open Health Stack Foundation"
+        url = "https://ohs.dev/"
+      }
+    }
+    scm {
+      url = "https://github.com/ohs-foundation/kotlin-fhir-data-capture/"
+      connection = "scm:git:git://github.com/ohs-foundation/kotlin-fhir-data-capture.git"
+      developerConnection =
+        "scm:git:ssh://git@github.com/ohs-foundation/kotlin-fhir-data-capture.git"
+    }
+  }
 }
