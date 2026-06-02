@@ -50,9 +50,7 @@ android {
 }
 
 kotlin {
-  androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
-
-  jvm("desktop")
+  jvm()
 
   @OptIn(ExperimentalWasmDsl::class)
   wasmJs {
@@ -68,9 +66,11 @@ kotlin {
     binaries.executable()
   }
 
-  listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
-    iosTarget.binaries.framework {
-      baseName = "CatalogKit"
+  androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
+
+  listOf(iosSimulatorArm64(), iosArm64(), iosX64()).forEach {
+    it.binaries.framework {
+      baseName = "Catalog"
       isStatic = true
     }
   }
@@ -107,7 +107,7 @@ kotlin {
     }
 
     @Suppress("unused")
-    val desktopMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
+    val jvmMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
 
     iosMain {
       dependencies {

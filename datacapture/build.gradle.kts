@@ -25,6 +25,18 @@ val mavenVersion: String by project
 kotlin {
   jvmToolchain(21)
 
+  jvm()
+
+  wasmJs {
+    browser()
+    binaries.library()
+  }
+
+  js {
+    browser()
+    binaries.library()
+  }
+
   androidLibrary {
     namespace = androidNamespace
     compileSdk = androidCompileSdk.toInt()
@@ -47,24 +59,8 @@ kotlin {
     }
   }
 
-  val xcfName = "sharedKit"
-
-  iosX64 { binaries.framework { baseName = xcfName } }
-
-  iosArm64 { binaries.framework { baseName = xcfName } }
-
-  iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
-
-  wasmJs {
-    browser()
-    binaries.library()
-  }
-
-  jvm("desktop")
-
-  js {
-    browser()
-    binaries.library()
+  listOf(iosSimulatorArm64(), iosArm64(), iosX64()).forEach {
+    it.binaries.framework { baseName = "KotlinFhirDataCapture" }
   }
 
   sourceSets {
@@ -135,7 +131,7 @@ kotlin {
     }
 
     @Suppress("unused")
-    val desktopMain by getting {
+    val jvmMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutines.swing)
