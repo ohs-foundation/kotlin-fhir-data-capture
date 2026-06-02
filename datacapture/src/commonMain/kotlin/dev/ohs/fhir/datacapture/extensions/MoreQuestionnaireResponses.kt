@@ -120,6 +120,26 @@ internal fun QuestionnaireResponse.Builder.unpackRepeatedGroups(questionnaire: Q
   item = unpackRepeatedGroups(questionnaire.item, item).toMutableList()
 }
 
+/**
+ * Unpacks repeated descendant groups while keeping the current item as a single logical node.
+ *
+ * Extraction templates authored on a parent item expect child groups to be visible through
+ * `item.where(linkId = '...')`, even if the traversal machinery has packed repeated groups into
+ * answer-based form. This helper restores the author-facing child shape without exploding the
+ * current item itself into multiple siblings.
+ */
+internal fun QuestionnaireResponse.Item.unpackRepeatedDescendants(
+  questionnaireItem: Questionnaire.Item
+): QuestionnaireResponse.Item =
+  toBuilder()
+    .apply {
+      item = unpackRepeatedGroups(questionnaireItem.item, item).toMutableList()
+      answer.forEach {
+        it.item = unpackRepeatedGroups(questionnaireItem.item, it.item).toMutableList()
+      }
+    }
+    .build()
+
 private fun unpackRepeatedGroups(
   questionnaireItems: List<Questionnaire.Item>,
   questionnaireResponseItems: List<QuestionnaireResponse.Item.Builder>,

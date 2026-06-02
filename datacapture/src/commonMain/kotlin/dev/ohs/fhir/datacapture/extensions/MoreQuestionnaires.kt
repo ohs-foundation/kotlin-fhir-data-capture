@@ -229,3 +229,53 @@ private suspend fun forEachItemPair(
     }
   }
 }
+
+/**
+ * Parsed view of an `sdc-questionnaire-templateExtract` extension.
+ *
+ * The template points at a contained resource and can optionally define FHIRPath expressions for
+ * `Bundle.entry.request` metadata. The extractor resolves these expressions later against the
+ * current questionnaire/questionnaire response scope.
+ */
+data class TemplateExtractDefinition(
+  val templateReference: String,
+  val fullUrlExpression: String? = null,
+  val resourceIdExpression: String? = null,
+  val ifNoneMatchExpression: String? = null,
+  val ifModifiedSinceExpression: String? = null,
+  val ifMatchExpression: String? = null,
+  val ifNoneExistExpression: String? = null,
+)
+
+/** Root-level resource templates declared on the questionnaire itself. */
+internal val Questionnaire.templateExtractExtensions: List<TemplateExtractDefinition>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_TEMPLATE_EXTRACT_URL }
+      .mapNotNull { it.asTemplateExtractDefinition() }
+
+/** Optional root-level bundle template that can emit multiple entries in one extraction step. */
+internal val Questionnaire.templateExtractBundleReference: String?
+  get() =
+    extension
+      .firstOrNull { it.url == EXTENSION_TEMPLATE_EXTRACT_BUNDLE_URL }
+      ?.value
+      ?.asReference()
+      ?.value
+      ?.reference
+      ?.value
+
+/**
+ * Questionnaire-scoped `%variable` names that should be pre-populated with generated URN values.
+ */
+internal val Questionnaire.allocateIdVariableNames: List<String>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
+      .mapNotNull { it.stringValue()?.normalizedVariableName() }
+
+/** Resolves a contained resource whether the template used `id` or `#id` notation. */
+internal fun Questionnaire.findContainedResource(reference: String): Resource? {
+  val containedReference = if (reference.startsWith("#")) reference else "#$reference"
+  return contained.firstOrNull { resource -> resource.id?.let { "#$it" } == containedReference }
+}

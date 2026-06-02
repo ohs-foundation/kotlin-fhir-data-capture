@@ -33,7 +33,7 @@ internal object FhirPathService {
    */
   fun evaluate(
     expression: String,
-    resource: Resource,
+    resource: Any?,
     variables: Map<String, Any?> = emptyMap(),
   ): List<Any> =
     try {

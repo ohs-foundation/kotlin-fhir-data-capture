@@ -995,3 +995,17 @@ internal fun Questionnaire.Item.readCustomStyleExtension(styleUrl: StyleUrl): St
   }
   return null
 }
+
+/** Item-level resource templates that only apply when that item is being traversed. */
+internal val Questionnaire.Item.templateExtractExtensions: List<TemplateExtractDefinition>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_TEMPLATE_EXTRACT_URL }
+      .mapNotNull { it.asTemplateExtractDefinition() }
+
+/** Item-scoped `%variable` names whose generated values are shared within that item context. */
+internal val Questionnaire.Item.allocateIdVariableNames: List<String>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
+      .mapNotNull { it.stringValue()?.normalizedVariableName() }

@@ -26,6 +26,20 @@ import kotlinx.datetime.LocalTime
 
 internal const val EXTENSION_CQF_CALCULATED_VALUE_URL: String =
   "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue"
+internal const val EXTENSION_TEMPLATE_EXTRACT_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract"
+
+internal const val EXTENSION_TEMPLATE_EXTRACT_BUNDLE_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractBundle"
+
+internal const val EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext"
+
+internal const val EXTENSION_TEMPLATE_EXTRACT_VALUE_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue"
+
+internal const val EXTENSION_EXTRACT_ALLOCATE_ID_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
 
 fun Extension.readStringExtension(uri: String): String? {
   val ext = extension.single { it.url == uri }
@@ -142,3 +156,34 @@ internal suspend fun Extension.Value.populateCqfCalculatedValue(
     }
   } ?: this
 }
+
+/**
+ * Converts the raw nested extension structure into a shape the extractor can work with directly.
+ *
+ * If the mandatory `template` child extension is missing, the definition is ignored because there
+ * is no contained resource to materialize.
+ */
+internal fun Extension.asTemplateExtractDefinition(): TemplateExtractDefinition? {
+  val templateReference =
+    extension.firstOrNull { it.url == "template" }?.value?.asReference()?.value?.reference?.value
+      ?: return null
+
+  return TemplateExtractDefinition(
+    templateReference = templateReference,
+    fullUrlExpression = extension.firstOrNull { it.url == "fullUrl" }?.stringValue(),
+    resourceIdExpression = extension.firstOrNull { it.url == "resourceId" }?.stringValue(),
+    ifNoneMatchExpression = extension.firstOrNull { it.url == "ifNoneMatch" }?.stringValue(),
+    ifModifiedSinceExpression =
+      extension.firstOrNull { it.url == "ifModifiedSince" }?.stringValue(),
+    ifMatchExpression = extension.firstOrNull { it.url == "ifMatch" }?.stringValue(),
+    ifNoneExistExpression = extension.firstOrNull { it.url == "ifNoneExist" }?.stringValue(),
+  )
+}
+
+/** Reads the string-like primitive variants commonly used by SDC extraction extensions. */
+internal fun Extension.stringValue(): String? =
+  value?.asString()?.value?.value
+    ?: value?.asUri()?.value?.value
+    ?: value?.asCanonical()?.value?.value
+    ?: value?.asCode()?.value?.value
+    ?: value?.asMarkdown()?.value?.value
