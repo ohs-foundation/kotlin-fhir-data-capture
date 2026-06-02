@@ -56,8 +56,7 @@ public object QuestionnaireResponseDataExtractor {
     }
 }
 
-private enum class ExtractionMode {
-  TEMPLATE,
-  DEFINITION,
-  NONE,
+private enum class DataExtractionMethod {
+  TEMPLATE_BASED
+  DEFINITION_BASED
 }
