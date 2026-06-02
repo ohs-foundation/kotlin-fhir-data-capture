@@ -19,8 +19,14 @@ package dev.ohs.fhir.datacapture
 expect object DataCapture {
 
   /**
-   * If client has set a configuration by implementing [DataCaptureConfig.Provider], then it returns
-   * that. Otherwise, it returns a default [DataCaptureConfig].
+   * Initialises the library with the provided [config]. Must be called before
+   * [getConfiguration] is used. If called more than once, subsequent calls are ignored.
+   */
+  fun initialize(config: DataCaptureConfig)
+
+  /**
+   * Returns the [DataCaptureConfig] supplied via [initialize], or a default [DataCaptureConfig]
+   * if [initialize] has not been called.
    */
   fun getConfiguration(): DataCaptureConfig
 }
