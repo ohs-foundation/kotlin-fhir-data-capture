@@ -19,10 +19,10 @@ import android.content.Context
 
 actual object DataCapture {
 
-  private lateinit var configuration: DataCaptureConfig
+  private var configuration: DataCaptureConfig? = null
 
   fun initialize(context: Context) {
-    if (!::configuration.isInitialized) {
+    if (configuration == null) {
       configuration =
         if (context.applicationContext is DataCaptureConfig.Provider) {
           (context.applicationContext as DataCaptureConfig.Provider).getDataCaptureConfig()
@@ -33,13 +33,10 @@ actual object DataCapture {
     return
   }
 
-  actual fun getConfiguration(): DataCaptureConfig {
-    if (this::configuration.isInitialized) {
-      return configuration
-    } else {
-      throw Exception(
-        "DataCapture not initialized. Initialize the library with DataCapture.initialize(context) "
-      )
+  actual fun initialize(config: DataCaptureConfig) {
+    if (configuration == null) {
+      configuration = config
     }
   }
+  actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()
 }
