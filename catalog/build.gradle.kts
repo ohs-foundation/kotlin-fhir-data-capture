@@ -68,9 +68,9 @@ kotlin {
 
   androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
 
-  listOf(iosSimulatorArm64(), iosArm64(), iosX64()).forEach { iosTarget ->
-    iosTarget.binaries.framework {
-      baseName = "CatalogKit"
+  listOf(iosSimulatorArm64(), iosArm64(), iosX64()).forEach {
+    it.binaries.framework {
+      baseName = "Catalog"
       isStatic = true
     }
   }
