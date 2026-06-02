@@ -16,8 +16,13 @@
 package dev.ohs.fhir.datacapture
 
 actual object DataCapture {
-  actual fun getConfiguration(): DataCaptureConfig {
-    // TODO Replace default configuration with actual data capture configuration
-    return DataCaptureConfig()
+  private var configuration: DataCaptureConfig? = null
+
+  actual fun initialize(config: DataCaptureConfig) {
+    if (configuration == null) {
+      configuration = config
+    }
   }
+
+  actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()
 }
