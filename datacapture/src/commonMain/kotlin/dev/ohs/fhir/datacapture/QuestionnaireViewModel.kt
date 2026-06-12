@@ -72,7 +72,6 @@ import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.FhirDateTime
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -102,11 +101,17 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTime::class)
 internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
-  private val jsonR4 = FhirR4Json()
+
+  private val jsonR4 = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
   private val xFhirQueryResolver: XFhirQueryResolver? by lazy {
     DataCapture.getConfiguration().xFhirQueryResolver
   }
@@ -234,7 +239,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
         state[EXTRA_QUESTIONNAIRE_LAUNCH_CONTEXT_MAP] as Map<String, String>
 
       val launchContextMapResource =
-        launchContextMapString.mapValues { jsonR4.decodeFromString(it.value) }
+        launchContextMapString.mapValues { jsonR4.decodeFromString<Resource>(it.value) }
       questionnaire.questionnaireLaunchContexts?.let { launchContextExtensions ->
         validateLaunchContextExtensions(launchContextExtensions)
         filterByCodeInNameExtension(launchContextMapResource, launchContextExtensions)

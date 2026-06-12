@@ -15,7 +15,6 @@
  */
 package dev.ohs.fhir.datacapture.extraction
 
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
@@ -33,13 +32,13 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 class DefinitionBasedDataExtractorTest {
-  private val fhirJson = FhirR4Json()
+
   private val json = Json { ignoreUnknownKeys = true }
 
   @Test
   fun canExtract_shouldReturnFalse_whenQuestionnaireHasNoDefinitionExtractInstructions() = runTest {
     val questionnaire =
-      fhirJson.decodeFromString(
+      json.decodeFromString(
         """
         {
           "resourceType": "Questionnaire",
@@ -63,7 +62,7 @@ class DefinitionBasedDataExtractorTest {
   fun extract_shouldRequireMatchingQuestionnaireCanonical() = runTest {
     val questionnaire = loadQuestionnaire("behavior_definition_extraction.json")
     val questionnaireResponse =
-      fhirJson.decodeFromString(
+      json.decodeFromString(
         Res.readBytes("files/behavior_definition_extraction_response.json")
           .decodeToString()
           .replace(
@@ -86,7 +85,7 @@ class DefinitionBasedDataExtractorTest {
     assertTrue(DefinitionBasedDataExtractor.canExtract(questionnaire))
 
     val bundle = DefinitionBasedDataExtractor.extract(questionnaire, questionnaireResponse)
-    val bundleJson = json.parseToJsonElement(fhirJson.encodeToString(bundle)).jsonObject
+    val bundleJson = json.parseToJsonElement(json.encodeToString(bundle)).jsonObject
     val entries = bundleJson.requireArray("entry")
 
     assertEquals("transaction", bundleJson.requireString("type"))
@@ -206,7 +205,7 @@ class DefinitionBasedDataExtractorTest {
     assertTrue(DefinitionBasedDataExtractor.canExtract(questionnaire))
 
     val bundle = DefinitionBasedDataExtractor.extract(questionnaire, questionnaireResponse)
-    val bundleJson = json.parseToJsonElement(fhirJson.encodeToString(bundle)).jsonObject
+    val bundleJson = json.parseToJsonElement(json.encodeToString(bundle)).jsonObject
     val entries = bundleJson.requireArray("entry")
 
     assertEquals("transaction", bundleJson.requireString("type"))
@@ -317,11 +316,242 @@ class DefinitionBasedDataExtractorTest {
     }
   }
 
+  @Test
+  fun extract_shouldResolveUnslicedBooleanChoiceFields() = runTest {
+    val bundleJson =
+      extractBundleJson(
+        questionnaireJson =
+          """
+          {
+            "resourceType": "Questionnaire",
+            "url": "http://example.org/fhir/Questionnaire/extract-observation-boolean",
+            "status": "active",
+            "item": [
+              {
+                "linkId": "obs",
+                "text": "Observation",
+                "type": "group",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Observation"
+                      }
+                    ]
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.status"
+                      },
+                      {
+                        "url": "fixed-value",
+                        "valueCode": "final"
+                      }
+                    ]
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code.coding"
+                      },
+                      {
+                        "url": "fixed-value",
+                        "valueCoding": {
+                          "system": "http://example.org/test-codes",
+                          "code": "sigmoidoscopy-complication"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "item": [
+                  {
+                    "linkId": "complication",
+                    "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.value[x]",
+                    "text": "Complication",
+                    "type": "boolean"
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+        questionnaireResponseJson =
+          """
+          {
+            "resourceType": "QuestionnaireResponse",
+            "questionnaire": "http://example.org/fhir/Questionnaire/extract-observation-boolean",
+            "status": "completed",
+            "item": [
+              {
+                "linkId": "obs",
+                "item": [
+                  {
+                    "linkId": "complication",
+                    "answer": [
+                      {
+                        "valueBoolean": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+      )
+
+    val entries = bundleJson.requireArray("entry")
+    val observation = entries.singleByResourceType("Observation").requireObject("resource")
+
+    assertEquals("true", observation.requireString("valueBoolean"))
+    assertFalse(observation.containsKey("valueString"))
+    assertFalse(observation.containsKey("valueCodeableConcept"))
+  }
+
+  @Test
+  fun extract_shouldResolveCodingAnswersIntoCodeableConceptChoices() = runTest {
+    val bundleJson =
+      extractBundleJson(
+        questionnaireJson =
+          """
+          {
+            "resourceType": "Questionnaire",
+            "url": "http://example.org/fhir/Questionnaire/extract-observation-choice",
+            "status": "active",
+            "item": [
+              {
+                "linkId": "obs",
+                "text": "Observation",
+                "type": "group",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Observation"
+                      }
+                    ]
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.status"
+                      },
+                      {
+                        "url": "fixed-value",
+                        "valueCode": "final"
+                      }
+                    ]
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                    "extension": [
+                      {
+                        "url": "definition",
+                        "valueUri": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code.coding"
+                      },
+                      {
+                        "url": "fixed-value",
+                        "valueCoding": {
+                          "system": "http://example.org/test-codes",
+                          "code": "screening-result"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "item": [
+                  {
+                    "linkId": "result",
+                    "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.value[x]",
+                    "text": "Result",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueCoding": {
+                          "system": "http://example.org/result-codes",
+                          "code": "positive",
+                          "display": "Positive"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+        questionnaireResponseJson =
+          """
+          {
+            "resourceType": "QuestionnaireResponse",
+            "questionnaire": "http://example.org/fhir/Questionnaire/extract-observation-choice",
+            "status": "completed",
+            "item": [
+              {
+                "linkId": "obs",
+                "item": [
+                  {
+                    "linkId": "result",
+                    "answer": [
+                      {
+                        "valueCoding": {
+                          "system": "http://example.org/result-codes",
+                          "code": "positive",
+                          "display": "Positive"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+          """
+            .trimIndent(),
+      )
+
+    val entries = bundleJson.requireArray("entry")
+    val observation = entries.singleByResourceType("Observation").requireObject("resource")
+    val valueCoding =
+      observation.requireObject("valueCodeableConcept").requireArray("coding").single().jsonObject
+
+    assertEquals("positive", valueCoding.requireString("code"))
+    assertEquals("http://example.org/result-codes", valueCoding.requireString("system"))
+    assertFalse(observation.containsKey("valueCoding"))
+    assertFalse(observation.containsKey("valueString"))
+  }
+
+  private fun extractBundleJson(
+    questionnaireJson: String,
+    questionnaireResponseJson: String,
+  ): JsonObject {
+    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaireResponse =
+      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+    val bundle = DefinitionBasedDataExtractor.extract(questionnaire, questionnaireResponse)
+    return json.parseToJsonElement(json.encodeToString(bundle)).jsonObject
+  }
+
   private suspend fun loadQuestionnaire(fileName: String): Questionnaire =
-    fhirJson.decodeFromString(Res.readBytes("files/$fileName").decodeToString()) as Questionnaire
+    json.decodeFromString(Res.readBytes("files/$fileName").decodeToString()) as Questionnaire
 
   private suspend fun loadQuestionnaireResponse(fileName: String): QuestionnaireResponse =
-    fhirJson.decodeFromString(Res.readBytes("files/$fileName").decodeToString())
+    json.decodeFromString(Res.readBytes("files/$fileName").decodeToString())
       as QuestionnaireResponse
 
   private fun JsonObject.requireArray(name: String): JsonArray = getValue(name).jsonArray

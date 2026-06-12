@@ -29,7 +29,7 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
  * StructureMap-based extraction implementation.
  */
 object DefinitionBasedDataExtractor {
-  public fun canExtract(questionnaire: Questionnaire): Boolean =
+  fun canExtract(questionnaire: Questionnaire): Boolean =
     questionnaire.definitionExtractExtensions.isNotEmpty() ||
       questionnaire.item.any { it.hasDefinitionExtractRecursively() }
 

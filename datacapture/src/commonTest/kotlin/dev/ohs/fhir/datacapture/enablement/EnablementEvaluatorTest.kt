@@ -24,7 +24,6 @@ import dev.ohs.fhir.model.r4.Date
 import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -39,9 +38,13 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 
 class EnablementEvaluatorTest {
-  private val json = FhirR4Json()
+  private val json = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
 
   @Test fun evaluate_noEnableWhen_shouldReturnTrue() = runTest { assertTrue(evaluateEnableWhen()) }
 

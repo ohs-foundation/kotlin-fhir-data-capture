@@ -19,7 +19,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 
 /**
  * Generated from kotlin-fhir's FhirR4Json polymorphic Resource registrations in
- * dev.ohs.fhir:fhir-model:1.0.0-beta03.
+ * dev.ohs.fhir:fhir-model:1.0.0-beta05.
  */
 internal object GeneratedR4ResourceDescriptorRegistry {
   private val descriptorsByResourceType: Map<String, SerialDescriptor> by lazy {
