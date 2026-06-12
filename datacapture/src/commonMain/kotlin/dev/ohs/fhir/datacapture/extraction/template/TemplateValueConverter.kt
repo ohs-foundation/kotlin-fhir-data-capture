@@ -34,7 +34,6 @@ import dev.ohs.fhir.model.r4.Date
 import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.FhirDateTime
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.HumanName
 import dev.ohs.fhir.model.r4.Id
 import dev.ohs.fhir.model.r4.Identifier
@@ -52,6 +51,7 @@ import dev.ohs.fhir.model.r4.Time
 import dev.ohs.fhir.model.r4.Uri
 import dev.ohs.fhir.model.r4.Url
 import dev.ohs.fhir.model.r4.Uuid
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -64,23 +64,6 @@ internal class TemplateValueConverter {
     explicitNulls = false
     encodeDefaults = false
   }
-
-  /*
-   * We intentionally keep two serializers here while the project is on
-   * `dev.ohs.fhir:fhir-model:1.0.0-beta03`.
-   *
-   * `json` is used for generic JsonElement composition when we materialize datatype values into
-   * the mutable template tree.
-   *
-   * `fhirJson` is still needed for Resource -> JSON conversion because the currently released
-   * kotlin-fhir artifact wraps the required polymorphic Resource serializers inside `FhirR4Json`
-   * and does not expose that configured Json instance. Upstream PR
-   * `ohs-foundation/kotlin-fhir#83` replaces that surrogate-based setup with custom serializers so
-   * plain `kotlinx.serialization Json` can serialize Resources directly with correct
-   * `resourceType` handling. Once this project upgrades to a release that includes #83, we can
-   * revisit collapsing this to one serializer.
-   */
-  private val fhirJson = FhirR4Json()
 
   /**
    * Converts one evaluated FHIRPath result into the JSON form expected by the template tree.
@@ -180,7 +163,7 @@ internal class TemplateValueConverter {
 
       is Annotation -> json.encodeToJsonElement(Annotation.serializer(), value)
 
-      is Resource -> json.parseToJsonElement(fhirJson.encodeToString(value))
+      is Resource -> json.encodeToJsonElement(Resource.serializer(), value)
 
       else -> {
         issues +=
@@ -327,7 +310,7 @@ internal class TemplateValueConverter {
     issues: MutableList<TemplateExtractionIssue>,
   ): Resource? =
     try {
-      fhirJson.decodeFromString(resourceJson.toString())
+      json.decodeFromString<Resource>(resourceJson.toString())
     } catch (throwable: Throwable) {
       issues +=
         TemplateExtractionIssue(
@@ -342,5 +325,5 @@ internal class TemplateValueConverter {
 
   /** Serializes a typed Kotlin FHIR resource into a mutable JSON object for template processing. */
   fun resourceToJson(resource: Resource): JsonObject =
-    json.parseToJsonElement(fhirJson.encodeToString(resource)).jsonObject
+    json.encodeToJsonElement(Resource.serializer(), resource).jsonObject
 }

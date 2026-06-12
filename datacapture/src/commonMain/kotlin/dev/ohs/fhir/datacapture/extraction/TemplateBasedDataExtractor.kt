@@ -24,12 +24,17 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 
 /**
- * Extracts FHIR resources from a completed [QuestionnaireResponse] using the SDC
- * `sdc-questionnaire-templateExtract` mechanism.
+ * Template-based extraction is the Structured Data Capture (SDC) mechanism for deriving one
+ * transaction Bundle from a completed [QuestionnaireResponse] by cloning contained resource
+ * templates and replacing their templated values with data selected from the response:
+ * https://build.fhir.org/ig/HL7/sdc/en/extraction.html
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-templateExtract.html
  *
- * The extractor is platform-independent and lives in `commonMain`, so callers can use it from
- * Android, iOS, JVM, JS, or Wasm after obtaining a completed questionnaire response from the data
- * capture workflow.
+ * This implementation supports the `sdc-questionnaire-templateExtract`,
+ * `sdc-questionnaire-templateExtractContext`, `sdc-questionnaire-templateExtractValue`, and
+ * `sdc-questionnaire-extractAllocateId` extensions defined by SDC. The extractor is
+ * platform-independent and lives in `commonMain`, so callers can use it from Android, iOS, JVM, JS,
+ * or Wasm after obtaining a completed questionnaire response from the data capture workflow.
  */
 object TemplateBasedDataExtractor {
   /** Returns `true` when the questionnaire declares at least one template extraction definition. */

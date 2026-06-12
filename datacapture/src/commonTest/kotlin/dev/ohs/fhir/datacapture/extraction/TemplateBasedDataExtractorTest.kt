@@ -15,8 +15,10 @@
  */
 package dev.ohs.fhir.datacapture.extraction
 
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_EXTRACT_ALLOCATE_ID_URL as EXTRACT_ALLOCATE_ID_URL
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_TEMPLATE_EXTRACT_URL as TEMPLATE_EXTRACT_URL
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_TEMPLATE_EXTRACT_VALUE_URL as TEMPLATE_EXTRACT_VALUE_URL
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractionResult
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin.test.Test
@@ -32,8 +34,10 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 class TemplateBasedDataExtractorTest {
-  private val fhirJson = FhirR4Json()
-  private val json = Json { explicitNulls = false }
+  private val json = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
 
   @Test
   fun extractsRootAndRepeatedGroupResourcesUsingSharedAllocatedIds() {
@@ -49,13 +53,13 @@ class TemplateBasedDataExtractorTest {
               "url": "$TEMPLATE_EXTRACT_URL",
               "extension": [
                 {
-                  "url": "template",
+                  "url": "$TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL",
                   "valueReference": {
                     "reference": "#patient-template"
                   }
                 },
                 {
-                  "url": "fullUrl",
+                  "url": "$TEMPLATE_EXTRACT_CHILD_FULL_URL",
                   "valueString": "%patientFullUrl"
                 }
               ]
@@ -87,7 +91,7 @@ class TemplateBasedDataExtractorTest {
                   "url": "$TEMPLATE_EXTRACT_URL",
                   "extension": [
                     {
-                      "url": "template",
+                      "url": "$TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL",
                       "valueReference": {
                         "reference": "#condition-template"
                       }
@@ -323,13 +327,13 @@ class TemplateBasedDataExtractorTest {
                   "url": "$TEMPLATE_EXTRACT_URL",
                   "extension": [
                     {
-                      "url": "template",
+                      "url": "$TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL",
                       "valueReference": {
                         "reference": "#phone-template"
                       }
                     },
                     {
-                      "url": "resourceId",
+                      "url": "$TEMPLATE_EXTRACT_CHILD_RESOURCE_ID_URL",
                       "valueString": "%context.answer.value.first()"
                     }
                   ]
@@ -403,7 +407,7 @@ class TemplateBasedDataExtractorTest {
               "url": "$TEMPLATE_EXTRACT_URL",
               "extension": [
                 {
-                  "url": "template",
+                  "url": "$TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL",
                   "valueReference": {
                     "reference": "#missing-template"
                   }
@@ -438,14 +442,14 @@ class TemplateBasedDataExtractorTest {
   }
 
   private fun questionnaire(jsonString: String): Questionnaire =
-    fhirJson.decodeFromString(jsonString.trimIndent()) as Questionnaire
+    json.decodeFromString<Questionnaire>(jsonString.trimIndent())
 
   private fun questionnaireResponse(jsonString: String): QuestionnaireResponse =
-    fhirJson.decodeFromString(jsonString.trimIndent()) as QuestionnaireResponse
+    json.decodeFromString<QuestionnaireResponse>(jsonString.trimIndent())
 
   private fun bundleEntryObjects(result: TemplateExtractionResult): List<JsonObject> =
     json
-      .parseToJsonElement(fhirJson.encodeToString(result.bundle))
+      .parseToJsonElement(json.encodeToString(result.bundle))
       .jsonObject
       .getValue("entry")
       .jsonArray
@@ -453,13 +457,4 @@ class TemplateBasedDataExtractorTest {
 
   private fun resourceType(entry: JsonObject): String =
     entry.getValue("resource").jsonObject.getValue("resourceType").jsonPrimitive.content
-
-  private companion object {
-    const val TEMPLATE_EXTRACT_URL =
-      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract"
-    const val TEMPLATE_EXTRACT_VALUE_URL =
-      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue"
-    const val EXTRACT_ALLOCATE_ID_URL =
-      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
-  }
 }

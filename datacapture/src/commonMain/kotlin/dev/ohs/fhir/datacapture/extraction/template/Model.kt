@@ -24,7 +24,15 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.String as FhirString
 
-/** Parsed view of a `sdc-questionnaire-templateExtract` extension. */
+/**
+ * Parsed view of the `sdc-questionnaire-templateExtract` complex extension.
+ *
+ * In SDC this extension points to a contained resource template and can optionally supply
+ * expressions for `Bundle.entry.fullUrl`, the extracted resource id, and conditional
+ * `Bundle.entry.request` metadata that should be populated when the output transaction Bundle is
+ * assembled:
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-templateExtract.html
+ */
 internal data class TemplateExtractDefinition(
   val templateReference: String,
   val fullUrlExpression: String? = null,
@@ -41,7 +49,14 @@ internal data class TemplateExtractExpression(
   val variableName: String? = null,
 )
 
-/** Template extraction directives found on a templated JSON node. */
+/**
+ * Template control extensions found on one JSON node inside a contained extraction template.
+ *
+ * `templateExtractContext` shifts the evaluation context for the subtree, while
+ * `templateExtractValue` replaces the current node with one or more evaluated values:
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-templateExtractContext.html
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-templateExtractValue.html
+ */
 internal data class TemplateNodeControls(
   val contextExpression: TemplateExtractExpression? = null,
   val valueExpression: TemplateExtractExpression? = null,

@@ -15,8 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.extraction.template
 
-import dev.ohs.fhir.datacapture.extensions.EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL
-import dev.ohs.fhir.datacapture.extensions.EXTENSION_TEMPLATE_EXTRACT_VALUE_URL
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_TEMPLATE_EXTRACT_VALUE_URL
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject

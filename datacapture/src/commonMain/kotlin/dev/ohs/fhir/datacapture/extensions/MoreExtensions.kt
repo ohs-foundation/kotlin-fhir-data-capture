@@ -16,6 +16,13 @@
 package dev.ohs.fhir.datacapture.extensions
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_FULL_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_IF_MATCH_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_IF_MODIFIED_SINCE_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_IF_NONE_EXIST_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_IF_NONE_MATCH_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_RESOURCE_ID_URL
+import dev.ohs.fhir.datacapture.extraction.TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractDefinition
 import dev.ohs.fhir.model.r4.Element
 import dev.ohs.fhir.model.r4.Expression
@@ -27,18 +34,6 @@ import kotlinx.datetime.LocalTime
 
 internal const val EXTENSION_CQF_CALCULATED_VALUE_URL: String =
   "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue"
-
-internal const val EXTENSION_TEMPLATE_EXTRACT_URL: String =
-  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtract"
-
-internal const val EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL: String =
-  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext"
-
-internal const val EXTENSION_TEMPLATE_EXTRACT_VALUE_URL: String =
-  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractValue"
-
-internal const val EXTENSION_EXTRACT_ALLOCATE_ID_URL: String =
-  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
 
 /** Reads the first child extension with the supplied `uri` as a string-like primitive value. */
 fun Extension.readStringExtension(uri: String): String? {
@@ -80,17 +75,25 @@ internal fun Extension.referenceValue(): String? =
  */
 internal fun Extension.asTemplateExtractDefinition(): TemplateExtractDefinition? {
   val templateReference =
-    extension.firstOrNull { it.url == "template" }?.referenceValue() ?: return null
+    extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_TEMPLATE_URL }?.referenceValue()
+      ?: return null
 
   return TemplateExtractDefinition(
     templateReference = templateReference,
-    fullUrlExpression = extension.firstOrNull { it.url == "fullUrl" }?.stringValue(),
-    resourceIdExpression = extension.firstOrNull { it.url == "resourceId" }?.stringValue(),
-    ifNoneMatchExpression = extension.firstOrNull { it.url == "ifNoneMatch" }?.stringValue(),
+    fullUrlExpression =
+      extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_FULL_URL }?.stringValue(),
+    resourceIdExpression =
+      extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_RESOURCE_ID_URL }?.stringValue(),
+    ifNoneMatchExpression =
+      extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_IF_NONE_MATCH_URL }?.stringValue(),
     ifModifiedSinceExpression =
-      extension.firstOrNull { it.url == "ifModifiedSince" }?.stringValue(),
-    ifMatchExpression = extension.firstOrNull { it.url == "ifMatch" }?.stringValue(),
-    ifNoneExistExpression = extension.firstOrNull { it.url == "ifNoneExist" }?.stringValue(),
+      extension
+        .firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_IF_MODIFIED_SINCE_URL }
+        ?.stringValue(),
+    ifMatchExpression =
+      extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_IF_MATCH_URL }?.stringValue(),
+    ifNoneExistExpression =
+      extension.firstOrNull { it.url == TEMPLATE_EXTRACT_CHILD_IF_NONE_EXIST_URL }?.stringValue(),
   )
 }
 
