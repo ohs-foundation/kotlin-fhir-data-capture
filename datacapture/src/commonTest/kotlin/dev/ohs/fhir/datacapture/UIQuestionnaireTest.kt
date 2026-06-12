@@ -52,7 +52,6 @@ import dev.ohs.fhir.datacapture.views.components.SLIDER_TAG
 import dev.ohs.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.model.r4.Enumeration
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.Test
@@ -62,12 +61,16 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.button_paginatio
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
 import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
 import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTestApi::class)
 class UIQuestionnaireTest {
 
-  private val fhirR4Json = FhirR4Json()
+  private val fhirR4Json = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
 
   @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {

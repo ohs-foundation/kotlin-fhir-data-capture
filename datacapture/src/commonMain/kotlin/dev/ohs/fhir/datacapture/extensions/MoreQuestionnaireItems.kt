@@ -975,6 +975,18 @@ private fun List<Questionnaire.Item>.flattenInto(output: MutableList<Questionnai
 internal val Questionnaire.Item.isRepeatedGroup: Boolean
   get() = type.value == Questionnaire.QuestionnaireItemType.Group && repeats?.value == true
 
+internal val Questionnaire.Item.definitionExtractExtensions: List<Extension>
+  get() = extension.filter { it.url == EXTENSION_DEFINITION_EXTRACT_URL }
+
+internal val Questionnaire.Item.allocateIdVariableNames: List<String>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
+      .mapNotNull { it.value?.asString()?.value?.value?.normalizedVariableName() }
+
+internal fun Questionnaire.Item.hasDefinitionExtractRecursively(): Boolean =
+  definitionExtractExtensions.isNotEmpty() || item.any { it.hasDefinitionExtractRecursively() }
+
 // TODO: Move this elsewhere.
 val Resource.logicalId: String
   get() {

@@ -27,6 +27,17 @@ import kotlinx.datetime.LocalTime
 internal const val EXTENSION_CQF_CALCULATED_VALUE_URL: String =
   "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue"
 
+internal const val CORE_STRUCTURE_DEFINITION_PREFIX = "http://hl7.org/fhir/StructureDefinition/"
+
+internal const val EXTENSION_DEFINITION_EXTRACT_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract"
+
+internal const val EXTENSION_DEFINITION_EXTRACT_VALUE_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue"
+
+internal const val EXTENSION_EXTRACT_ALLOCATE_ID_URL =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
+
 fun Extension.readStringExtension(uri: String): String? {
   val ext = extension.single { it.url == uri }
   return ext.value?.asUri()?.value?.value

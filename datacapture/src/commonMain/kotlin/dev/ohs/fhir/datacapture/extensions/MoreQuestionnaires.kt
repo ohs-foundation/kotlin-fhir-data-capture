@@ -170,6 +170,15 @@ enum class EntryMode(val value: String) {
   }
 }
 
+internal val Questionnaire.definitionExtractExtensions: List<Extension>
+  get() = extension.filter { it.url == EXTENSION_DEFINITION_EXTRACT_URL }
+
+internal val Questionnaire.allocateIdVariableNames: List<String>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
+      .mapNotNull { it.value?.asString()?.value?.value?.normalizedVariableName() }
+
 /**
  * Applies `forEach` on each questionnaire item and questionnaire response item pair in the
  * questionnaire and the given `questionnaireResponse`.

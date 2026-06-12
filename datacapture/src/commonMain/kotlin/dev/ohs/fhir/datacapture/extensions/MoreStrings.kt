@@ -29,3 +29,5 @@ internal fun String.toBigDecimalOrNull(): BigDecimal? =
   } catch (_: ArithmeticException) {
     null
   }
+
+internal fun String.normalizedVariableName(): String = removePrefix("%")
