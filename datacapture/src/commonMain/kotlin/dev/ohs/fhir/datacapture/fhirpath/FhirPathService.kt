@@ -17,11 +17,30 @@ package dev.ohs.fhir.datacapture.fhirpath
 
 import co.touchlab.kermit.Logger
 import dev.ohs.fhir.fhirpath.FhirPathEngine
+import dev.ohs.fhir.fhirpath.types.FhirPathDate
+import dev.ohs.fhir.fhirpath.types.FhirPathDateTime
+import dev.ohs.fhir.fhirpath.types.FhirPathQuantity
+import dev.ohs.fhir.fhirpath.types.FhirPathTime
 import dev.ohs.fhir.model.r4.Resource
+import kotlin.Int
+import kotlin.Long
 
 /** Centralized service for FHIRPath evaluation and utility functions. */
 internal object FhirPathService {
   private val r4FhirPathEngine = FhirPathEngine.forR4()
+
+  /**
+   * Evaluates the [expression] against any supported FHIRPath base value without coercing the
+   * result.
+   *
+   * Template extraction relies on these raw values to decide whether a template node should be
+   * removed, cloned into an array, or converted into a complex JSON subtree.
+   */
+  internal fun evaluateUntypedOrThrow(
+    expression: String,
+    base: Any?,
+    variables: Map<String, Any?> = emptyMap(),
+  ): List<Any> = r4FhirPathEngine.evaluateExpression(expression, base, variables).toList()
 
   /**
    * Evaluates the [expression] on the [resource] with optional [variables].
@@ -37,7 +56,7 @@ internal object FhirPathService {
     variables: Map<String, Any?> = emptyMap(),
   ): List<Any> =
     try {
-      r4FhirPathEngine.evaluateExpression(expression, resource, variables).toList()
+      evaluateUntypedOrThrow(expression, resource, variables)
     } catch (throwable: Throwable) {
       Logger.e("Error evaluating fhirPath expression $expression", throwable)
       emptyList()
@@ -60,6 +79,17 @@ internal object FhirPathService {
 
   private fun convertSingleResultToString(value: Any): String =
     when (value) {
+      is String -> value
+      is Boolean -> value.toString()
+      is Int -> value.toString()
+      is Long -> value.toString()
+      is Double -> value.toString()
+      is Float -> value.toString()
+      is com.ionspin.kotlin.bignum.decimal.BigDecimal -> value.toString()
+      is FhirPathDate -> value.toFhirLiteral()
+      is FhirPathDateTime -> value.toFhirLiteral()
+      is FhirPathTime -> value.toFhirLiteral()
+      is FhirPathQuantity -> value.value?.toString() ?: ""
       is dev.ohs.fhir.model.r4.String -> value.value ?: ""
       is dev.ohs.fhir.model.r4.Integer -> value.value?.toString() ?: ""
       is dev.ohs.fhir.model.r4.Decimal -> value.value?.toString() ?: ""
@@ -93,4 +123,62 @@ internal object FhirPathService {
    */
   fun evaluateToDisplay(expressions: List<String>, data: Resource) =
     expressions.joinToString(" ") { evaluateFhirPathToString(it, data) }
+}
+
+private fun FhirPathDate.toFhirLiteral(): String = buildString {
+  append(year.toString().padStart(4, '0'))
+  month?.let {
+    append('-')
+    append(it.toString().padStart(2, '0'))
+    day?.let { dayValue ->
+      append('-')
+      append(dayValue.toString().padStart(2, '0'))
+    }
+  }
+}
+
+private fun FhirPathDateTime.toFhirLiteral(): String = buildString {
+  append(year.toString().padStart(4, '0'))
+  month?.let {
+    append('-')
+    append(it.toString().padStart(2, '0'))
+    day?.let { dayValue ->
+      append('-')
+      append(dayValue.toString().padStart(2, '0'))
+      hour?.let { hourValue ->
+        append('T')
+        append(hourValue.toString().padStart(2, '0'))
+        minute?.let { minuteValue ->
+          append(':')
+          append(minuteValue.toString().padStart(2, '0'))
+          second?.let { secondValue ->
+            append(':')
+            val normalized =
+              if (secondValue % 1.0 == 0.0) {
+                secondValue.toInt().toString().padStart(2, '0')
+              } else {
+                secondValue.toString().padStart(2, '0')
+              }
+            append(normalized)
+          }
+        }
+        utcOffset?.let { append(it.toString()) }
+      }
+    }
+  }
+}
+
+private fun FhirPathTime.toFhirLiteral(): String = buildString {
+  append(hour.toString().padStart(2, '0'))
+  append(':')
+  append(minute.toString().padStart(2, '0'))
+  append(':')
+  val secondValue = second ?: 0.0
+  val normalizedSecond =
+    if (secondValue % 1.0 == 0.0) {
+      secondValue.toInt().toString().padStart(2, '0')
+    } else {
+      secondValue.toString().padStart(2, '0')
+    }
+  append(normalizedSecond)
 }

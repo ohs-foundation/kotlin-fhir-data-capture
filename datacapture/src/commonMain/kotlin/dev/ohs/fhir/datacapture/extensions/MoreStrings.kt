@@ -29,3 +29,6 @@ internal fun String.toBigDecimalOrNull(): BigDecimal? =
   } catch (_: ArithmeticException) {
     null
   }
+
+/** FHIRPath variables are referenced with `%`, while lookup maps store the bare identifier. */
+internal fun String.normalizedVariableName(): String = removePrefix("%")

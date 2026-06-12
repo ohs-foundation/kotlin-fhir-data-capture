@@ -24,7 +24,6 @@ import dev.ohs.fhir.model.r4.Date
 import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -39,9 +38,14 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class EnablementEvaluatorTest {
-  private val json = FhirR4Json()
+  private val json = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
 
   @Test fun evaluate_noEnableWhen_shouldReturnTrue() = runTest { assertTrue(evaluateEnableWhen()) }
 
@@ -185,13 +189,13 @@ class EnablementEvaluatorTest {
       """
         .trimIndent()
 
-    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString<Questionnaire>(questionnaireJson)
 
     val questionnaireItem: Questionnaire.Item? =
       questionnaire.item.find { item -> item.linkId.value == "2" }
 
     val questionnaireResponse =
-      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+      json.decodeFromString<QuestionnaireResponse>(questionnaireResponseJson)
 
     assertNotNull(questionnaireItem)
     assertTrue(
@@ -261,11 +265,11 @@ class EnablementEvaluatorTest {
       """
         .trimIndent()
 
-    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString<Questionnaire>(questionnaireJson)
 
     val questionnaireItemComponent = questionnaire.item.find { it.linkId.value == "2" }
     val questionnaireResponse =
-      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+      json.decodeFromString<QuestionnaireResponse>(questionnaireResponseJson)
     assertNotNull(questionnaireItemComponent)
     assertFalse(
       EnablementEvaluator(questionnaire, questionnaireResponse)
@@ -333,13 +337,13 @@ class EnablementEvaluatorTest {
       """
         .trimIndent()
 
-    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString<Questionnaire>(questionnaireJson)
 
     val questionnaireItem: Questionnaire.Item =
       questionnaire.item.find { it.linkId.value == "female" }!!
 
     val questionnaireResponse =
-      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+      json.decodeFromString<QuestionnaireResponse>(questionnaireResponseJson)
 
     assertTrue(
       EnablementEvaluator(questionnaire, questionnaireResponse)
@@ -398,10 +402,10 @@ class EnablementEvaluatorTest {
       """
         .trimIndent()
 
-    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString<Questionnaire>(questionnaireJson)
 
     val questionnaireResponse =
-      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+      json.decodeFromString<QuestionnaireResponse>(questionnaireResponseJson)
 
     assertTrue(
       EnablementEvaluator(questionnaire, questionnaireResponse)
@@ -460,10 +464,10 @@ class EnablementEvaluatorTest {
       """
         .trimIndent()
 
-    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString<Questionnaire>(questionnaireJson)
 
     val questionnaireResponse =
-      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+      json.decodeFromString<QuestionnaireResponse>(questionnaireResponseJson)
 
     assertTrue(
       EnablementEvaluator(questionnaire, questionnaireResponse)

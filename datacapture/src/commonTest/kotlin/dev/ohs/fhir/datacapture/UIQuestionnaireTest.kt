@@ -52,7 +52,6 @@ import dev.ohs.fhir.datacapture.views.components.SLIDER_TAG
 import dev.ohs.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.model.r4.Enumeration
-import dev.ohs.fhir.model.r4.FhirR4Json
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.Test
@@ -62,12 +61,18 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.button_paginatio
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
 import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
 import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTestApi::class)
 class UIQuestionnaireTest {
 
-  private val fhirR4Json = FhirR4Json()
+  private val fhirJson = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
 
   @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {
@@ -306,7 +311,7 @@ class UIQuestionnaireTest {
   ]
 }
 """
-    val questionnaire = fhirR4Json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = fhirJson.decodeFromString<Questionnaire>(questionnaireJson)
     setQuestionnaireContent(questionnaire)
     val nextButtonText = getString(Res.string.button_pagination_next)
     onNode(hasTestTag(QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG) and hasText(nextButtonText))
@@ -421,7 +426,7 @@ class UIQuestionnaireTest {
   ]
 }
 """
-    val questionnaire = fhirR4Json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = fhirJson.decodeFromString<Questionnaire>(questionnaireJson)
     setQuestionnaireContent(questionnaire)
     onNode(
         hasTestTag(QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG) and
@@ -555,7 +560,7 @@ class UIQuestionnaireTest {
     showNavigationLongScroll: Boolean = false,
     submitText: String? = null,
   ) {
-    val questionnaireJsonString = fhirR4Json.encodeToString(questionnaire)
+    val questionnaireJsonString = fhirJson.encodeToString(questionnaire)
 
     val testLifecycleOwner = TestLifecycleOwner(Lifecycle.State.RESUMED)
     setContent {

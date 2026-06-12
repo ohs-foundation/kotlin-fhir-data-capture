@@ -20,6 +20,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewType
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_EXTRACT_ALLOCATE_ID_URL
+import dev.ohs.fhir.datacapture.extraction.EXTENSION_TEMPLATE_EXTRACT_URL
+import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractDefinition
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Coding
@@ -974,6 +977,30 @@ private fun List<Questionnaire.Item>.flattenInto(output: MutableList<Questionnai
 
 internal val Questionnaire.Item.isRepeatedGroup: Boolean
   get() = type.value == Questionnaire.QuestionnaireItemType.Group && repeats?.value == true
+
+/**
+ * The template extraction extension can also appear on a Questionnaire.item so each logical
+ * occurrence of that item contributes one or more extracted resources based on a contained
+ * template:
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-templateExtract.html
+ */
+internal val Questionnaire.Item.templateExtractExtensions: List<TemplateExtractDefinition>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_TEMPLATE_EXTRACT_URL }
+      .mapNotNull { it.asTemplateExtractDefinition() }
+
+/**
+ * Item-scoped allocateId variables are generated once per logical item occurrence and then reused
+ * by any child template expressions under that item:
+ * https://build.fhir.org/ig/HL7/sdc/en/StructureDefinition-sdc-questionnaire-extractAllocateId.html
+ * https://build.fhir.org/ig/HL7/sdc/en/expressions.html
+ */
+internal val Questionnaire.Item.allocateIdVariableNames: List<String>
+  get() =
+    extension
+      .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
+      .mapNotNull { it.stringValue()?.normalizedVariableName() }
 
 // TODO: Move this elsewhere.
 val Resource.logicalId: String
