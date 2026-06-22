@@ -24,4 +24,5 @@ actual object DataCapture {
     }
   }
 
-  actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()}
+  actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()
+}

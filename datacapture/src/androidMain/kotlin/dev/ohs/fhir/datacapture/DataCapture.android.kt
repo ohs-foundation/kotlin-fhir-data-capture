@@ -38,5 +38,6 @@ actual object DataCapture {
       configuration = config
     }
   }
+
   actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()
 }

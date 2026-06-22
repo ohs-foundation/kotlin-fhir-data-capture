@@ -21,6 +21,6 @@ import dev.ohs.fhir.datacapture.DataCaptureConfig
 
 @Suppress("FunctionName", "unused")
 fun MainViewController() = ComposeUIViewController {
-    DataCapture.initialize(DataCaptureConfig())
-    App()
+  DataCapture.initialize(DataCaptureConfig())
+  App()
 }

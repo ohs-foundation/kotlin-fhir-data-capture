@@ -20,8 +20,8 @@ import dev.ohs.fhir.model.r4.Resource
 
 /**
  * The App developers may provide the [DataCaptureConfig] for the DataCapture library by calling
- * [DataCapture.initialize] with a configured instance. The library will cache the configuration
- * for the lifetime of the application.
+ * [DataCapture.initialize] with a configured instance. The library will cache the configuration for
+ * the lifetime of the application.
  *
  * NOTE: App developers should make sure the configuration provided to [DataCapture.initialize] is
  * constant throughout the lifecycle of the application.
