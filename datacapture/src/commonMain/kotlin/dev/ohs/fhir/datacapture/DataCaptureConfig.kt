@@ -51,10 +51,11 @@ data class DataCaptureConfig(
 ) {
 
   /**
-   * A platform-specific hook for providing a [DataCaptureConfig] to the Structured Data Capture
-   * library. Implement this interface and pass a configured instance to [DataCapture.initialize].
-   * You should provide the same configuration throughout the lifecycle of your application. The
-   * library caches the configuration and later changes will be ignored.
+   * Android-only hook for providing a [DataCaptureConfig] to the Structured Data Capture library.
+   * Implement this interface on your [android.app.Application] class and call
+   * [DataCapture.initialize] with the application [android.content.Context] — the library will read
+   * the config from there. On all other platforms call [DataCapture.initialize] directly with a
+   * [DataCaptureConfig] instance.
    */
   interface Provider {
     fun getDataCaptureConfig(): DataCaptureConfig

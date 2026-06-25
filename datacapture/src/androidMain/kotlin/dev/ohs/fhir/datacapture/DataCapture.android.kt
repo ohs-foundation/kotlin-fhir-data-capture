@@ -22,15 +22,13 @@ actual object DataCapture {
   private var configuration: DataCaptureConfig? = null
 
   fun initialize(context: Context) {
-    if (configuration == null) {
-      configuration =
-        if (context.applicationContext is DataCaptureConfig.Provider) {
-          (context.applicationContext as DataCaptureConfig.Provider).getDataCaptureConfig()
-        } else {
-          DataCaptureConfig()
-        }
-    }
-    return
+    val config =
+      if (context.applicationContext is DataCaptureConfig.Provider) {
+        (context.applicationContext as DataCaptureConfig.Provider).getDataCaptureConfig()
+      } else {
+        DataCaptureConfig()
+      }
+    initialize(config)
   }
 
   actual fun initialize(config: DataCaptureConfig) {
