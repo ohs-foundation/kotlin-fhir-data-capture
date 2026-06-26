@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import dev.ohs.fhir.datacapture.DataCapture
-import dev.ohs.fhir.datacapture.DataCaptureConfig
+package dev.ohs.fhir.datacapture
+
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import kotlin.test.BeforeTest
@@ -24,13 +24,9 @@ class DataCaptureTest {
 
   @BeforeTest
   fun resetConfiguration() {
-    // TODO: Replace with internal reset function when tests move to commonTest
-    val field = DataCapture::class.java.getDeclaredField("configuration")
-    field.isAccessible = true
-    field.set(DataCapture, null)
+    DataCapture.resetForTesting()
   }
 
-  // TC-1: getConfiguration before initialize returns a default DataCaptureConfig
   @Test
   fun getConfigurationBeforeInitializeReturnsDefault() {
     val config = DataCapture.getConfiguration()
@@ -38,7 +34,6 @@ class DataCaptureTest {
     config shouldBe DataCaptureConfig()
   }
 
-  // TC-2: initialize stores the provided config
   @Test
   fun initializeStoresProvidedConfig() {
     val customConfig = DataCaptureConfig(xFhirQueryResolver = { emptyList() })
@@ -48,7 +43,6 @@ class DataCaptureTest {
     DataCapture.getConfiguration() shouldBeSameInstanceAs customConfig
   }
 
-  // TC-3: second call to initialize is ignored — first-call-wins
   @Test
   fun initializeIsFirstCallWins() {
     val firstConfig = DataCaptureConfig()
@@ -60,7 +54,6 @@ class DataCaptureTest {
     DataCapture.getConfiguration() shouldBeSameInstanceAs firstConfig
   }
 
-  // TC-4: getConfiguration is idempotent after initialize — same instance on every call
   @Test
   fun getConfigurationIsIdempotent() {
     val config = DataCaptureConfig()

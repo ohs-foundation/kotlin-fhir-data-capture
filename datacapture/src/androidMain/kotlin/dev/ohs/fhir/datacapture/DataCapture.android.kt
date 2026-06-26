@@ -38,4 +38,8 @@ actual object DataCapture {
   }
 
   actual fun getConfiguration(): DataCaptureConfig = configuration ?: DataCaptureConfig()
+
+  internal actual fun resetForTesting() {
+    configuration = null
+  }
 }

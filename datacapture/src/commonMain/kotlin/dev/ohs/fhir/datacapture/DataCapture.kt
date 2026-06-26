@@ -29,4 +29,7 @@ expect object DataCapture {
    * [initialize] has not been called.
    */
   fun getConfiguration(): DataCaptureConfig
+
+  /** Resets the stored configuration to null. For use in tests only. */
+  internal fun resetForTesting()
 }
