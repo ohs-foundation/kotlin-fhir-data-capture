@@ -17,7 +17,6 @@ package dev.ohs.fhir.catalog
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
-import dev.ohs.fhir.datacapture.DataCapture
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import kotlinx.browser.document
 

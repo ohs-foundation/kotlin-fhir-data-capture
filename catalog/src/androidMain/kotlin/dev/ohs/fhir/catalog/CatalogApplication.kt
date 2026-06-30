@@ -16,7 +16,6 @@
 package dev.ohs.fhir.catalog
 
 import android.app.Application
-import dev.ohs.fhir.datacapture.DataCapture
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 
 class CatalogApplication : Application() {

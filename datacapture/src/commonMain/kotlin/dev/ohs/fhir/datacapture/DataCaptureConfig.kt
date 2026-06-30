@@ -19,12 +19,12 @@ import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Resource
 
 /**
- * The App developers may provide the [DataCaptureConfig] for the DataCapture library by calling
- * [DataCapture.initialize] with a configured instance. The library will cache the configuration for
- * the lifetime of the application.
- *
- * NOTE: App developers should make sure the configuration provided to [DataCapture.initialize] is
- * constant throughout the lifecycle of the application.
+ * Configuration for the DataCapture library. Supply an instance via [LocalDataCaptureConfig]:
+ * ```kotlin
+ * CompositionLocalProvider(LocalDataCaptureConfig provides DataCaptureConfig(...)) {
+ *   App()
+ * }
+ * ```
  */
 data class DataCaptureConfig(
   /**
@@ -48,19 +48,7 @@ data class DataCaptureConfig(
    * override the behaviour of existing components in the sdc.
    */
   val questionnaireItemView: QuestionnaireItemViewHolderFactoryMatchersProviderFactory? = null,
-) {
-
-  /**
-   * Android-only hook for providing a [DataCaptureConfig] to the Structured Data Capture library.
-   * Implement this interface on your [android.app.Application] class and call
-   * [DataCapture.initialize] with the application [android.content.Context] — the library will read
-   * the config from there. On all other platforms call [DataCapture.initialize] directly with a
-   * [DataCaptureConfig] instance.
-   */
-  interface Provider {
-    fun getDataCaptureConfig(): DataCaptureConfig
-  }
-}
+)
 
 /**
  * Resolves external answer value sets not defined in the questionnaire's `contained` element. This

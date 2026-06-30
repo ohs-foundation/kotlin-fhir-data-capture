@@ -16,7 +16,6 @@
 package dev.ohs.fhir.catalog
 
 import androidx.compose.ui.window.ComposeUIViewController
-import dev.ohs.fhir.datacapture.DataCapture
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import platform.UIKit.UIViewController
 
