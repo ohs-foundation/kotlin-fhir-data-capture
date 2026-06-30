@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,8 @@ import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireResponseScreen
 import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireScreen
 import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireViewModel
 import dev.ohs.fhir.catalog.ui.theme.AppTheme
+import dev.ohs.fhir.datacapture.DataCaptureConfig
+import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import kotlin_fhir_data_capture.catalog.generated.resources.Res
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_behaviors
 import kotlin_fhir_data_capture.catalog.generated.resources.ic_components
@@ -80,143 +83,148 @@ sealed class Screen(val route: String, val label: String, val icon: @Composable 
 
 @Composable
 fun App() {
-  AppTheme {
-    Surface {
-      val navController: NavHostController = rememberNavController()
-      val componentViewModel: ComponentListViewModel = viewModel { ComponentListViewModel() }
-      val layoutViewModel: LayoutListViewModel = viewModel { LayoutListViewModel() }
-      val behaviorViewModel: BehaviorListViewModel = viewModel { BehaviorListViewModel() }
+  CompositionLocalProvider(
+    LocalDataCaptureConfig provides DataCaptureConfig(xFhirQueryResolver = { emptyList() })
+  ) {
+    AppTheme {
+      Surface {
+        val navController: NavHostController = rememberNavController()
+        val componentViewModel: ComponentListViewModel = viewModel { ComponentListViewModel() }
+        val layoutViewModel: LayoutListViewModel = viewModel { LayoutListViewModel() }
+        val behaviorViewModel: BehaviorListViewModel = viewModel { BehaviorListViewModel() }
 
-      var submittedResponseJson by remember { mutableStateOf<String?>(null) }
+        var submittedResponseJson by remember { mutableStateOf<String?>(null) }
 
-      val navBackStackEntry by navController.currentBackStackEntryAsState()
-      val currentDestination = navBackStackEntry?.destination
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
 
-      val items = listOf(Screen.Components, Screen.Layouts, Screen.Behaviors)
+        val items = listOf(Screen.Components, Screen.Layouts, Screen.Behaviors)
 
-      Scaffold(
-        bottomBar = {
-          if (items.any { it.route == currentDestination?.route }) {
-            NavigationBar {
-              items.forEach { screen ->
-                NavigationBarItem(
-                  icon = screen.icon,
-                  label = { Text(screen.label) },
-                  selected =
-                    currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                  onClick = {
-                    navController.navigate(screen.route) {
-                      popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                      launchSingleTop = true
-                      restoreState = true
-                    }
-                  },
-                )
+        Scaffold(
+          bottomBar = {
+            if (items.any { it.route == currentDestination?.route }) {
+              NavigationBar {
+                items.forEach { screen ->
+                  NavigationBarItem(
+                    icon = screen.icon,
+                    label = { Text(screen.label) },
+                    selected =
+                      currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    onClick = {
+                      navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                      }
+                    },
+                  )
+                }
               }
             }
           }
-        }
-      ) { innerPadding ->
-        NavHost(
-          navController = navController,
-          startDestination = Screen.Components.route,
-          modifier = Modifier.padding(innerPadding),
-        ) {
-          composable(Screen.Components.route) {
-            ComponentListScreen(
-              viewModel = componentViewModel,
-              onComponentClick = { component, title ->
-                val validationPart =
-                  component.questionnaireFileWithValidation?.let { "?validationFile=$it" } ?: ""
-                navController.navigate(
-                  "questionnaire/${component.questionnaireFile}/$title$validationPart"
-                )
-              },
-            )
-          }
-          composable(Screen.Layouts.route) {
-            LayoutListScreen(
-              viewModel = layoutViewModel,
-              onLayoutClick = { layout, title ->
-                navController.navigate(
-                  "questionnaire/${layout.questionnaireFileName}/$title?showReviewPage=${layout.showReviewPage}&showReviewPageFirst=${layout.showReviewPageFirst}&isReadOnly=${layout.isReadOnly}"
-                )
-              },
-            )
-          }
-          composable(Screen.Behaviors.route) {
-            BehaviorListScreen(
-              viewModel = behaviorViewModel,
-              onBehaviorClick = { behavior, title ->
-                navController.navigate("questionnaire/${behavior.questionnaireFileName}/$title")
-              },
-            )
-          }
-          composable(
-            route =
-              "questionnaire/{fileName}/{title}?showReviewPage={review}&showReviewPageFirst={reviewFirst}&isReadOnly={readOnly}&validationFile={validationFile}",
-            arguments =
-              listOf(
-                navArgument("fileName") { type = NavType.StringType },
-                navArgument("title") { type = NavType.StringType },
-                navArgument("review") {
-                  type = NavType.BoolType
-                  defaultValue = false
+        ) { innerPadding ->
+          NavHost(
+            navController = navController,
+            startDestination = Screen.Components.route,
+            modifier = Modifier.padding(innerPadding),
+          ) {
+            composable(Screen.Components.route) {
+              ComponentListScreen(
+                viewModel = componentViewModel,
+                onComponentClick = { component, title ->
+                  val validationPart =
+                    component.questionnaireFileWithValidation?.let { "?validationFile=$it" } ?: ""
+                  navController.navigate(
+                    "questionnaire/${component.questionnaireFile}/$title$validationPart"
+                  )
                 },
-                navArgument("reviewFirst") {
-                  type = NavType.BoolType
-                  defaultValue = false
+              )
+            }
+            composable(Screen.Layouts.route) {
+              LayoutListScreen(
+                viewModel = layoutViewModel,
+                onLayoutClick = { layout, title ->
+                  navController.navigate(
+                    "questionnaire/${layout.questionnaireFileName}/$title?showReviewPage=${layout.showReviewPage}&showReviewPageFirst=${layout.showReviewPageFirst}&isReadOnly=${layout.isReadOnly}"
+                  )
                 },
-                navArgument("readOnly") {
-                  type = NavType.BoolType
-                  defaultValue = false
+              )
+            }
+            composable(Screen.Behaviors.route) {
+              BehaviorListScreen(
+                viewModel = behaviorViewModel,
+                onBehaviorClick = { behavior, title ->
+                  navController.navigate("questionnaire/${behavior.questionnaireFileName}/$title")
                 },
-                navArgument("validationFile") {
-                  type = NavType.StringType
-                  nullable = true
-                },
-              ),
-          ) { backStackEntry ->
-            val arguments = backStackEntry.arguments!!
-            val fileName =
-              arguments.read { if (contains("fileName")) getString("fileName") else "" }
-            val title = arguments.read { if (contains("title")) getString("title") else "" }
-            val review = arguments.read { if (contains("review")) getBoolean("review") else false }
-            val reviewFirst =
-              arguments.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else false }
-            val readOnly =
-              arguments.read { if (contains("readOnly")) getBoolean("readOnly") else false }
-            val validationFile =
-              arguments.read {
-                if (contains("validationFile")) getString("validationFile") else null
-              }
+              )
+            }
+            composable(
+              route =
+                "questionnaire/{fileName}/{title}?showReviewPage={review}&showReviewPageFirst={reviewFirst}&isReadOnly={readOnly}&validationFile={validationFile}",
+              arguments =
+                listOf(
+                  navArgument("fileName") { type = NavType.StringType },
+                  navArgument("title") { type = NavType.StringType },
+                  navArgument("review") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                  },
+                  navArgument("reviewFirst") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                  },
+                  navArgument("readOnly") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                  },
+                  navArgument("validationFile") {
+                    type = NavType.StringType
+                    nullable = true
+                  },
+                ),
+            ) { backStackEntry ->
+              val arguments = backStackEntry.arguments!!
+              val fileName =
+                arguments.read { if (contains("fileName")) getString("fileName") else "" }
+              val title = arguments.read { if (contains("title")) getString("title") else "" }
+              val review =
+                arguments.read { if (contains("review")) getBoolean("review") else false }
+              val reviewFirst =
+                arguments.read { if (contains("reviewFirst")) getBoolean("reviewFirst") else false }
+              val readOnly =
+                arguments.read { if (contains("readOnly")) getBoolean("readOnly") else false }
+              val validationFile =
+                arguments.read {
+                  if (contains("validationFile")) getString("validationFile") else null
+                }
 
-            QuestionnaireScreen(
-              viewModel = viewModel { QuestionnaireViewModel() },
-              title = title,
-              fileName = fileName,
-              validationFileName = validationFile,
-              showReviewPage = review,
-              showReviewPageFirst = reviewFirst,
-              isReadOnly = readOnly,
-              onBackClick = { navController.popBackStack() },
-              navigateToResponse = { responseJson ->
-                submittedResponseJson = responseJson
-                navController.navigate("questionnaire_response/$title")
-              },
-            )
-          }
-          composable(
-            route = "questionnaire_response/{title}",
-            arguments = listOf(navArgument("title") { type = NavType.StringType }),
-          ) { backStackEntry ->
-            val arguments = backStackEntry.arguments
-            val title =
-              arguments?.read { if (contains("title")) getString("title") else null } ?: ""
-            QuestionnaireResponseScreen(
-              responseJson = submittedResponseJson ?: "",
-              onBackClick = { navController.popBackStack() },
-            )
+              QuestionnaireScreen(
+                viewModel = viewModel { QuestionnaireViewModel() },
+                title = title,
+                fileName = fileName,
+                validationFileName = validationFile,
+                showReviewPage = review,
+                showReviewPageFirst = reviewFirst,
+                isReadOnly = readOnly,
+                onBackClick = { navController.popBackStack() },
+                navigateToResponse = { responseJson ->
+                  submittedResponseJson = responseJson
+                  navController.navigate("questionnaire_response/$title")
+                },
+              )
+            }
+            composable(
+              route = "questionnaire_response/{title}",
+              arguments = listOf(navArgument("title") { type = NavType.StringType }),
+            ) { backStackEntry ->
+              val arguments = backStackEntry.arguments
+              val title =
+                arguments?.read { if (contains("title")) getString("title") else null } ?: ""
+              QuestionnaireResponseScreen(
+                responseJson = submittedResponseJson ?: "",
+                onBackClick = { navController.popBackStack() },
+              )
+            }
           }
         }
       }

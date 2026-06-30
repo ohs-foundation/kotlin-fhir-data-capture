@@ -16,18 +16,5 @@
 package dev.ohs.fhir.catalog
 
 import android.app.Application
-import dev.ohs.fhir.datacapture.DataCaptureConfig
 
-class CatalogApplication : Application() {
-  override fun onCreate() {
-    super.onCreate()
-    DataCapture.initialize(
-      DataCaptureConfig(
-        xFhirQueryResolver = {
-          // TODO: Implement actual xFhirQueryResolver backed with data from db
-          emptyList()
-        }
-      )
-    )
-  }
-}
+class CatalogApplication : Application()

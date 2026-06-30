@@ -16,11 +16,7 @@
 package dev.ohs.fhir.catalog
 
 import androidx.compose.ui.window.ComposeUIViewController
-import dev.ohs.fhir.datacapture.DataCaptureConfig
 import platform.UIKit.UIViewController
 
 @Suppress("FunctionName", "unused")
-fun MainViewController(): UIViewController {
-  DataCapture.initialize(DataCaptureConfig())
-  return ComposeUIViewController { App() }
-}
+fun MainViewController(): UIViewController = ComposeUIViewController { App() }
