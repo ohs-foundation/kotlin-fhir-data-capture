@@ -105,7 +105,8 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTime::class)
-internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptureConfig) : ViewModel() {
+internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptureConfig) :
+  ViewModel() {
   private val jsonR4 = Json {
     explicitNulls = false
     encodeDefaults = false
