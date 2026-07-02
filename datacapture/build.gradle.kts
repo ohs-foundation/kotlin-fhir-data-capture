@@ -89,6 +89,7 @@ kotlin {
         implementation(libs.navigation.compose)
         implementation(libs.ohs.fhir.model)
         implementation(libs.ohs.fhir.path)
+        implementation(libs.compass.geolocation)
       }
     }
 
@@ -137,6 +138,25 @@ kotlin {
         implementation(libs.kotlinx.coroutines.swing)
       }
     }
+    androidMain {
+    dependencies {
+        implementation(libs.compass.geolocation.mobile)
+        implementation(libs.compass.permissions.mobile)
+    }
+}
+
+iosMain {
+    dependencies {
+        implementation(libs.compass.geolocation.mobile)
+        implementation(libs.compass.permissions.mobile)
+    }
+}
+
+wasmJsMain {
+    dependencies {
+        implementation(libs.compass.geolocation.browser)
+    }
+}
   }
 }
 
