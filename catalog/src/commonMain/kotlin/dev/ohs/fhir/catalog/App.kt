@@ -83,9 +83,8 @@ sealed class Screen(val route: String, val label: String, val icon: @Composable 
 
 @Composable
 fun App() {
-  CompositionLocalProvider(
-    LocalDataCaptureConfig provides DataCaptureConfig(xFhirQueryResolver = { emptyList() })
-  ) {
+  val dataCaptureConfig = remember { DataCaptureConfig(xFhirQueryResolver = { emptyList() }) }
+  CompositionLocalProvider(LocalDataCaptureConfig provides dataCaptureConfig) {
     AppTheme {
       Surface {
         val navController: NavHostController = rememberNavController()
