@@ -100,7 +100,7 @@
     <string name="cancel">Cancel</string>
     <string name="record_gps_location">Record GPS Location</string>
     <string name="required_text_and_new_line">Required\n</string>
-        <!-- Missing strings for datacapture module -->
+    <!-- Missing strings for datacapture module -->
     <string name="not_answered">Not answered</string>
     <string name="edit_button_text">Edit</string>
     <string name="questionnaire_review_mode_title">Review Mode</string>
@@ -129,11 +129,7 @@
     <string name="upload_video">Upload Video</string>
     <string name="upload_document">Upload Document</string>
     <string name="upload_file">Upload File</string>
-    <string name="scan_barcode">Scan barcode</string>
-    <string name="camera_permission_message">Camera access is required to scan barcodes. Please grant camera permission to continue.</string>
-    <string name="camera_permission_required">Camera permission required</string>
-    <string name="open_settings">Open settings</string>
-    <string name="rescan">Rescan</string>
+
     <string name="delete">Delete</string>
     <string name="open_choice_other">Other</string>
     <string name="open_choice_other_add_another">Add another</string>
@@ -145,11 +141,8 @@
     <string name="cancel_questionnaire">Cancel</string>
     <string name="add_repeated_group_item">Add item</string>
     <string name="repeated_group_title">Item %d</string>
-    <string name="select_time">Select time</string>
     <string name="time">Time</string>
     <string name="ok">OK</string>
-    <string name="switch_to_clock_input">Switch to clock</string>
-    <string name="switch_to_text_input">Switch to text</string>
     <string name="optional_helper_text">(optional)</string>
     <string name="required">Required</string>
     <string name="questionnaire_validation_error_fix_button_text">Fix</string>
@@ -157,14 +150,6 @@
     <string name="questionnaire_validation_error_item_text_with_bullet">• %s</string>
     <string name="questionnaire_validation_error_submit_button_text">Submit anyway</string>
     <string name="questionnaire_validation_error_supporting_text">Please fix the errors</string>
-    <string name="cd_file_icon_preview">File preview</string>
-    <string name="cd_photo_preview">Photo preview</string>
-    <string name="take_photo">Take photo</string>
-    <string name="upload_audio">Upload audio</string>
-    <string name="upload_document">Upload document</string>
-    <string name="upload_file">Upload file</string>
-    <string name="upload_photo">Upload photo</string>
-    <string name="upload_video">Upload video</string>
     <string name="uploaded">Uploaded</string>
     <string name="date_format_validation_error_msg">Invalid date format</string>
     <string name="decimal_format_validation_error_msg">Invalid decimal format</string>
