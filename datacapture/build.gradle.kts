@@ -142,6 +142,9 @@ kotlin {
       dependencies {
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+        implementation(libs.kscan)
       }
     }
 
@@ -149,6 +152,8 @@ kotlin {
       dependencies {
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
       }
     }
 

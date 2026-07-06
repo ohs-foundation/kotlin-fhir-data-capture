@@ -158,4 +158,9 @@
     <string name="repeated_group_title">%1$s. %2$s</string>
     <string name="add_repeated_group_item">Add %1$s</string>
     <string name="record_gps_location">Record GPS Location</string>
+    <string name="scan_barcode">SCAN BARCODE</string>
+    <string name="rescan">RE-SCAN</string>
+    <string name="camera_permission_required">Camera Permission Required</string>
+    <string name="camera_permission_message">Camera access is required to scan barcodes. Please grant camera permission to continue.</string>
+    <string name="open_settings">Open Settings</string>
 </resources>
