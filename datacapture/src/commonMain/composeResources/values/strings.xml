@@ -116,6 +116,24 @@
     <string name="select_date">Select date</string>
     <string name="help">Help</string>
     <string name="space_asterisk">*</string>
+    <string name="select_time">Select time</string>
+    <string name="switch_to_text_input">Switch to text input</string>
+    <string name="switch_to_clock_input">Switch to clock input</string>
+
+    <!-- 2.6 Attachment widget -->
+    <string name="take_photo">Take Photo</string>
+    <string name="cd_photo_preview">Photo Preview</string>
+    <string name="cd_file_icon_preview">File Icon Preview</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="upload_audio">Upload Audio</string>
+    <string name="upload_video">Upload Video</string>
+    <string name="upload_document">Upload Document</string>
+    <string name="upload_file">Upload File</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="camera_permission_message">Camera access is required to scan barcodes. Please grant camera permission to continue.</string>
+    <string name="camera_permission_required">Camera permission required</string>
+    <string name="open_settings">Open settings</string>
+    <string name="rescan">Rescan</string>
     <string name="delete">Delete</string>
     <string name="open_choice_other">Other</string>
     <string name="open_choice_other_add_another">Add another</string>
