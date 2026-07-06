@@ -139,24 +139,20 @@ kotlin {
       }
     }
     androidMain {
-    dependencies {
+      dependencies {
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
+      }
     }
-}
 
-iosMain {
-    dependencies {
+    iosMain {
+      dependencies {
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
+      }
     }
-}
 
-wasmJsMain {
-    dependencies {
-        implementation(libs.compass.geolocation.browser)
-    }
-}
+    wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
   }
 }
 
