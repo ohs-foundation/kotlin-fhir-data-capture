@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B9DA97B12DC1472C00A4DA20 /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9DA97B12DC1472C00A4DA20 /* Structured Data Capture Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Structured Data Capture Catalog.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE6507D22F3CBEB300EE3190 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BE6507D42F3CBECE00EE3190 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,7 +68,7 @@
 		B9DA97B22DC1472C00A4DA20 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B9DA97B12DC1472C00A4DA20 /* Catalog.app */,
+				B9DA97B12DC1472C00A4DA20 /* Structured Data Capture Catalog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,7 +96,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = B9DA97B12DC1472C00A4DA20 /* Catalog.app */;
+			productReference = B9DA97B12DC1472C00A4DA20 /* Structured Data Capture Catalog.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
