@@ -105,27 +105,23 @@ kotlin {
     }
 
     androidMain {
-    resources.srcDir("res")
-    dependencies {
+      resources.srcDir("res")
+      dependencies {
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
         implementation(libs.kscan)
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
+      }
     }
-}   
     iosMain {
-    dependencies {
+      dependencies {
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
         implementation(libs.compass.geolocation.mobile)
+      }
     }
-}
-wasmJsMain {
-    dependencies {
-        implementation(libs.compass.geolocation.browser)
-    }
-}
+    wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
 
     getByName("androidDeviceTest") {
       dependencies {
