@@ -83,6 +83,8 @@ sealed class Screen(val route: String, val label: String, val icon: @Composable 
 
 @Composable
 fun App() {
+  // TODO(https://github.com/ohs-foundation/kotlin-fhir-data-capture/issues/34): resolve via
+  // kotlin-fhir-engine once it's released, instead of returning an empty list.
   val dataCaptureConfig = remember { DataCaptureConfig(xFhirQueryResolver = { emptyList() }) }
   CompositionLocalProvider(LocalDataCaptureConfig provides dataCaptureConfig) {
     AppTheme {
