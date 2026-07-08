@@ -1,5 +1,6 @@
 # Kotlin FHIR Data Capture
 
+[![tests](https://github.com/ohs-foundation/kotlin-fhir-data-capture/actions/workflows/run-tests.yml/badge.svg)](https://github.com/ohs-foundation/kotlin-fhir-data-capture/actions/workflows/run-tests.yml)
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture?color=yellow&label=fhir-data-capture)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture)
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-jvm?color=yellow&label=jvm)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-jvm)
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-wasm-js?color=yellow&label=wasm-js)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-wasm-js)
@@ -39,7 +40,8 @@ The library also supports the following
 
 ## Catalog app
 
-The `catalog` module is a multiplatform demo application. To run the iOS variant see [catalog-iosApp/README.md](catalog-iosApp/README.md).
+The `catalog` module is a multiplatform demo application. To run the iOS variant see
+[catalog-iosApp/README.md](catalog-iosApp/README.md).
 
 ## User Guide
 
@@ -115,6 +117,58 @@ Questionnaire(
 ```
 
 ## Developer guide
+
+### Testing
+
+Tests are located in the following source sets:
+
+- `commonTest`: Shared tests (logical validation rules and Compose UI rendering/flows) that run
+  across all targets.
+- `jvmTest`: JVM-specific tests verifying localized date, time, and datetime input
+  parsing/formatting using JVM Locales (`java.util.Locale`).
+- `androidDeviceTest`: Android-specific instrumentation tests verifying interactions with native
+  Android date, time, and datetime picker dialogs (requires a connected device or emulator).
+
+#### CI Platform Coverage
+
+The [CI pipeline](.github/workflows/run-tests.yml) automatically runs checks on every push and pull
+request. The table below details which test source sets (listed above) are executed by each target's
+CI task:
+
+| Platform              | Gradle task                          | CI runner       | Test source sets            | Notes |
+|:----------------------|:-------------------------------------|:----------------|:----------------------------|:------|
+| **JVM**               | `:datacapture:jvmTest`               | `ubuntu-latest` | `commonTest`, `jvmTest`     | Requires `xvfb-run` on Linux runners to host virtual framebuffer for Compose tests |
+| **Wasm JS (Browser)** | `:datacapture:wasmJsBrowserTest`     | `ubuntu-latest` | `commonTest`                | Runs in headless Chrome |
+| **JS (Browser)**      | `:datacapture:jsBrowserTest`         | `ubuntu-latest` | `commonTest`                | Runs in headless Chrome |
+| **Android**           | `:datacapture:testAndroidHostTest`   | `ubuntu-latest` | `commonTest`                | Runs host unit tests on JVM |
+| **iOS (Simulator)**   | `:datacapture:iosSimulatorArm64Test` | `macos-latest`  | `commonTest`                | Runs in simulator environment |
+
+#### Running Tests Locally
+
+To run all CI-validated test suites locally:
+
+```bash
+./gradlew check
+```
+
+To run a specific test suite locally, run the corresponding Gradle task:
+
+- **JVM**: `./gradlew :datacapture:jvmTest`
+- **Wasm**: `./gradlew :datacapture:wasmJsBrowserTest`
+- **JS**: `./gradlew :datacapture:jsBrowserTest`
+- **Android Host**: `./datacapture:testAndroidHostTest`
+- **iOS Simulator**: `./gradlew :datacapture:iosSimulatorArm64Test`
+
+##### On-Device Android Tests
+
+The platform-specific Android UI tests (located under `androidDeviceTest`) are **not** run
+automatically on CI. To run them locally:
+
+1. Connect a physical Android device or start an emulator.
+2. Execute the connected test task:
+   ```bash
+   ./gradlew :datacapture:connectedAndroidDeviceTest
+   ```
 
 ### Publishing
 
