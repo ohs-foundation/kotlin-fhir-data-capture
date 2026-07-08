@@ -28,15 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.imageData
 import dev.ohs.fhir.model.r4.Attachment
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 @Composable
 fun MediaItem(attachment: Attachment) {
+  val urlResolver = LocalDataCaptureConfig.current.urlResolver
   var attachmentBitmap: ImageBitmap? by remember(attachment) { mutableStateOf(null) }
   LaunchedEffect(attachmentBitmap) {
-    attachmentBitmap = attachment.imageData()?.decodeToImageBitmap()
+    attachmentBitmap = attachment.imageData(urlResolver)?.decodeToImageBitmap()
   }
   attachmentBitmap?.let { ImageMediaItem(it, attachment.title?.value) }
 }

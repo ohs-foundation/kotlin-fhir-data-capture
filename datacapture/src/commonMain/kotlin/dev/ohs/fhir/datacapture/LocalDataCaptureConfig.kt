@@ -15,15 +15,18 @@
  */
 package dev.ohs.fhir.datacapture
 
-import android.app.Application
+import androidx.compose.runtime.staticCompositionLocalOf
 
-/** Application class when you want to test the DataCaptureConfig.Provider */
-internal class DataCaptureTestApplication : Application(), DataCaptureConfig.Provider {
-
-  override fun onCreate() {
-    super.onCreate()
-    DataCapture.initialize(this)
-  }
-
-  override fun getDataCaptureConfig(): DataCaptureConfig = DataCaptureConfig()
-}
+/**
+ * A [androidx.compose.runtime.CompositionLocal] that provides [DataCaptureConfig] to the Compose UI
+ * tree. Wrap your root composable with [androidx.compose.runtime.CompositionLocalProvider] to
+ * supply a custom config:
+ * ```kotlin
+ * CompositionLocalProvider(LocalDataCaptureConfig provides DataCaptureConfig(...)) {
+ *   App()
+ * }
+ * ```
+ *
+ * Falls back to a default [DataCaptureConfig] (all resolvers null) if no provider is set.
+ */
+val LocalDataCaptureConfig = staticCompositionLocalOf { DataCaptureConfig() }

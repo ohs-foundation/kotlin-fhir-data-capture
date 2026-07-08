@@ -105,17 +105,15 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTime::class)
-internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
+internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptureConfig) :
+  ViewModel() {
   private val jsonR4 = Json {
     explicitNulls = false
     encodeDefaults = false
   }
-  private val xFhirQueryResolver: XFhirQueryResolver? by lazy {
-    DataCapture.getConfiguration().xFhirQueryResolver
-  }
-  private val externalValueSetResolver: ExternalAnswerValueSetResolver? by lazy {
-    DataCapture.getConfiguration().valueSetResolverExternal
-  }
+  private val xFhirQueryResolver: XFhirQueryResolver? = config.xFhirQueryResolver
+  private val externalValueSetResolver: ExternalAnswerValueSetResolver? =
+    config.valueSetResolverExternal
 
   /** The current questionnaire as questions are being answered. */
   internal val questionnaire: Questionnaire

@@ -19,47 +19,36 @@ import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Resource
 
 /**
- * The App developers may provide the [DataCaptureConfig] for the DataCapture library by
- * implementing [Provider] interface in the android.app.Application class. The library would load
- * and cache the configuration by calling [Provider.getDataCaptureConfig].
- *
- * NOTE: App developers should make sure that [Provider.getDataCaptureConfig] provides a constant
- * [DataCaptureConfig] throughout the lifecycle of the application.
+ * Configuration for the DataCapture library. Supply an instance via [LocalDataCaptureConfig]:
+ * ```kotlin
+ * CompositionLocalProvider(LocalDataCaptureConfig provides DataCaptureConfig(...)) {
+ *   App()
+ * }
+ * ```
  */
 data class DataCaptureConfig(
   /**
    * An [ExternalAnswerValueSetResolver] may be set to provide answer options dynamically for
    * `choice` and `open-choice` type questions.
    */
-  var valueSetResolverExternal: ExternalAnswerValueSetResolver? = null,
+  val valueSetResolverExternal: ExternalAnswerValueSetResolver? = null,
 
   /**
    * A [XFhirQueryResolver] may be set by the client to resolve x-fhir-query for the library. See
    * https://build.fhir.org/ig/HL7/sdc/expressions.html#fhirquery for more details.
    */
-  var xFhirQueryResolver: XFhirQueryResolver? = null,
+  val xFhirQueryResolver: XFhirQueryResolver? = null,
 
   /** Resolves a URL to the media binary content. */
-  var urlResolver: UrlResolver? = null,
+  val urlResolver: UrlResolver? = null,
 
   /**
    * A [QuestionnaireItemViewHolderFactoryMatchersProviderFactory] may be set by the client to
    * provide [QuestionnaireItemViewFactoryMatcher]s to add custom questionnaire components or
    * override the behaviour of existing components in the sdc.
    */
-  var questionnaireItemView: QuestionnaireItemViewHolderFactoryMatchersProviderFactory? = null,
-) {
-
-  /**
-   * A class that can provide the [DataCaptureConfig] for the Structured Data Capture Library. To do
-   * this, implement the [DataCaptureConfig.Provider] interface on your android.app.Application
-   * class. You should provide the same configuration throughout the lifecycle of your application.
-   * The library may cache the configuration and different configurations will be ignored.
-   */
-  interface Provider {
-    fun getDataCaptureConfig(): DataCaptureConfig
-  }
-}
+  val questionnaireItemView: QuestionnaireItemViewHolderFactoryMatchersProviderFactory? = null,
+)
 
 /**
  * Resolves external answer value sets not defined in the questionnaire's `contained` element. This

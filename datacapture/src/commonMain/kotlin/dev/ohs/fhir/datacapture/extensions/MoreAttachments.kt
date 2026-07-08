@@ -15,19 +15,18 @@
  */
 package dev.ohs.fhir.datacapture.extensions
 
-import dev.ohs.fhir.datacapture.DataCapture
+import dev.ohs.fhir.datacapture.UrlResolver
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Base64Binary
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-internal suspend fun Attachment.imageData(): ByteArray? {
+internal suspend fun Attachment.imageData(urlResolver: UrlResolver?): ByteArray? {
   check(mimeType == MimeType.IMAGE.value) {
     "${mimeType?.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} attachment is not supported in Item Media extension yet"
   }
 
-  return data?.data
-    ?: url?.value?.let { DataCapture.getConfiguration().urlResolver?.resolveBitmapUrl(it) }
+  return data?.data ?: url?.value?.let { urlResolver?.resolveBitmapUrl(it) }
 }
 
 /** Returns the main MIME type of a MIME type string (e.g. image/png returns image). */

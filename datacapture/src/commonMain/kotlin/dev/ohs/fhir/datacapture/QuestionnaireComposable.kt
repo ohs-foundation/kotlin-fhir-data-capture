@@ -91,8 +91,9 @@ fun Questionnaire(
       matchersProvider ?: EmptyQuestionnaireItemViewFactoryMatchersProvider
     }
 
+  val dataCaptureConfig = LocalDataCaptureConfig.current
   val viewModel: QuestionnaireViewModel =
-    viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap) }
+    viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap, dataCaptureConfig) }
   val flattenedQuestionnaireItems =
     remember(viewModel.questionnaire) { viewModel.questionnaire.item.flattened() }
 
