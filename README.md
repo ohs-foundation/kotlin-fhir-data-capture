@@ -40,7 +40,8 @@ The library also supports the following
 
 ## Catalog app
 
-The `catalog` module is a multiplatform demo application. To run the iOS variant see [catalog-iosApp/README.md](catalog-iosApp/README.md).
+The `catalog` module is a multiplatform demo application. To run the iOS variant see
+[catalog-iosApp/README.md](catalog-iosApp/README.md).
 
 ## User Guide
 
@@ -121,13 +122,18 @@ Questionnaire(
 
 Tests are located in the following source sets:
 
-- `commonTest`: Shared tests (logical validation rules and Compose UI rendering/flows) that run across all targets.
-- `jvmTest`: JVM-specific tests verifying localized date, time, and datetime input parsing/formatting using JVM Locales (`java.util.Locale`).
-- `androidDeviceTest`: Android-specific instrumentation tests verifying interactions with native Android date, time, and datetime picker dialogs (requires a connected device or emulator).
+- `commonTest`: Shared tests (logical validation rules and Compose UI rendering/flows) that run
+  across all targets.
+- `jvmTest`: JVM-specific tests verifying localized date, time, and datetime input
+  parsing/formatting using JVM Locales (`java.util.Locale`).
+- `androidDeviceTest`: Android-specific instrumentation tests verifying interactions with native
+  Android date, time, and datetime picker dialogs (requires a connected device or emulator).
 
 #### CI Platform Coverage
 
-The [CI pipeline](.github/workflows/run-tests.yml) automatically runs checks on every push and pull request. The table below details which test source sets (listed above) are executed by each target's CI task:
+The [CI pipeline](.github/workflows/run-tests.yml) automatically runs checks on every push and pull
+request. The table below details which test source sets (listed above) are executed by each target's
+CI task:
 
 | Platform              | Gradle task                          | CI runner       | Test source sets            | Notes |
 |:----------------------|:-------------------------------------|:----------------|:----------------------------|:------|
@@ -155,7 +161,8 @@ To run a specific test suite locally, run the corresponding Gradle task:
 
 ##### On-Device Android Tests
 
-The platform-specific Android UI tests (located under `androidDeviceTest`) are **not** run automatically on CI. To run them locally:
+The platform-specific Android UI tests (located under `androidDeviceTest`) are **not** run
+automatically on CI. To run them locally:
 
 1. Connect a physical Android device or start an emulator.
 2. Execute the connected test task:
