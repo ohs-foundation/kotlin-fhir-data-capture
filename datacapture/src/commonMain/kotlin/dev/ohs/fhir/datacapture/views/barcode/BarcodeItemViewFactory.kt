@@ -65,7 +65,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
+internal object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
@@ -132,7 +132,7 @@ object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
             )
           }
         }
-      } // end Column
+      }
 
       if (showPermissionError) {
         AlertDialog(
@@ -197,7 +197,7 @@ object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
       )
     )
   }
-} // end object BarcodeItemViewFactory
+}
 
 val BarcodeItemViewFactoryMatcher =
   QuestionnaireItemViewFactoryMatcher(BarcodeItemViewFactory) { it.itemControlCode == "barcode" }

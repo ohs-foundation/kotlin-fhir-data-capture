@@ -112,6 +112,14 @@ kotlin {
       }
     }
 
+    iosMain {
+      dependencies {
+        implementation(libs.kscan)
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+      }
+    }
+
     getByName("androidDeviceTest") {
       dependencies {
         implementation(libs.androidx.compose.ui.test.junit4)
