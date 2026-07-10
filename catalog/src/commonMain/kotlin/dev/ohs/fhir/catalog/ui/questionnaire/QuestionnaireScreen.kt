@@ -48,7 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.catalog.ui.questionnaire.components.ErrorStateToggleAction
-import dev.ohs.fhir.catalog.views.barcode.BarcodeItemViewFactoryMatcher
+import dev.ohs.fhir.datacapture.views.barcode.BarcodeItemViewFactoryMatcher
 import dev.ohs.fhir.catalog.views.locationwidget.LocationCaptureItemViewFactoryMatcher
 import dev.ohs.fhir.catalog.views.locationwidget.LocationCoordinateItemViewFactoryMatcher
 import dev.ohs.fhir.datacapture.Questionnaire
