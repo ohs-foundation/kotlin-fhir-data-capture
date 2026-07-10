@@ -428,18 +428,23 @@ object DefinitionExtractionEngine {
 
     val definitionPath =
       pair.questionnaireItem.definition?.value?.let(::parseDefinitionPath)?.takeIf {
-        it.canonical == scopeCanonical
+        canonicalMatches(it.canonical, scopeCanonical)
       }
     val directAnchor =
       definitionPath?.let { path ->
-        val anchorPath = computeItemAnchorPath(pair.questionnaireItem, path.pathSegments)
+        val anchorPath =
+          computeItemAnchorPath(
+            questionnaireItem = pair.questionnaireItem,
+            fullPath = path.pathSegments,
+          )
+
         if (anchorPath == parentAnchor.path) {
           parentAnchor
         } else {
           ensureDefinitionPathAnchor(
-            rootAnchor = rootAnchor,
             parentAnchor = parentAnchor,
             anchorPath = anchorPath,
+            appendFinalListElement = pair.questionnaireItem.isGroup(),
           )
         }
       }
@@ -483,6 +488,9 @@ object DefinitionExtractionEngine {
     }
   }
 
+  private fun canonicalMatches(left: String, right: String): Boolean =
+    left.substringBefore("|") == right.substringBefore("|")
+
   /**
    * Applies `definitionExtractValue` directives for the current scope.
    *
@@ -504,14 +512,17 @@ object DefinitionExtractionEngine {
     directAnchor: AnchorContext?,
   ) {
     sourceExtensions
+      .asSequence()
       .filter { it.url == EXTENSION_DEFINITION_EXTRACT_VALUE_URL }
       .map(::parseDefinitionExtractValue)
-      .filter { it.definition.canonical == scopeCanonical }
+      .filter { config ->
+        canonicalMatches(left = config.definition.canonical, right = scopeCanonical)
+      }
       .forEach { config ->
         val rawValues =
-          config.expression?.let {
+          config.expression?.let { expression ->
             evaluateDefinitionExtractExpression(
-              expression = it,
+              expression = expression,
               base = base,
               questionnaire = questionnaire,
               questionnaireResponse = questionnaireResponse,
@@ -520,30 +531,35 @@ object DefinitionExtractionEngine {
               allocateIds = allocateIds,
             )
           } ?: config.fixedValue?.let(::fixedValueToRawValue)?.let(::listOf) ?: emptyList()
+
         if (rawValues.isEmpty()) {
           return@forEach
         }
 
+        val definitionPath = config.definition.pathSegments
+
         val targetAnchor =
           when {
-            directAnchor != null &&
-              config.definition.pathSegments.startsWithPath(directAnchor.path) -> directAnchor
+            directAnchor != null && definitionPath.startsWithPath(directAnchor.path) -> {
+              directAnchor
+            }
 
-            parentAnchor.path.isNotEmpty() &&
-              config.definition.pathSegments.startsWithPath(parentAnchor.path) -> parentAnchor
+            parentAnchor.path.isNotEmpty() && definitionPath.startsWithPath(parentAnchor.path) -> {
+              parentAnchor
+            }
 
-            else ->
+            else -> {
               ensureDefinitionPathAnchor(
-                rootAnchor = rootAnchor,
                 parentAnchor = rootAnchor,
-                anchorPath = computeValueAnchorPath(config.definition.pathSegments),
+                anchorPath = computeValueAnchorPath(definitionPath),
               )
+            }
           }
 
         writeValuesToDefinitionPath(
           rootAnchor = rootAnchor,
           anchor = targetAnchor,
-          fullPath = config.definition.pathSegments,
+          fullPath = definitionPath,
           rawValues = rawValues,
         )
       }
@@ -867,26 +883,35 @@ object DefinitionExtractionEngine {
   }
 
   private fun ensureDefinitionPathAnchor(
-    rootAnchor: AnchorContext,
     parentAnchor: AnchorContext,
     anchorPath: List<String>,
+    appendFinalListElement: Boolean = false,
   ): AnchorContext {
     require(anchorPath.startsWithPath(parentAnchor.path)) {
-      "Anchor path ${anchorPath.joinToString(".")} must extend parent anchor ${
-        parentAnchor.path.joinToString(".")
-      }"
+      "Anchor path '${anchorPath.joinToString(".")}' must extend parent anchor " +
+        "'${parentAnchor.path.joinToString(".")}'."
     }
+
+    val relativePath = anchorPath.drop(parentAnchor.path.size)
 
     var currentNode = parentAnchor.node
     var currentDescriptor = parentAnchor.descriptor
 
-    anchorPath.drop(parentAnchor.path.size).forEach { segment ->
+    relativePath.forEachIndexed { index, segment ->
       val fieldInfo = findFieldInfo(currentDescriptor, segment)
-      currentNode = ensureObjectChild(currentNode, fieldInfo, appendToList = true)
+      val isFinalSegment = index == relativePath.lastIndex
+
+      currentNode =
+        ensureObjectChild(
+          currentNode = currentNode,
+          fieldInfo = fieldInfo,
+          appendToList = appendFinalListElement && isFinalSegment,
+        )
+
       currentDescriptor = currentNode.descriptor
     }
 
-    return AnchorContext(anchorPath, currentNode, currentDescriptor)
+    return AnchorContext(path = anchorPath, node = currentNode, descriptor = currentDescriptor)
   }
 
   private fun ensureObjectChild(
