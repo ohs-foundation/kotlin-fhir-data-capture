@@ -19,6 +19,7 @@ import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.packRepeatedGroups
+import dev.ohs.fhir.datacapture.extensions.referencesQuestionnaireResponseResource
 import dev.ohs.fhir.datacapture.extraction.template.EXTENSION_EXTRACT_ALLOCATE_ID_URL
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.fhirpath.types.FhirPathDate
@@ -594,8 +595,13 @@ object DefinitionExtractionEngine {
    *
    * Per the spec, `$extract` expressions only have access to QuestionnaireResponse data,
    * Questionnaire data, and `extractAllocateId` variables. This wrapper builds that scoped variable
-   * map and delegates raw FHIRPath execution to the shared [FhirPathService]. The small fallback
-   * table preserves compatibility for expressions that older engine versions handled specially.
+   * map and delegates raw FHIRPath execution to the shared [FhirPathService].
+   *
+   * Item-scoped directives still need `%resource` to resolve against the whole
+   * QuestionnaireResponse even though relative paths such as `item.where(...)` should evaluate
+   * against the current `QuestionnaireResponse.Item`. Choose the evaluation root up front based on
+   * whether the expression references `%resource` instead of maintaining a brittle
+   * expression-by-expression fallback table.
    */
   private fun evaluateDefinitionExtractExpression(
     expression: Expression,
@@ -605,23 +611,29 @@ object DefinitionExtractionEngine {
     questionnaireItem: Questionnaire.Item?,
     responseItem: QuestionnaireResponse.Item?,
     allocateIds: Map<String, String>,
-  ): List<Any> =
-    expression.expression
-      ?.value
-      ?.let { evaluateResourceExpressionFallback(it, questionnaireResponse) }
-      ?.takeIf { it.isNotEmpty() }
-      ?: FhirPathService.evaluate(
-        expression = expression.expression?.value ?: "",
-        resource = base,
-        variables =
-          buildMap {
-            put("resource", questionnaireResponse)
-            put("context", responseItem ?: base)
-            put("questionnaire", questionnaire)
-            questionnaireItem?.let { put("qItem", it) }
-            putAll(allocateIds)
-          },
-      )
+  ): List<Any> {
+    val expressionString = expression.expression?.value ?: return emptyList()
+    val variables = buildMap {
+      put("resource", questionnaireResponse)
+      put("context", responseItem ?: base)
+      put("questionnaire", questionnaire)
+      questionnaireItem?.let { put("qItem", it) }
+      putAll(allocateIds)
+    }
+
+    val evaluationRoot =
+      if (expressionString.referencesQuestionnaireResponseResource()) {
+        questionnaireResponse
+      } else {
+        base
+      }
+
+    return FhirPathService.evaluate(
+      expression = expressionString,
+      resource = evaluationRoot,
+      variables = variables,
+    )
+  }
 
   /**
    * Resolves a definition-extraction FHIRPath expression to the singular string form required by
@@ -653,28 +665,6 @@ object DefinitionExtractionEngine {
         ),
       path = "definition extraction expression '$expression'",
     ) ?: ""
-
-  /**
-   * Preserves a few historical `%resource` expressions that prior implementations treated as direct
-   * QuestionnaireResponse accessors even when the underlying FHIRPath engine returned no value.
-   */
-  private fun evaluateResourceExpressionFallback(
-    expression: String,
-    questionnaireResponse: QuestionnaireResponse,
-  ): List<Any> =
-    when (expression.trim()) {
-      "%resource.author" -> listOfNotNull(questionnaireResponse.author)
-
-      "%resource.id" -> questionnaireResponse.id?.let(::listOf) ?: emptyList()
-
-      "'QuestionnaireResponse/' + %resource.id" ->
-        questionnaireResponse.id?.let { listOf("QuestionnaireResponse/$it") } ?: emptyList()
-
-      "(%resource.authored | %resource.meta.lastUpdated | now()).first()" ->
-        listOfNotNull(questionnaireResponse.authored)
-
-      else -> emptyList()
-    }
 
   private fun fixedValueToRawValue(fixedValue: Extension.Value): Any =
     when (fixedValue) {

@@ -32,3 +32,5 @@ internal fun String.toBigDecimalOrNull(): BigDecimal? =
 
 /** FHIRPath variables are referenced with `%`, while lookup maps store the bare identifier. */
 internal fun String.normalizedVariableName(): String = removePrefix("%")
+
+fun String.referencesQuestionnaireResponseResource(): Boolean = contains("%resource")
