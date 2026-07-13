@@ -85,6 +85,7 @@ kotlin {
         implementation(libs.material)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
+        implementation(libs.ohs.fhir.engine)
       }
     }
     commonMain.dependencies {
@@ -107,7 +108,12 @@ kotlin {
     }
 
     @Suppress("unused")
-    val jvmMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
+    val jvmMain by getting {
+      dependencies {
+        implementation(compose.desktop.currentOs)
+        implementation(libs.ohs.fhir.engine)
+      }
+    }
 
     iosMain {
       dependencies {
@@ -118,6 +124,11 @@ kotlin {
       }
     }
 
-    wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
+    wasmJsMain {
+      dependencies {
+        implementation(libs.compass.geolocation.browser)
+        implementation(libs.ohs.fhir.engine)
+      }
+    }
   }
 }
