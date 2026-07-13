@@ -15,6 +15,7 @@
  */
 package dev.ohs.fhir.catalog
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
@@ -29,6 +30,6 @@ fun main() = application {
     title = stringResource(Res.string.app_name),
     state = WindowState(placement = WindowPlacement.Maximized),
   ) {
-    App()
+    App(xFhirQueryResolver = remember { catalogXFhirQueryResolver() })
   }
 }

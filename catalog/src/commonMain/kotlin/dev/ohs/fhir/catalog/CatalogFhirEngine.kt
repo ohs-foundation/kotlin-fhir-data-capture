@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 Open Health Stack Foundation
+ * Copyright 2026 Open Health Stack Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,6 @@
  */
 package dev.ohs.fhir.catalog
 
-import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.ComposeViewport
-import kotlinx.browser.document
+import dev.ohs.fhir.datacapture.XFhirQueryResolver
 
-@OptIn(ExperimentalComposeUiApi::class)
-fun main() {
-  ComposeViewport(document.body!!) {
-    App(xFhirQueryResolver = remember { catalogXFhirQueryResolver() })
-  }
-}
+expect fun catalogXFhirQueryResolver(context: Any = Unit): XFhirQueryResolver
