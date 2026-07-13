@@ -232,9 +232,7 @@ object DefinitionExtractionEngine {
               allocateIds = inheritedAllocateIds,
             )
           }
-          ?.takeIf { it.isNotBlank() }
-          ?: definitionExtract.fullUrlExpression?.let { null }
-          ?: generateAllocatedFullUrl()
+          ?.takeIf { it.isNotBlank() } ?: generateAllocatedFullUrl()
       put("fullUrl", JsonPrimitive(fullUrl))
 
       put("resource", resourceJson)
