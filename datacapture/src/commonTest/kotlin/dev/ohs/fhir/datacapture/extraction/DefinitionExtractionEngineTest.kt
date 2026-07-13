@@ -586,6 +586,160 @@ class DefinitionExtractionEngineTest {
   }
 
   @Test
+  fun infersCustomProfileResourceTypeFromDefinitionExtractValueHintsWithoutItemDefinitions() =
+    runTest {
+      val customProfile = "https://ohs.dev/fhir/StructureDefinition/MyObservation"
+      val questionnaire =
+        questionnaire(
+          """
+          {
+            "resourceType": "Questionnaire",
+            "url": "http://example.org/Questionnaire/custom-profile-observation",
+            "status": "active",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                "extension": [
+                  {
+                    "url": "definition",
+                    "valueCanonical": "$customProfile"
+                  }
+                ]
+              },
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                "extension": [
+                  {
+                    "url": "definition",
+                    "valueUri": "$customProfile#Observation.status"
+                  },
+                  {
+                    "url": "fixed-value",
+                    "valueCode": "final"
+                  }
+                ]
+              },
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtractValue",
+                "extension": [
+                  {
+                    "url": "definition",
+                    "valueUri": "$customProfile#Observation.code.text"
+                  },
+                  {
+                    "url": "fixed-value",
+                    "valueString": "Profiled observation"
+                  }
+                ]
+              }
+            ]
+          }
+          """
+        )
+      val questionnaireResponse =
+        questionnaireResponse(
+          """
+          {
+            "resourceType": "QuestionnaireResponse",
+            "questionnaire": "http://example.org/Questionnaire/custom-profile-observation",
+            "status": "completed"
+          }
+          """
+        )
+
+      val result =
+        DefinitionExtractionEngine.extractByDefinition(
+          questionnaire = questionnaire,
+          questionnaireResponse = questionnaireResponse,
+        )
+
+      assertEquals(1, result.entry.size)
+
+      val observationEntry = bundleEntryObjects(result).single()
+      assertEquals("Observation", resourceType(observationEntry))
+
+      val observationResource = resourceOf(observationEntry)
+      assertEquals("final", observationResource.getValue("status").jsonPrimitive.content)
+      assertEquals(
+        "Profiled observation",
+        observationResource.getValue("code").jsonObject.getValue("text").jsonPrimitive.content,
+      )
+      assertEquals(
+        listOf(customProfile),
+        observationResource.getValue("meta").jsonObject.getValue("profile").jsonArray.map { profile
+          ->
+          profile.jsonPrimitive.content
+        },
+      )
+    }
+
+  @Test
+  fun usesProvidedProfileResourceTypeResolverWhenLocalHintsAreAbsent() = runTest {
+    val customProfile = "https://ohs.dev/fhir/StructureDefinition/MyPatient"
+    val questionnaire =
+      questionnaire(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "url": "http://example.org/Questionnaire/custom-profile-patient",
+          "status": "active",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+              "extension": [
+                {
+                  "url": "definition",
+                  "valueCanonical": "$customProfile"
+                }
+              ]
+            }
+          ]
+        }
+        """
+      )
+    val questionnaireResponse =
+      questionnaireResponse(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "questionnaire": "http://example.org/Questionnaire/custom-profile-patient",
+          "status": "completed"
+        }
+        """
+      )
+
+    val unresolvedResult =
+      DefinitionExtractionEngine.extractByDefinition(questionnaire, questionnaireResponse)
+    assertEquals(0, unresolvedResult.entry.size)
+
+    val result =
+      DefinitionExtractionEngine.extractByDefinition(
+        questionnaire = questionnaire,
+        questionnaireResponse = questionnaireResponse,
+        resolveProfileResourceType = { canonical ->
+          if (canonical.substringBefore("|") == customProfile) {
+            "Patient"
+          } else {
+            null
+          }
+        },
+      )
+
+    assertEquals(1, result.entry.size)
+
+    val patientEntry = bundleEntryObjects(result).single()
+    assertEquals("Patient", resourceType(patientEntry))
+    assertEquals("Patient", requestOf(patientEntry).getValue("url").jsonPrimitive.content)
+    assertEquals(
+      listOf(customProfile),
+      resourceOf(patientEntry).getValue("meta").jsonObject.getValue("profile").jsonArray.map {
+        profile ->
+        profile.jsonPrimitive.content
+      },
+    )
+  }
+
+  @Test
   fun skipsBrokenResourceAndReturnsTheValidOnes() = runTest {
     val questionnaire =
       questionnaire(

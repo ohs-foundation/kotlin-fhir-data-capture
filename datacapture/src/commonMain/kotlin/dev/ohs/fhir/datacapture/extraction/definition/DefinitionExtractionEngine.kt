@@ -96,6 +96,26 @@ object DefinitionExtractionEngine {
   fun extractByDefinition(
     questionnaire: Questionnaire,
     questionnaireResponse: QuestionnaireResponse,
+  ): Bundle =
+    extractByDefinition(
+      questionnaire = questionnaire,
+      questionnaireResponse = questionnaireResponse,
+      resolveProfileResourceType = null,
+    )
+
+  /**
+   * Extracts resources using SDC definition-based rules with an optional custom profile resolver.
+   *
+   * Some `definitionExtract.definition` canonicals point at custom StructureDefinitions whose last
+   * URL segment is the profile id rather than a core FHIR resource type. When local typed
+   * `item.definition` or `definitionExtractValue.definition` hints are not present, callers can
+   * provide [resolveProfileResourceType] to map that canonical to a supported base resource type
+   * such as `Observation`.
+   */
+  fun extractByDefinition(
+    questionnaire: Questionnaire,
+    questionnaireResponse: QuestionnaireResponse,
+    resolveProfileResourceType: ((String) -> String?)?,
   ): Bundle {
     requireMatchingQuestionnaire(questionnaire, questionnaireResponse)
 
@@ -105,32 +125,35 @@ object DefinitionExtractionEngine {
       alignQuestionnaireItemsWithResponseItems(questionnaire.item, packedResponse.item)
     val rootAllocateIds =
       questionnaire.extractAllocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
-    val entries = mutableListOf<JsonObject>()
-
-    questionnaire.definitionExtractExtensions.forEach { definitionExtract ->
-      appendValidEntryOrSkip(
-        outputEntries = entries,
-        scopeDescription = "Questionnaire definition '${definitionExtract.definition}'",
-      ) {
-        extractBundleEntryForDefinitionScope(
-          definitionExtract = definitionExtract,
+    val entries = buildList {
+      addAll(
+        questionnaire.definitionExtractExtensions.mapNotNull { definitionExtract ->
+          materializeValidEntryOrNull(
+            scopeDescription = "Questionnaire definition '${definitionExtract.definition}'"
+          ) {
+            extractBundleEntryForDefinitionScope(
+              definitionExtract = definitionExtract,
+              questionnaire = questionnaire,
+              questionnaireResponse = questionnaireResponse,
+              scopeBase = packedResponse,
+              scopeQuestionnaireItem = null,
+              scopePairs = rootPairs,
+              inheritedAllocateIds = rootAllocateIds,
+              resolveProfileResourceType = resolveProfileResourceType,
+            )
+          }
+        }
+      )
+      addAll(
+        extractNestedDefinitionScopeEntries(
+          pairs = rootPairs,
           questionnaire = questionnaire,
           questionnaireResponse = questionnaireResponse,
-          scopeBase = packedResponse,
-          scopeQuestionnaireItem = null,
-          scopePairs = rootPairs,
           inheritedAllocateIds = rootAllocateIds,
+          resolveProfileResourceType = resolveProfileResourceType,
         )
-      }
+      )
     }
-
-    extractNestedDefinitionScopeEntries(
-      pairs = rootPairs,
-      questionnaire = questionnaire,
-      questionnaireResponse = questionnaireResponse,
-      inheritedAllocateIds = rootAllocateIds,
-      outputEntries = entries,
-    )
 
     if (entries.isEmpty()) {
       Logger.w(
@@ -176,8 +199,16 @@ object DefinitionExtractionEngine {
     scopeQuestionnaireItem: Questionnaire.Item?,
     scopePairs: List<QuestionnaireItemResponsePair>,
     inheritedAllocateIds: Map<String, String>,
+    resolveProfileResourceType: ((String) -> String?)?,
   ): JsonObject {
-    val resourceType = inferResourceType(definitionExtract.definition, scopePairs)
+    val resourceType =
+      inferResourceType(
+        definitionCanonical = definitionExtract.definition,
+        questionnaire = questionnaire,
+        scopeQuestionnaireItem = scopeQuestionnaireItem,
+        scopePairs = scopePairs,
+        resolveProfileResourceType = resolveProfileResourceType,
+      )
     val rootDescriptor = resourceDescriptor(resourceType)
     val resourceNode = MutableJsonObject(rootDescriptor)
     val rootAnchor =
@@ -323,39 +354,69 @@ object DefinitionExtractionEngine {
     questionnaire: Questionnaire,
     questionnaireResponse: QuestionnaireResponse,
     inheritedAllocateIds: Map<String, String>,
-    outputEntries: MutableList<JsonObject>,
-  ) {
-    for (pair in pairs) {
+    resolveProfileResourceType: ((String) -> String?)?,
+  ): List<JsonObject> =
+    pairs.flatMap { pair ->
       val pairAllocateIds =
         inheritedAllocateIds +
           pair.questionnaireItem.extractAllocateIdVariableNames.associateWith {
             generateAllocatedFullUrl()
           }
 
-      for (definitionExtract in pair.questionnaireItem.definitionExtractExtensions) {
-        if (pair.questionnaireItem.repeats?.value == true && !pair.questionnaireItem.isGroup()) {
-          for (answer in pair.responseItem.answer) {
-            val syntheticResponseItem =
-              pair.responseItem
-                .toBuilder()
-                .apply {
-                  this.answer = mutableListOf(answer.toBuilder())
-                  this.item = mutableListOf()
-                }
-                .build()
-            val syntheticPair =
-              QuestionnaireItemResponsePair(
-                questionnaireItem = pair.questionnaireItem,
-                responseItem = syntheticResponseItem,
-                children =
-                  alignQuestionnaireItemsWithResponseItems(pair.questionnaireItem.item, answer.item),
-              )
-            if (hasResponseContent(syntheticResponseItem)) {
-              appendValidEntryOrSkip(
-                outputEntries = outputEntries,
-                scopeDescription =
-                  "item '${pair.questionnaireItem.linkId.value.orEmpty()}' definition '${definitionExtract.definition}'",
-              ) {
+      extractEntriesForDefinitionScopePair(
+        pair = pair,
+        questionnaire = questionnaire,
+        questionnaireResponse = questionnaireResponse,
+        inheritedAllocateIds = pairAllocateIds,
+        resolveProfileResourceType = resolveProfileResourceType,
+      ) +
+        extractNestedDefinitionScopeEntries(
+          pairs = pair.children,
+          questionnaire = questionnaire,
+          questionnaireResponse = questionnaireResponse,
+          inheritedAllocateIds = pairAllocateIds,
+          resolveProfileResourceType = resolveProfileResourceType,
+        )
+    }
+
+  private fun extractEntriesForDefinitionScopePair(
+    pair: QuestionnaireItemResponsePair,
+    questionnaire: Questionnaire,
+    questionnaireResponse: QuestionnaireResponse,
+    inheritedAllocateIds: Map<String, String>,
+    resolveProfileResourceType: ((String) -> String?)?,
+  ): List<JsonObject> =
+    pair.questionnaireItem.definitionExtractExtensions.flatMap { definitionExtract ->
+      val scopeDescription =
+        "item '${pair.questionnaireItem.linkId.value.orEmpty()}' definition '${definitionExtract.definition}'"
+
+      when {
+        pair.questionnaireItem.repeats?.value == true && !pair.questionnaireItem.isGroup() ->
+          pair.responseItem.answer
+            .map { answer ->
+              val syntheticResponseItem =
+                pair.responseItem
+                  .toBuilder()
+                  .apply {
+                    this.answer = mutableListOf(answer.toBuilder())
+                    this.item = mutableListOf()
+                  }
+                  .build()
+              val syntheticPair =
+                QuestionnaireItemResponsePair(
+                  questionnaireItem = pair.questionnaireItem,
+                  responseItem = syntheticResponseItem,
+                  children =
+                    alignQuestionnaireItemsWithResponseItems(
+                      pair.questionnaireItem.item,
+                      answer.item,
+                    ),
+                )
+              syntheticResponseItem to syntheticPair
+            }
+            .filter { (syntheticResponseItem, _) -> hasResponseContent(syntheticResponseItem) }
+            .mapNotNull { (syntheticResponseItem, syntheticPair) ->
+              materializeValidEntryOrNull(scopeDescription = scopeDescription) {
                 extractBundleEntryForDefinitionScope(
                   definitionExtract = definitionExtract,
                   questionnaire = questionnaire,
@@ -363,39 +424,31 @@ object DefinitionExtractionEngine {
                   scopeBase = syntheticResponseItem,
                   scopeQuestionnaireItem = pair.questionnaireItem,
                   scopePairs = listOf(syntheticPair),
-                  inheritedAllocateIds = pairAllocateIds,
+                  inheritedAllocateIds = inheritedAllocateIds,
+                  resolveProfileResourceType = resolveProfileResourceType,
                 )
               }
             }
-          }
-        } else if (hasResponseContent(pair.responseItem)) {
-          appendValidEntryOrSkip(
-            outputEntries = outputEntries,
-            scopeDescription =
-              "item '${pair.questionnaireItem.linkId.value.orEmpty()}' definition '${definitionExtract.definition}'",
-          ) {
-            extractBundleEntryForDefinitionScope(
-              definitionExtract = definitionExtract,
-              questionnaire = questionnaire,
-              questionnaireResponse = questionnaireResponse,
-              scopeBase = pair.responseItem,
-              scopeQuestionnaireItem = pair.questionnaireItem,
-              scopePairs = listOf(pair),
-              inheritedAllocateIds = pairAllocateIds,
-            )
-          }
-        }
-      }
 
-      extractNestedDefinitionScopeEntries(
-        pairs = pair.children,
-        questionnaire = questionnaire,
-        questionnaireResponse = questionnaireResponse,
-        inheritedAllocateIds = pairAllocateIds,
-        outputEntries = outputEntries,
-      )
+        hasResponseContent(pair.responseItem) ->
+          listOfNotNull(
+            materializeValidEntryOrNull(scopeDescription = scopeDescription) {
+              extractBundleEntryForDefinitionScope(
+                definitionExtract = definitionExtract,
+                questionnaire = questionnaire,
+                questionnaireResponse = questionnaireResponse,
+                scopeBase = pair.responseItem,
+                scopeQuestionnaireItem = pair.questionnaireItem,
+                scopePairs = listOf(pair),
+                inheritedAllocateIds = inheritedAllocateIds,
+                resolveProfileResourceType = resolveProfileResourceType,
+              )
+            }
+          )
+
+        else -> emptyList()
+      }
     }
-  }
 
   /**
    * Applies one aligned Questionnaire/QuestionnaireResponse item pair to the current resource
@@ -571,22 +624,21 @@ object DefinitionExtractionEngine {
    * the failed query or directive produced no data. This helper keeps that behavior localized to
    * one resource scope instead of failing the whole extraction transaction.
    */
-  private inline fun appendValidEntryOrSkip(
-    outputEntries: MutableList<JsonObject>,
+  private inline fun materializeValidEntryOrNull(
     scopeDescription: String,
     block: () -> JsonObject,
-  ) {
+  ): JsonObject? =
     try {
       val entryJson = block()
       json.decodeFromJsonElement(Bundle.Entry.serializer(), entryJson)
-      outputEntries.add(entryJson)
+      entryJson
     } catch (throwable: Throwable) {
       Logger.w(
         "Skipping definition-based extraction for $scopeDescription because it could not be fully materialized.",
         throwable,
       )
+      null
     }
-  }
 
   /**
    * Evaluates a FHIRPath expression in the SDC definition-extraction context.
@@ -1095,7 +1147,10 @@ object DefinitionExtractionEngine {
 
   private fun inferResourceType(
     definitionCanonical: String,
+    questionnaire: Questionnaire,
+    scopeQuestionnaireItem: Questionnaire.Item?,
     scopePairs: List<QuestionnaireItemResponsePair>,
+    resolveProfileResourceType: ((String) -> String?)?,
   ): String {
     val canonicalWithoutVersion = definitionCanonical.substringBefore("|")
     val coreCandidate = canonicalWithoutVersion.substringAfterLast("/")
@@ -1103,24 +1158,62 @@ object DefinitionExtractionEngine {
       return coreCandidate
     }
 
-    scopePairs
-      .asSequence()
-      .mapNotNull { pair -> pair.questionnaireItem.definition?.value?.let(::parseDefinitionPath) }
-      .firstOrNull { it.canonical == definitionCanonical }
-      ?.let {
-        return it.resourceType
-      }
+    val hintedResourceTypes =
+      collectResourceTypeHints(questionnaire, scopeQuestionnaireItem, scopePairs)
+        .filter { definitionPath ->
+          canonicalMatches(definitionPath.canonical, definitionCanonical)
+        }
+        .map(DefinitionPath::resourceType)
+        .distinct()
+        .toList()
 
-    scopePairs
-      .asSequence()
-      .flatMap { pair -> pair.children.asSequence() }
-      .mapNotNull { pair -> pair.questionnaireItem.definition?.value?.let(::parseDefinitionPath) }
-      .firstOrNull { it.canonical == definitionCanonical }
-      ?.let {
-        return it.resourceType
-      }
+    when (hintedResourceTypes.size) {
+      1 -> return hintedResourceTypes.single()
 
-    error("Unable to infer resource type from definition '$definitionCanonical'.")
+      0 -> Unit
+
+      else ->
+        error(
+          "Conflicting resource type hints ${hintedResourceTypes.joinToString()} were found for definition '$definitionCanonical'."
+        )
+    }
+
+    resolveProfileResourceType?.invoke(definitionCanonical)?.let { resolvedResourceType ->
+      require(isSupportedResourceType(resolvedResourceType)) {
+        "Profile resource type resolver returned unsupported resource type '$resolvedResourceType' for definition '$definitionCanonical'."
+      }
+      return resolvedResourceType
+    }
+
+    error(
+      "Unable to infer resource type from definition '$definitionCanonical'. Add a matching item.definition or definitionExtractValue.definition hint, or provide a profile resource type resolver."
+    )
+  }
+
+  private fun collectResourceTypeHints(
+    questionnaire: Questionnaire,
+    scopeQuestionnaireItem: Questionnaire.Item?,
+    scopePairs: List<QuestionnaireItemResponsePair>,
+  ): Sequence<DefinitionPath> = sequence {
+    if (scopeQuestionnaireItem == null) {
+      yieldAll(
+        questionnaire.extension.definitionExtractValueDefinitions.asSequence().map { it.definition }
+      )
+    }
+    scopePairs.forEach { pair -> yieldAll(pair.resourceTypeHintsRecursively()) }
+  }
+
+  private fun QuestionnaireItemResponsePair.resourceTypeHintsRecursively():
+    Sequence<DefinitionPath> = sequence {
+    questionnaireItem.definition?.value?.let(::parseDefinitionPath)?.let { definitionPath ->
+      yield(definitionPath)
+    }
+    yieldAll(
+      questionnaireItem.extension.definitionExtractValueDefinitions.asSequence().map {
+        it.definition
+      }
+    )
+    children.forEach { child -> yieldAll(child.resourceTypeHintsRecursively()) }
   }
 
   private fun resourceDescriptor(resourceType: String): SerialDescriptor =
@@ -1211,6 +1304,10 @@ object DefinitionExtractionEngine {
   private val Questionnaire.Item.definitionExtractExtensions: List<DefinitionExtractConfig>
     get() =
       extension.filter { it.url == EXTENSION_DEFINITION_EXTRACT_URL }.map(::parseDefinitionExtract)
+
+  private val List<Extension>.definitionExtractValueDefinitions: List<DefinitionExtractValueConfig>
+    get() =
+      filter { it.url == EXTENSION_DEFINITION_EXTRACT_VALUE_URL }.map(::parseDefinitionExtractValue)
 
   private val Questionnaire.extractAllocateIdVariableNames: List<String>
     get() =
