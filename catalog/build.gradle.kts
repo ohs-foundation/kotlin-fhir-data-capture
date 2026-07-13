@@ -123,6 +123,8 @@ kotlin {
         implementation(libs.moko.permissions.compose)
       }
     }
+    val iosArm64Main by getting { dependencies { implementation(libs.ohs.fhir.engine) } }
+    val iosSimulatorArm64Main by getting { dependencies { implementation(libs.ohs.fhir.engine) } }
 
     wasmJsMain {
       dependencies {
