@@ -15,8 +15,11 @@
  */
 package dev.ohs.fhir.catalog
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.UIKit.UIViewController
 
 @Suppress("FunctionName", "unused")
-fun MainViewController(): UIViewController = ComposeUIViewController { App() }
+fun MainViewController(): UIViewController = ComposeUIViewController {
+  App(xFhirQueryResolver = remember { catalogXFhirQueryResolver() })
+}
