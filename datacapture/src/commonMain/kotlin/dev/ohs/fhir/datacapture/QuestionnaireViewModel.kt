@@ -1012,11 +1012,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       questionnaireItem.text
         ?.cqfExpression
         ?.let {
-          expressionEvaluator.evaluateExpressionValue(
-            questionnaireItem,
-            questionnaireResponseItem,
-            it,
-          )
+          expressionEvaluator.evaluateExpression(questionnaireItem, questionnaireResponseItem, it)
         }
         ?.takeIf { it.isNotEmpty() }
         ?.let { FhirPathService.convertToString(it) }
@@ -1051,15 +1047,19 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
               enabledAnswerOptions = enabledQuestionnaireAnswerOptions,
               minAnswerValue =
                 questionnaireItem.minValue?.populateCqfCalculatedValue {
-                  expressionEvaluator
-                    .evaluateExpressionValue(questionnaireItem, questionnaireResponseItem, it)
-                    ?.singleOrNull()
+                  expressionEvaluator.evaluateExpressionValue(
+                    questionnaireItem,
+                    questionnaireResponseItem,
+                    it,
+                  )
                 },
               maxAnswerValue =
                 questionnaireItem.maxValue?.populateCqfCalculatedValue {
-                  expressionEvaluator
-                    .evaluateExpressionValue(questionnaireItem, questionnaireResponseItem, it)
-                    ?.singleOrNull()
+                  expressionEvaluator.evaluateExpressionValue(
+                    questionnaireItem,
+                    questionnaireResponseItem,
+                    it,
+                  )
                 },
               draftAnswer = draftAnswerMap[questionnaireItem],
               enabledDisplayItems =

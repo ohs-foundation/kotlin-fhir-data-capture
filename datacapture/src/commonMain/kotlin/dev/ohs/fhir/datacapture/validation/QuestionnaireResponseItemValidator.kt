@@ -57,11 +57,6 @@ internal class QuestionnaireResponseItemValidator(val expressionEvaluator: Expre
               questionnaireResponseItem,
               it,
             )
-              ?: expressionEvaluator.evaluateExpression(
-                questionnaireItem,
-                questionnaireResponseItem,
-                it,
-              )
           }
         }
       }
