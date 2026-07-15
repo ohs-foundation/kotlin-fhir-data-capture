@@ -157,19 +157,19 @@ internal class ExpressionEvaluator(
   }
 
   /**
-   * Returns a list of [Any] evaluation value result of an expression, including cqf-expression and
+   * Returns single [Any] evaluation value result of an expression, including cqf-expression and
    * cqf-calculatedValue expressions
    */
   suspend fun evaluateExpressionValue(
     questionnaireItem: Questionnaire.Item,
     questionnaireResponseItem: QuestionnaireResponse.Item?,
     expression: Expression,
-  ): List<Any>? {
+  ): Any? {
     if (!expression.isFhirPath) {
       throw UnsupportedOperationException("${expression.language} not supported yet")
     }
     return try {
-      evaluateExpression(questionnaireItem, questionnaireResponseItem, expression)
+      evaluateExpression(questionnaireItem, questionnaireResponseItem, expression).singleOrNull()
     } catch (e: Exception) {
       Logger.w("Could not evaluate expression ${expression.expression} with FHIRPathEngine", e)
       null
