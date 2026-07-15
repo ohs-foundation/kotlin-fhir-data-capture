@@ -115,6 +115,59 @@ Questionnaire(
     },
 )
 ```
+### Data Extraction
+
+Once a user has completed a questionnaire, you'll often want to convert the resulting
+`QuestionnaireResponse` into other FHIR resources — for example, extracting a `Patient` from a
+registration questionnaire, or an `Observation` from a clinical assessment. This process is called
+**extraction**, and is defined by the [HL7 Structured Data Capture (SDC) Implementation
+Guide](https://build.fhir.org/ig/HL7/sdc/extraction.html).
+
+The `datacapture` module implements **template-based extraction**. A template resource (or template
+Bundle) is annotated with `sdc-questionnaire-templateExtractContext` and
+`sdc-questionnaire-templateExtractValue` extensions, which use FHIRPath expressions to indicate:
+
+- **Context** (`templateExtractContext`): which part of the `QuestionnaireResponse` a given branch
+  of the template should be evaluated against, and whether it should be cloned once per repeating
+  answer.
+- **Value** (`templateExtractValue`): which specific answer value should be inserted into a given
+  primitive field of the template.
+
+If an expression evaluates to no results, the corresponding property (or branch, for context
+expressions) is removed from the extracted resource rather than left empty or null.
+
+#### Basic usage
+
+```kotlin
+val bundle = TemplateExtractionEngine.extract(
+    questionnaire = myQuestionnaire,
+    questionnaireResponse = myQuestionnaireResponse,
+)
+// bundle is a transaction Bundle containing the extracted resource(s),
+// e.g. Patient, Observation, etc., as defined by the template(s).
+```
+
+`extract()` is a suspend function and should be called from a coroutine scope.
+
+#### Template resources
+
+Template resources referenced by `sdc-questionnaire-templateExtractContext` /
+`sdc-questionnaire-templateExtractValue` extensions are expected to be either:
+
+- **Contained** within the `Questionnaire` resource itself, referenced via the
+  `sdc-questionnaire-templateExtract` extension, or
+- Supplied as a standalone **template Bundle**, referenced via the
+  `sdc-questionnaire-templateExtractBundle` extension.
+
+The extraction engine does **not** post the resulting resources to a FHIR server — it returns a
+`Bundle` for the caller to persist as appropriate.
+
+#### Learn more
+
+See the [SDC Form Data Extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html) spec page
+for the full extraction model, including repeating groups, conditional extraction, and cross-resource
+references via `allocateId`.
+
 
 ## Developer guide
 
