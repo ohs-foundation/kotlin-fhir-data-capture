@@ -827,6 +827,8 @@ object DefinitionExtractionEngine {
   }
 
   private fun encodeValueForField(rawValue: Any, fieldDescriptor: SerialDescriptor): JsonElement {
+    // Promotions: bare value -> a structurally different but compatible target field.
+    // These are shape decisions, not encodings, so they still need to live here.
     if (
       fieldDescriptor.kind == StructureKind.CLASS &&
         looksLikeCodeableConcept(fieldDescriptor) &&
@@ -835,7 +837,9 @@ object DefinitionExtractionEngine {
       return buildJsonObject {
         put(
           "coding",
-          buildJsonArray { add(json.encodeToJsonElement(Coding.serializer(), rawValue)) },
+          buildJsonArray {
+            add(FhirPathService.toJsonElement(rawValue, path = fieldDescriptor.serialName))
+          },
         )
       }
     }
@@ -848,91 +852,24 @@ object DefinitionExtractionEngine {
       return buildJsonObject { put("reference", JsonPrimitive(rawValue)) }
     }
 
-    return when (rawValue) {
-      is String -> JsonPrimitive(rawValue)
+    // Encode once via the shared serializer, then flatten to a sub-field if the target is
+    // primitive. No per-type re-implementation of what toJsonElement already knows how to do.
+    val encoded = FhirPathService.toJsonElement(rawValue, path = fieldDescriptor.serialName)
 
-      is Boolean -> JsonPrimitive(rawValue)
-
-      is Int -> JsonPrimitive(rawValue)
-
-      is Long -> JsonPrimitive(rawValue)
-
-      is BigDecimal -> JsonPrimitive(rawValue.toString())
-
-      is FhirString -> JsonPrimitive(rawValue.value ?: "")
-
-      is dev.ohs.fhir.model.r4.Boolean -> JsonPrimitive(rawValue.value ?: false)
-
-      is Integer -> JsonPrimitive(rawValue.value ?: 0)
-
-      is Decimal -> JsonPrimitive(rawValue.value?.toString() ?: "0")
-
-      is Date -> JsonPrimitive(rawValue.value?.toString() ?: "")
-
-      is DateTime -> JsonPrimitive(rawValue.value?.toString() ?: "")
-
-      is Time -> JsonPrimitive(rawValue.value?.toString() ?: "")
-
-      is Uri -> JsonPrimitive(rawValue.value ?: "")
-
-      is Canonical -> JsonPrimitive(rawValue.value ?: "")
-
-      is Code -> JsonPrimitive(rawValue.value ?: "")
-
-      is Coding ->
-        if (fieldDescriptor.kind is PrimitiveKind) {
-          JsonPrimitive(rawValue.code?.value ?: "")
-        } else {
-          json.encodeToJsonElement(Coding.serializer(), rawValue)
+    if (fieldDescriptor.kind is PrimitiveKind && encoded is JsonObject) {
+      val flattenedKey =
+        when (rawValue) {
+          is Coding -> "code"
+          is Reference -> "reference"
+          is Quantity -> "value".takeIf { fieldDescriptor.serialName.endsWith(".value") }
+          else -> null
         }
-
-      is Reference ->
-        if (fieldDescriptor.kind is PrimitiveKind) {
-          JsonPrimitive(rawValue.reference?.value ?: "")
-        } else {
-          json.encodeToJsonElement(Reference.serializer(), rawValue)
-        }
-
-      is Quantity ->
-        if (
-          fieldDescriptor.kind is PrimitiveKind && fieldDescriptor.serialName.endsWith(".value")
-        ) {
-          JsonPrimitive(rawValue.value?.value?.toString() ?: "")
-        } else {
-          json.encodeToJsonElement(Quantity.serializer(), rawValue)
-        }
-
-      is CodeableConcept -> json.encodeToJsonElement(CodeableConcept.serializer(), rawValue)
-
-      is Identifier -> json.encodeToJsonElement(Identifier.serializer(), rawValue)
-
-      is HumanName -> json.encodeToJsonElement(HumanName.serializer(), rawValue)
-
-      is ContactPoint -> json.encodeToJsonElement(ContactPoint.serializer(), rawValue)
-
-      is Meta -> json.encodeToJsonElement(Meta.serializer(), rawValue)
-
-      is Period -> json.encodeToJsonElement(Period.serializer(), rawValue)
-
-      is Attachment -> json.encodeToJsonElement(Attachment.serializer(), rawValue)
-
-      is FhirPathDate -> JsonPrimitive(rawValue.toString())
-
-      is FhirPathDateTime -> JsonPrimitive(formatFhirPathDateTime(rawValue))
-
-      is FhirPathTime -> JsonPrimitive(formatFhirPathTime(rawValue))
-
-      is FhirPathQuantity ->
-        buildJsonObject {
-          rawValue.value?.let { put("value", JsonPrimitive(it.toString())) }
-          rawValue.unit?.let { put("unit", JsonPrimitive(it)) }
-        }
-
-      else ->
-        error(
-          "Unsupported value type ${rawValue::class.simpleName} for descriptor ${fieldDescriptor.serialName}"
-        )
+      flattenedKey?.let { key ->
+        return encoded[key] ?: JsonPrimitive("")
+      }
     }
+
+    return encoded
   }
 
   private fun ensureDefinitionPathAnchor(
