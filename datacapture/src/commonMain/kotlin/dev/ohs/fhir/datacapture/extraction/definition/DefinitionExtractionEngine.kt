@@ -806,11 +806,24 @@ object DefinitionExtractionEngine {
       return
     }
 
-    require(rawValues.size == 1) {
-      "Multiple values cannot be assigned to singular field '$leafName'."
-    }
+    /**
+     * Cardinality 0..1/1..1 elements can only hold one value. If the QuestionnaireResponse supplied
+     * more than one answer for a singular element, keep the first-in-document-order value
+     * (consistent with how repeated groups/answers are otherwise ordered) and warn instead of
+     * failing extraction of the whole resource.
+     */
+    val singularElementValue =
+      if (rawValues.size > 1) {
+        Logger.w(
+          "Element '$leafName' at path '${fullPath.joinToString(".")}' has cardinality 0..1/1..1 " +
+            "but received ${rawValues.size} answers. Using the first answer and discarding the rest."
+        )
+        rawValues.first()
+      } else {
+        rawValues.single()
+      }
     currentNode.values[leafName] =
-      MutableJsonLiteral(encodeValueForField(rawValues.single(), leafFieldInfo.descriptor))
+      MutableJsonLiteral(encodeValueForField(singularElementValue, leafFieldInfo.descriptor))
   }
 
   private fun encodeValueForField(rawValue: Any, fieldDescriptor: SerialDescriptor): JsonElement {

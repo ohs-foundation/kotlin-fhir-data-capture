@@ -38,6 +38,126 @@ class DefinitionExtractionEngineTest {
   }
 
   @Test
+  fun keepsFirstValueAndWarnsWhenSingularFieldReceivesMultipleAnswers() = runTest {
+    val questionnaire =
+      questionnaire(
+        """
+      {
+        "resourceType": "Questionnaire",
+        "url": "https://ohs.dev/fhir/Questionnaire/demographics",
+        "status": "active",
+        "item": [
+          {
+            "linkId": "patient",
+            "type": "group",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-definitionExtract",
+                "extension": [
+                  {
+                    "url": "definition",
+                    "valueCanonical": "http://hl7.org/fhir/StructureDefinition/Patient"
+                  }
+                ]
+              }
+            ],
+            "item": [
+              {
+                "linkId": "family",
+                "type": "string",
+                "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.family"
+              },
+              {
+                "linkId": "gender",
+                "type": "choice",
+                "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender"
+              },
+              {
+                "linkId": "birthDate",
+                "type": "date",
+                "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.birthDate"
+              }
+            ]
+          }
+        ]
+      }
+      """
+      )
+    val questionnaireResponse =
+      questionnaireResponse(
+        """
+      {
+        "resourceType": "QuestionnaireResponse",
+        "questionnaire": "https://ohs.dev/fhir/Questionnaire/demographics",
+        "status": "completed",
+        "item": [
+          {
+            "linkId": "patient",
+            "item": [
+              {
+                "linkId": "family",
+                "answer": [
+                  { "valueString": "Doe" }
+                ]
+              },
+              {
+                "linkId": "gender",
+                "answer": [
+                  {
+                    "valueCoding": {
+                      "system": "http://hl7.org/fhir/administrative-gender",
+                      "code": "female"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "birthDate",
+                "answer": [
+                  { "valueDate": "1980-01-02" },
+                  { "valueDate": "1990-05-05" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+      )
+
+    val result =
+      DefinitionExtractionEngine.extractByDefinition(
+        questionnaire = questionnaire,
+        questionnaireResponse = questionnaireResponse,
+      )
+
+    // A cardinality overflow on one singular field must not drop the whole resource.
+    assertEquals(1, result.entry.size)
+
+    val patientEntry = bundleEntryObjects(result).single()
+    assertEquals("Patient", resourceType(patientEntry))
+
+    val patientResource = resourceOf(patientEntry)
+
+    // Sibling fields written before/after the overflowing one must still be present.
+    assertEquals(
+      "Doe",
+      patientResource
+        .getValue("name")
+        .jsonArray
+        .single()
+        .jsonObject
+        .getValue("family")
+        .jsonPrimitive
+        .content,
+    )
+    assertEquals("female", patientResource.getValue("gender").jsonPrimitive.content)
+
+    // First value wins for the overflowing singular field; the second is dropped, not thrown.
+    assertEquals("1980-01-02", patientResource.getValue("birthDate").jsonPrimitive.content)
+  }
+
+  @Test
   fun extractsDemographicsUsingTheExactSpecQuestionnaire() = runTest {
     val questionnaire = questionnaire(demographicsQuestionnaireJson)
     val questionnaireResponse =
