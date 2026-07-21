@@ -18,6 +18,8 @@ package dev.ohs.fhir.datacapture.extensions
 import androidx.compose.ui.text.AnnotatedString
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 internal fun String.toAnnotatedString(): AnnotatedString = AnnotatedString(this)
 
@@ -38,3 +40,9 @@ private val questionnaireResponseResourceReferenceRegex =
 
 internal fun String.referencesQuestionnaireResponseResource(): Boolean =
   questionnaireResponseResourceReferenceRegex.containsMatchIn(this)
+
+internal const val EXTENSION_EXTRACT_ALLOCATE_ID_URL: String =
+  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
+
+@OptIn(ExperimentalUuidApi::class)
+internal fun generateAllocatedFullUrl(): String = "urn:uuid:${Uuid.random()}"

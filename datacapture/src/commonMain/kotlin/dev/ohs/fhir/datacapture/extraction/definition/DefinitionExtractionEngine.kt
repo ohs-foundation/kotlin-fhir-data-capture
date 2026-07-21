@@ -17,10 +17,11 @@ package dev.ohs.fhir.datacapture.extraction.definition
 
 import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.ohs.fhir.datacapture.extensions.allocateIdVariableNames
 import dev.ohs.fhir.datacapture.extensions.elementValue
+import dev.ohs.fhir.datacapture.extensions.generateAllocatedFullUrl
 import dev.ohs.fhir.datacapture.extensions.packRepeatedGroups
 import dev.ohs.fhir.datacapture.extensions.referencesQuestionnaireResponseResource
-import dev.ohs.fhir.datacapture.extraction.template.EXTENSION_EXTRACT_ALLOCATE_ID_URL
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.fhirpath.types.FhirPathDate
 import dev.ohs.fhir.fhirpath.types.FhirPathDateTime
@@ -51,7 +52,6 @@ import dev.ohs.fhir.model.r4.Reference
 import dev.ohs.fhir.model.r4.String as FhirString
 import dev.ohs.fhir.model.r4.Time
 import dev.ohs.fhir.model.r4.Uri
-import kotlin.random.Random
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -124,7 +124,7 @@ object DefinitionExtractionEngine {
     val rootPairs =
       alignQuestionnaireItemsWithResponseItems(questionnaire.item, packedResponse.item)
     val rootAllocateIds =
-      questionnaire.extractAllocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
+      questionnaire.allocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
     val entries = buildList {
       addAll(
         questionnaire.definitionExtractExtensions.mapNotNull { definitionExtract ->
@@ -359,7 +359,7 @@ object DefinitionExtractionEngine {
     pairs.flatMap { pair ->
       val pairAllocateIds =
         inheritedAllocateIds +
-          pair.questionnaireItem.extractAllocateIdVariableNames.associateWith {
+          pair.questionnaireItem.allocateIdVariableNames.associateWith {
             generateAllocatedFullUrl()
           }
 
@@ -474,9 +474,7 @@ object DefinitionExtractionEngine {
 
     val pairAllocateIds =
       inheritedAllocateIds +
-        pair.questionnaireItem.extractAllocateIdVariableNames.associateWith {
-          generateAllocatedFullUrl()
-        }
+        pair.questionnaireItem.allocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
 
     val definitionPath =
       pair.questionnaireItem.definition?.value?.let(::parseDefinitionPath)?.takeIf {
@@ -1259,18 +1257,6 @@ object DefinitionExtractionEngine {
     get() =
       filter { it.url == EXTENSION_DEFINITION_EXTRACT_VALUE_URL }.map(::parseDefinitionExtractValue)
 
-  private val Questionnaire.extractAllocateIdVariableNames: List<String>
-    get() =
-      extension
-        .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
-        .mapNotNull { it.value?.asString()?.value?.value }
-
-  private val Questionnaire.Item.extractAllocateIdVariableNames: List<String>
-    get() =
-      extension
-        .filter { it.url == EXTENSION_EXTRACT_ALLOCATE_ID_URL }
-        .mapNotNull { it.value?.asString()?.value?.value }
-
   private fun parseDefinitionExtract(extension: Extension): DefinitionExtractConfig {
     val definition =
       extension.extension.firstOrNull { it.url == "definition" }?.value?.asCanonical()?.value?.value
@@ -1353,85 +1339,6 @@ object DefinitionExtractionEngine {
 
   private fun computeValueAnchorPath(fullPath: List<String>): List<String> =
     if (fullPath.size <= 1) emptyList() else fullPath.dropLast(1)
-
-  private fun generateAllocatedFullUrl(): String {
-    val bytes = ByteArray(16)
-    Random.nextBytes(bytes)
-    bytes[6] = ((bytes[6].toInt() and 0x0F) or 0x40).toByte()
-    bytes[8] = ((bytes[8].toInt() and 0x3F) or 0x80).toByte()
-    val hex =
-      bytes.joinToString(separator = "") { byte -> byte.toUByte().toString(16).padStart(2, '0') }
-    return "urn:uuid:${hex.substring(0, 8)}-${hex.substring(8, 12)}-${
-      hex.substring(
-        12,
-        16,
-      )
-    }-${hex.substring(16, 20)}-${hex.substring(20)}"
-  }
-
-  private fun formatFhirPathDateTime(value: FhirPathDateTime): String {
-    val year = value.year.toString().padStart(4, '0')
-    val month = value.month?.toString()?.padStart(2, '0')
-    val day = value.day?.toString()?.padStart(2, '0')
-    val hour = value.hour?.toString()?.padStart(2, '0')
-    val minute = value.minute?.toString()?.padStart(2, '0')
-    val second =
-      value.second?.let {
-        if (it.rem(1.0) == 0.0) {
-          it.toInt().toString().padStart(2, '0')
-        } else {
-          it.toString().padStart(2, '0')
-        }
-      }
-    return buildString {
-      append(year)
-      month?.let {
-        append("-")
-        append(it)
-      }
-      day?.let {
-        append("-")
-        append(it)
-      }
-      hour?.let {
-        append("T")
-        append(it)
-      }
-      minute?.let {
-        append(":")
-        append(it)
-      }
-      second?.let {
-        append(":")
-        append(it)
-      }
-      value.utcOffset?.let { append(it.toString()) }
-    }
-  }
-
-  private fun formatFhirPathTime(value: FhirPathTime): String {
-    val hour = value.hour.toString().padStart(2, '0')
-    val minute = value.minute?.toString()?.padStart(2, '0')
-    val second =
-      value.second?.let {
-        if (it.rem(1.0) == 0.0) {
-          it.toInt().toString().padStart(2, '0')
-        } else {
-          it.toString().padStart(2, '0')
-        }
-      }
-    return buildString {
-      append(hour)
-      minute?.let {
-        append(":")
-        append(it)
-      }
-      second?.let {
-        append(":")
-        append(it)
-      }
-    }
-  }
 
   private fun JsonElement.asString(): String? =
     (this as? JsonPrimitive)?.content?.takeIf { it.isNotBlank() }
