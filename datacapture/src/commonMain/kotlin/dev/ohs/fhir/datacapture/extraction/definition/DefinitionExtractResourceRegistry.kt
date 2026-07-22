@@ -169,7 +169,24 @@ import kotlinx.serialization.descriptors.SerialDescriptor
  * Keeping descriptor lookup in one place lets definition-based extraction work for every resource
  * type registered by the model library.
  */
+import dev.ohs.fhir.model.r4.Resource
+import kotlinx.serialization.descriptors.SerialDescriptor
+
 internal object DefinitionExtractResourceRegistry {
+  private val descriptorsByType: Map<String, SerialDescriptor> by lazy {
+    val resourceDescriptor = Resource.serializer().descriptor
+    val union = resourceDescriptor.getElementDescriptor(resourceDescriptor.getElementIndex("value"))
+    (0 until union.elementsCount).associate { index ->
+      union.getElementName(index) to union.getElementDescriptor(index)
+    }
+  }
+
+  internal val supportedResourceTypes: Set<String>
+    get() = descriptorsByType.keys
+
+  internal fun descriptorFor(resourceType: String): SerialDescriptor? =
+    descriptorsByType[resourceType]
+}
   internal val supportedResourceTypes: Set<String> =
     setOf(
       "Account",
