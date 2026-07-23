@@ -38,6 +38,7 @@ import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
+import dev.ohs.fhir.datacapture.views.components.HANDLE_INPUT_DEBOUNCE_TIME
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
 import dev.ohs.fhir.model.r4.Code
 import dev.ohs.fhir.model.r4.CodeableConcept
@@ -49,10 +50,25 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.Uri
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class PhoneNumberTextInputFactoryTest {
+
+  @BeforeTest
+  fun setUp() {
+    // The debounce relies on a real delay(), which runComposeUiTest's virtual clock does not
+    // resume on non-Android targets (https://github.com/JetBrains/compose-multiplatform/issues/4805).
+    HANDLE_INPUT_DEBOUNCE_TIME = 0L
+  }
+
+  @AfterTest
+  fun tearDown() {
+    HANDLE_INPUT_DEBOUNCE_TIME = 500L
+  }
+
   @Composable
   fun QuestionnaireEditTextPhoneNumberView(questionnaireViewItem: QuestionnaireViewItem) {
     QuestionnaireTheme { PhoneNumberTextInputFactory.Content(questionnaireViewItem) }
