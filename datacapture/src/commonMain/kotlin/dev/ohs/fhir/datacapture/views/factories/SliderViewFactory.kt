@@ -39,7 +39,6 @@ import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.min_value_less_than_max_value_validation_error_msg
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -89,7 +88,7 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
       remember(stepSize, minValue, maxValue) { (maxValue - minValue).div(stepSize).toInt() - 1 }
     val questionnaireViewItemAnswerValue =
       remember(answer) { answer?.value?.asInteger()?.value?.value?.toFloat() ?: minValue }
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
       modifier =

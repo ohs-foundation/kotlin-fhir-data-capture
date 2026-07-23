@@ -35,13 +35,12 @@ import dev.ohs.fhir.datacapture.views.components.DropDownAnswerOption
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.components.MultiAutoCompleteTextItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal object AutoCompleteViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val canHaveMultipleAnswers =
       remember(questionnaireViewItem.questionnaireItem) {
         questionnaireViewItem.questionnaireItem.repeats?.value ?: false

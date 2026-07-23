@@ -53,7 +53,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.gm_calendar_today_24
 import kotlin_fhir_data_capture.datacapture.generated.resources.select_date
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -80,7 +79,7 @@ internal fun DateFieldItem(
 ) {
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
-  val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+  val coroutineScope = rememberCoroutineScope()
   val localDateTimeFormatter = getLocalDateTimeFormatter()
 
   var dateInputDisplay by
