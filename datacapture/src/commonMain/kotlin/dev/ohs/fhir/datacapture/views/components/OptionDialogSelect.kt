@@ -139,7 +139,7 @@ internal fun OptionDialogSelect(
         ) {
           itemsIndexed(
             choiceOptions,
-            key = { _, row -> row.key() },
+            key = { index, row -> row.key(index) },
             contentType = { _, row -> row::class.simpleName },
           ) { index, optionSelectRow ->
             val label = optionSelectRow.option.displayString.toAnnotatedString()
@@ -229,7 +229,7 @@ internal fun OptionDialogSelect(
           if (otherOptionRowSelected) {
             itemsIndexed(
               otherOptionEditTexts,
-              key = { _, option -> option.key() },
+              key = { index, option -> option.key(index) },
               contentType = { _, _ -> OptionSelectRow.OtherEditText },
             ) { index, option ->
               Row(
@@ -376,9 +376,12 @@ internal sealed class OptionSelectRow {
   /** "Add Another" other field button. Only used in multi-select when [OtherRow] is selected. */
   object OtherAddAnother : OptionSelectRow()
 
-  fun key() =
+  // `index` disambiguates `Option` rows instead of relying on the answer option's `toString()`,
+  // which on Kotlin/JS can collapse distinct FHIR element values to the same "[object Object]"
+  // string and cause LazyColumn key collisions.
+  fun key(index: Int) =
     when (this) {
-      is Option -> "option_${option.item.elementValue}"
+      is Option -> "option_$index"
       is OtherRow -> "other_row"
       is OtherEditText -> "other_edit_$id"
       OtherAddAnother -> "add_another"
