@@ -119,6 +119,7 @@ kotlin {
     }
 
     iosMain {
+      dependsOn(commonMain.get())
       dependencies {
         implementation(libs.compass.geolocation.mobile)
         implementation(libs.compass.permissions.mobile)
@@ -126,9 +127,15 @@ kotlin {
         implementation(libs.moko.permissions.compose)
       }
     }
-    val iosArm64Main by getting { dependsOn(fhirEngineMain) }
-    val iosSimulatorArm64Main by getting { dependsOn(fhirEngineMain) }
-
+    val iosArm64Main by getting {
+      dependsOn(iosMain.get())
+      dependsOn(fhirEngineMain)
+    }
+    val iosSimulatorArm64Main by getting {
+      dependsOn(iosMain.get())
+      dependsOn(fhirEngineMain)
+    }
+    val iosX64Main by getting { dependsOn(iosMain.get()) }
     wasmJsMain {
       dependsOn(fhirEngineMain)
       dependencies { implementation(libs.compass.geolocation.browser) }

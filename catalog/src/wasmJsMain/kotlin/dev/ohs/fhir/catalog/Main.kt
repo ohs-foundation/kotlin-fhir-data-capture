@@ -15,14 +15,12 @@
  */
 package dev.ohs.fhir.catalog
 
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-  ComposeViewport(document.body!!) {
-    App(xFhirQueryResolver = remember { catalogXFhirQueryResolver() })
-  }
+  val xFhirQueryResolver = catalogXFhirQueryResolver()
+  ComposeViewport(document.body!!) { App(xFhirQueryResolver = xFhirQueryResolver) }
 }
