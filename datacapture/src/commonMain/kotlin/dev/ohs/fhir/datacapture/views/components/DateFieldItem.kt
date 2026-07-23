@@ -139,7 +139,7 @@ internal fun DateFieldItem(
               text = formattedText,
               selection = TextRange(dateInputFormat.pattern.length),
             )
-          postDelayedNewDateInput(DateInput(formattedText, localDate), HANDLE_INPUT_DEBOUNCE_TIME)
+          postDelayedNewDateInput(DateInput(formattedText, localDate), handleInputDebounceTime)
         }
       }
     },

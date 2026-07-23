@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import dev.ohs.fhir.datacapture.extensions.displayString
-import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.itemAnswerOptionImage
 import dev.ohs.fhir.datacapture.extensions.optionExclusive
 import dev.ohs.fhir.datacapture.extensions.toAnnotatedString

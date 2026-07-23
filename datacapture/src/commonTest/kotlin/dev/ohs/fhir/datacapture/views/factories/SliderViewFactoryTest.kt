@@ -71,8 +71,8 @@ class SliderViewFactoryTest {
   /**
    * Compose Material3's Slider computes [ProgressBarRangeInfo.current] via a fraction/position
    * round-trip that isn't exactly reproducible across Kotlin targets (e.g. current=10 renders as
-   * 10.000000149011612 on Kotlin/JS but exactly 10 on JVM/Wasm). Asserts [current] with a
-   * tolerance instead of exact equality; [range] and [steps] are still checked exactly.
+   * 10.000000149011612 on Kotlin/JS but exactly 10 on JVM/Wasm). Asserts [current] with a tolerance
+   * instead of exact equality; [range] and [steps] are still checked exactly.
    */
   private fun SemanticsNodeInteraction.assertRangeInfoApproximatelyEquals(
     expected: ProgressBarRangeInfo,

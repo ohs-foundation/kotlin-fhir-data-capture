@@ -38,8 +38,8 @@ import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
-import dev.ohs.fhir.datacapture.views.components.HANDLE_INPUT_DEBOUNCE_TIME
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
+import dev.ohs.fhir.datacapture.views.components.handleInputDebounceTime
 import dev.ohs.fhir.model.r4.Code
 import dev.ohs.fhir.model.r4.CodeableConcept
 import dev.ohs.fhir.model.r4.Coding
@@ -60,13 +60,14 @@ class PhoneNumberTextInputFactoryTest {
   @BeforeTest
   fun setUp() {
     // The debounce relies on a real delay(), which runComposeUiTest's virtual clock does not
-    // resume on non-Android targets (https://github.com/JetBrains/compose-multiplatform/issues/4805).
-    HANDLE_INPUT_DEBOUNCE_TIME = 0L
+    // resume on non-Android targets
+    // (https://github.com/JetBrains/compose-multiplatform/issues/4805).
+    handleInputDebounceTime = 0L
   }
 
   @AfterTest
   fun tearDown() {
-    HANDLE_INPUT_DEBOUNCE_TIME = 500L
+    handleInputDebounceTime = 500L
   }
 
   @Composable

@@ -43,7 +43,6 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.no
 import kotlin_fhir_data_capture.datacapture.generated.resources.yes
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 

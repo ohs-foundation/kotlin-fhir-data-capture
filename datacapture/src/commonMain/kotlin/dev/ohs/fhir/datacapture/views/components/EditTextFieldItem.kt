@@ -54,7 +54,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal const val EDIT_TEXT_FIELD_TEST_TAG = "text_input_edit_text"
 internal const val UNIT_TEXT_TEST_TAG = "unit_text_view"
-internal var HANDLE_INPUT_DEBOUNCE_TIME = 500L
+internal var handleInputDebounceTime = 500L
 
 @Composable
 internal fun EditTextFieldItem(modifier: Modifier, textFieldState: EditTextFieldState) {
@@ -183,7 +183,7 @@ internal data class EditTextFieldState(
     coroutineScope.launch {
       snapshotFlow { inputText }
         .drop(1) // Drops the initial value emitted by snapshotFlow
-        .debounce(HANDLE_INPUT_DEBOUNCE_TIME)
+        .debounce(handleInputDebounceTime)
         .collectLatest { handleTextInputChange(it) }
     }
   }
