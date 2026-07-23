@@ -76,7 +76,13 @@ kotlin {
   }
 
   sourceSets {
+    val fhirEngineMain by creating {
+      dependsOn(commonMain.get())
+      dependencies { implementation(libs.ohs.fhir.engine) }
+    }
+
     androidMain {
+      dependsOn(fhirEngineMain)
       dependencies {
         implementation(libs.androidx.appcompat)
         implementation(libs.androidx.core)
@@ -85,7 +91,6 @@ kotlin {
         implementation(libs.material)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
-        implementation(libs.ohs.fhir.engine)
       }
     }
     commonMain.dependencies {
@@ -109,10 +114,8 @@ kotlin {
 
     @Suppress("unused")
     val jvmMain by getting {
-      dependencies {
-        implementation(compose.desktop.currentOs)
-        implementation(libs.ohs.fhir.engine)
-      }
+      dependsOn(fhirEngineMain)
+      dependencies { implementation(compose.desktop.currentOs) }
     }
 
     iosMain {
@@ -123,14 +126,12 @@ kotlin {
         implementation(libs.moko.permissions.compose)
       }
     }
-    val iosArm64Main by getting { dependencies { implementation(libs.ohs.fhir.engine) } }
-    val iosSimulatorArm64Main by getting { dependencies { implementation(libs.ohs.fhir.engine) } }
+    val iosArm64Main by getting { dependsOn(fhirEngineMain) }
+    val iosSimulatorArm64Main by getting { dependsOn(fhirEngineMain) }
 
     wasmJsMain {
-      dependencies {
-        implementation(libs.compass.geolocation.browser)
-        implementation(libs.ohs.fhir.engine)
-      }
+      dependsOn(fhirEngineMain)
+      dependencies { implementation(libs.compass.geolocation.browser) }
     }
   }
 }

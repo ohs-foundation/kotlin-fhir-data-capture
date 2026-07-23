@@ -34,7 +34,7 @@ ohs-fhir-path = "1.0.0-beta03"
 permissions-camera = "0.20.1"
 spotless-plugin = "8.4.0"
 truth = "1.1.5"
-ohs-fhir-engine = "2.0.0-alpha01"
+ohs-fhir-engine = "2.0.0-alpha02"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
