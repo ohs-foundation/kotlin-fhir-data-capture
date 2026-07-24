@@ -68,7 +68,7 @@ kotlin {
 
   androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
 
-  listOf(iosSimulatorArm64(), iosArm64(), iosX64()).forEach {
+  listOf(iosSimulatorArm64(), iosArm64()).forEach {
     it.binaries.framework {
       baseName = "Catalog"
       isStatic = true
@@ -119,6 +119,7 @@ kotlin {
     }
 
     iosMain {
+      dependsOn(fhirEngineMain)
       dependsOn(commonMain.get())
       dependencies {
         implementation(libs.compass.geolocation.mobile)
@@ -127,15 +128,8 @@ kotlin {
         implementation(libs.moko.permissions.compose)
       }
     }
-    val iosArm64Main by getting {
-      dependsOn(iosMain.get())
-      dependsOn(fhirEngineMain)
-    }
-    val iosSimulatorArm64Main by getting {
-      dependsOn(iosMain.get())
-      dependsOn(fhirEngineMain)
-    }
-    val iosX64Main by getting { dependsOn(iosMain.get()) }
+    val iosArm64Main by getting { dependsOn(iosMain.get()) }
+    val iosSimulatorArm64Main by getting { dependsOn(iosMain.get()) }
     wasmJsMain {
       dependsOn(fhirEngineMain)
       dependencies { implementation(libs.compass.geolocation.browser) }
