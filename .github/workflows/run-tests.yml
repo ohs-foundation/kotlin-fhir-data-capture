@@ -98,7 +98,7 @@ jobs:
       - name: Run tests
         if: ${{ !matrix.xvfb }}
         env:
-          GRADLE_OPTS: -Xmx6g -XX:MaxMetaspaceSize=512m -Xss4m -Dfile.encoding=UTF-8
+          GRADLE_OPTS: -Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8
         run: >-
           ./gradlew ${{ matrix.target }}
           --stacktrace
@@ -106,7 +106,7 @@ jobs:
           --no-parallel
           --no-configuration-cache
           --build-cache
-          -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss4m -Dfile.encoding=UTF-8"
+          -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8"
           -Dorg.gradle.workers.max=1
           -Dkotlin.daemon.enabled=false
 
@@ -115,7 +115,7 @@ jobs:
       - name: Run tests (with xvfb)
         if: ${{ matrix.xvfb }}
         env:
-          GRADLE_OPTS: -Xmx6g -XX:MaxMetaspaceSize=512m -Xss4m -Dfile.encoding=UTF-8
+          GRADLE_OPTS: -Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8
         run: >-
           xvfb-run --auto-servernum
           ./gradlew ${{ matrix.target }}
@@ -124,7 +124,7 @@ jobs:
           --no-parallel
           --no-configuration-cache
           --build-cache
-          -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss4m -Dfile.encoding=UTF-8"
+          -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8"
           -Dorg.gradle.workers.max=1
           -Dkotlin.daemon.enabled=false
 
