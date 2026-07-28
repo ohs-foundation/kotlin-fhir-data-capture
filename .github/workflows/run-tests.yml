@@ -108,7 +108,6 @@ jobs:
           --build-cache
           -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8"
           -Dorg.gradle.workers.max=1
-          -Dkotlin.daemon.enabled=false
 
       # Run tests that require UI interaction (like JVM desktop Compose UI tests) using xvfb-run
       # to provide a virtual framebuffer in the headless environment, preventing graphic environment exceptions.
@@ -126,7 +125,6 @@ jobs:
           --build-cache
           -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Xss32m -Dfile.encoding=UTF-8"
           -Dorg.gradle.workers.max=1
-          -Dkotlin.daemon.enabled=false
 
       - name: Upload test reports
         if: always()
