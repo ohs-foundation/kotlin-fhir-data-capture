@@ -8,7 +8,6 @@
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-android?color=yellow&label=android)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-android)
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-iossimulatorarm64?color=yellow&label=iossimulatorarm64)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-iossimulatorarm64)
 [![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-iosarm64?color=yellow&label=iosarm64)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-iosarm64)
-[![Release](https://img.shields.io/maven-central/v/dev.ohs.fhir/fhir-data-capture-iosx64?color=yellow&label=iosx64)](https://central.sonatype.com/artifact/dev.ohs.fhir/fhir-data-capture-iosx64)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 A Kotlin Multiplatform library for collecting, validating, and processing structured healthcare data using [HL7 FHIR Questionnaires](https://www.hl7.org/fhir/questionnaire.html).
@@ -36,7 +35,7 @@ The library also supports the following
 |:-------------------|:---------------------|:-----|:--------|
 | iosSimulatorArm64  | `-iossimulatorarm64` | 1    | ✅       |
 | iosArm64           | `-iosarm64`          | 1    | ✅       |
-| iosX64             | `-iosx64`            | 3    | ✅       |
+| iosX64             | `-iosx64`            | 3    | ⛔       |
 
 ## Catalog app
 
@@ -142,6 +141,7 @@ CI task:
 | **JS (Browser)**      | `:datacapture:jsBrowserTest`         | `ubuntu-latest` | `commonTest`                | Runs in headless Chrome |
 | **Android**           | `:datacapture:testAndroidHostTest`   | `ubuntu-latest` | `commonTest`                | Runs host unit tests on JVM |
 | **iOS (Simulator)**   | `:datacapture:iosSimulatorArm64Test` | `macos-latest`  | `commonTest`                | Runs in simulator environment |
+| **iOS Release Framework** | `:datacapture:linkReleaseFrameworkIosArm64` | `macos-latest` | N/A | Build-only regression check (no test source sets) guarding against the Kotlin/Native LTO OOM in [#35](https://github.com/ohs-foundation/kotlin-fhir-data-capture/issues/35) |
 
 #### Running Tests Locally
 
@@ -158,6 +158,7 @@ To run a specific test suite locally, run the corresponding Gradle task:
 - **JS**: `./gradlew :datacapture:jsBrowserTest`
 - **Android Host**: `./datacapture:testAndroidHostTest`
 - **iOS Simulator**: `./gradlew :datacapture:iosSimulatorArm64Test`
+- **iOS Release Framework**: `./gradlew :datacapture:linkReleaseFrameworkIosArm64`
 
 ##### On-Device Android Tests
 
