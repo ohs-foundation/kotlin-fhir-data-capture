@@ -42,6 +42,13 @@ jobs:
             name: iOS Simulator
             os: macos-latest
             xvfb: false
+          # Regression test for https://github.com/ohs-foundation/kotlin-fhir-data-capture/issues/35:
+          # linking the iOS release framework previously OOM'd during Kotlin/Native LTO because the
+          # combined (all-FHIR-version) fhir-model/fhir-path artifacts were pulled in unnecessarily.
+          - target: ":datacapture:linkReleaseFrameworkIosArm64"
+            name: iOS Release Framework
+            os: macos-latest
+            xvfb: false
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
 

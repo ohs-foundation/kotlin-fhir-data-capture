@@ -17,8 +17,10 @@ package dev.ohs.fhir.datacapture.fhirpath
 
 import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.extraction.DataExtractionException
 import dev.ohs.fhir.fhirpath.FhirPathEngine
+import dev.ohs.fhir.fhirpath.forR4
 import dev.ohs.fhir.fhirpath.types.FhirPathDate
 import dev.ohs.fhir.fhirpath.types.FhirPathDateTime
 import dev.ohs.fhir.fhirpath.types.FhirPathQuantity
@@ -140,8 +142,13 @@ internal object FhirPathService {
             hour == null -> FhirDateTime.Date(LocalDate(value.year, month, day)).toString()
 
             minute != null && second != null && utcOffset != null -> {
-              val wholeSeconds = second.toInt()
-              val nanoseconds = second.rem(1).times(1_000_000_000.0).toInt()
+              val wholeSecondsBigInteger = second.toBigInteger()
+              val wholeSeconds = wholeSecondsBigInteger.intValue()
+              val nanoseconds =
+                (second - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
+                  .times(1_000_000_000.toBigDecimal())
+                  .toBigInteger()
+                  .intValue()
               FhirDateTime.DateTime(
                   dateTime =
                     LocalDateTime(value.year, month, day, hour, minute, wholeSeconds, nanoseconds),
@@ -167,11 +174,15 @@ internal object FhirPathService {
                   append(minuteValue.toString().padStart(2, '0'))
                   second?.let { secondValue ->
                     append(':')
+                    val wholeSecondsBigInteger = secondValue.toBigInteger()
                     val normalized =
-                      if (secondValue % 1.0 == 0.0) {
-                        secondValue.toInt().toString().padStart(2, '0')
+                      if (
+                        BigDecimal.fromBigInteger(wholeSecondsBigInteger).compareTo(secondValue) ==
+                          0
+                      ) {
+                        wholeSecondsBigInteger.intValue().toString().padStart(2, '0')
                       } else {
-                        secondValue.toString().padStart(2, '0')
+                        secondValue.toPlainString().padStart(2, '0')
                       }
                     append(normalized)
                   }
@@ -192,8 +203,13 @@ internal object FhirPathService {
             second == null -> KotlinLocalTime(value.hour, minute).toString()
 
             else -> {
-              val wholeSeconds = second.toInt()
-              val nanoseconds = second.rem(1).times(1_000_000_000.0).toInt()
+              val wholeSecondsBigInteger = second.toBigInteger()
+              val wholeSeconds = wholeSecondsBigInteger.intValue()
+              val nanoseconds =
+                (second - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
+                  .times(1_000_000_000.toBigDecimal())
+                  .toBigInteger()
+                  .intValue()
               KotlinLocalTime(value.hour, minute, wholeSeconds, nanoseconds).toString()
             }
           }
