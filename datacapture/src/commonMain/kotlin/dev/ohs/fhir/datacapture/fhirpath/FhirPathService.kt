@@ -142,13 +142,7 @@ internal object FhirPathService {
             hour == null -> FhirDateTime.Date(LocalDate(value.year, month, day)).toString()
 
             minute != null && second != null && utcOffset != null -> {
-              val wholeSecondsBigInteger = second.toBigInteger()
-              val wholeSeconds = wholeSecondsBigInteger.intValue()
-              val nanoseconds =
-                (second - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
-                  .times(1_000_000_000.toBigDecimal())
-                  .toBigInteger()
-                  .intValue()
+              val (wholeSeconds, nanoseconds) = second.toWholeSecondsAndNanoseconds()
               FhirDateTime.DateTime(
                   dateTime =
                     LocalDateTime(value.year, month, day, hour, minute, wholeSeconds, nanoseconds),
@@ -174,13 +168,9 @@ internal object FhirPathService {
                   append(minuteValue.toString().padStart(2, '0'))
                   second?.let { secondValue ->
                     append(':')
-                    val wholeSecondsBigInteger = secondValue.toBigInteger()
                     val normalized =
-                      if (
-                        BigDecimal.fromBigInteger(wholeSecondsBigInteger).compareTo(secondValue) ==
-                          0
-                      ) {
-                        wholeSecondsBigInteger.intValue().toString().padStart(2, '0')
+                      if (secondValue.isWholeSecond()) {
+                        secondValue.toBigInteger().intValue().toString().padStart(2, '0')
                       } else {
                         secondValue.toPlainString().padStart(2, '0')
                       }
@@ -203,13 +193,7 @@ internal object FhirPathService {
             second == null -> KotlinLocalTime(value.hour, minute).toString()
 
             else -> {
-              val wholeSecondsBigInteger = second.toBigInteger()
-              val wholeSeconds = wholeSecondsBigInteger.intValue()
-              val nanoseconds =
-                (second - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
-                  .times(1_000_000_000.toBigDecimal())
-                  .toBigInteger()
-                  .intValue()
+              val (wholeSeconds, nanoseconds) = second.toWholeSecondsAndNanoseconds()
               KotlinLocalTime(value.hour, minute, wholeSeconds, nanoseconds).toString()
             }
           }
@@ -470,6 +454,23 @@ private fun fhirPathQuantityJsonElementOrNull(value: Any): JsonElement? =
 
     else -> null
   }
+
+private val NANOS_PER_SECOND = 1_000_000_000.toBigDecimal()
+
+/** Whether this fractional-second value has no sub-second component. */
+private fun BigDecimal.isWholeSecond(): Boolean =
+  compareTo(BigDecimal.fromBigInteger(toBigInteger())) == 0
+
+/** Splits a fractional-second value into whole seconds and its nanosecond remainder. */
+private fun BigDecimal.toWholeSecondsAndNanoseconds(): Pair<Int, Int> {
+  val wholeSecondsBigInteger = toBigInteger()
+  val nanoseconds =
+    (this - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
+      .times(NANOS_PER_SECOND)
+      .toBigInteger()
+      .intValue()
+  return wholeSecondsBigInteger.intValue() to nanoseconds
+}
 
 private fun structuredJsonElementOrNull(json: Json, value: Any): JsonElement? =
   when (value) {
