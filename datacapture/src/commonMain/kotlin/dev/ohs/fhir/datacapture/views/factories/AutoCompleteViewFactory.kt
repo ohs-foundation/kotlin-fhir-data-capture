@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 internal object AutoCompleteViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val canHaveMultipleAnswers =
       remember(questionnaireViewItem.questionnaireItem) {
         questionnaireViewItem.questionnaireItem.repeats?.value ?: false

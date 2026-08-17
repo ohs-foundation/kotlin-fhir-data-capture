@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.model.r4.Code
 import dev.ohs.fhir.model.r4.Enumeration
@@ -29,6 +31,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
+@RunWith(AndroidJUnit4::class)
 class ConstraintItemExtensionValidatorTest {
 
   @Test

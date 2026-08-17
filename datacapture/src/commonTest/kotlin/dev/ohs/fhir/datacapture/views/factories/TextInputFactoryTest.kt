@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +44,7 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class TextInputFactoryTest {
 
   private var programmaticUpdateCounter = 0

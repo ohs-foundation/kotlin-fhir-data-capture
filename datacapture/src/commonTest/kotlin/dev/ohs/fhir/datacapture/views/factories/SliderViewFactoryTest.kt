@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +60,7 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class SliderViewFactoryTest {
   @Composable
   fun QuestionnaireSliderView(questionnaireViewItem: QuestionnaireViewItem) {

@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.extraction
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.datacapture.extraction.template.TemplateEvaluationScope
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractionEngine
 import dev.ohs.fhir.datacapture.extraction.template.TemplateTreeProcessor
@@ -32,6 +34,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
+@RunWith(AndroidJUnit4::class)
 class TemplateExtractionEngineTest {
   private val json = Json {
     explicitNulls = false

@@ -30,6 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import kotlin.math.roundToInt
 
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.setProgress
+
 internal const val SLIDER_TAG = "slider"
 
 @Composable
@@ -45,7 +48,10 @@ internal fun SliderItem(
   Column {
     Slider(
       value = sliderPosition,
-      onValueChange = { sliderPosition = it },
+      onValueChange = {
+        sliderPosition = it
+        onPositionChanged(it)
+      },
       onValueChangeFinished = { onPositionChanged(sliderPosition) },
       steps = steps,
       valueRange = valueRange,

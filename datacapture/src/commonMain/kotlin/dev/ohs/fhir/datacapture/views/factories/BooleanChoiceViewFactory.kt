@@ -53,7 +53,7 @@ internal const val NO_CHOICE_RADIO_BUTTON_TAG = "no_radio_button"
 internal object BooleanChoiceViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val readOnly =
       remember(questionnaireViewItem) {
         questionnaireViewItem.questionnaireItem.readOnly?.value ?: false

@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.kotlin.multiplatform.library)
+  id("com.android.library")
   alias(libs.plugins.cashapp.licensee)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.compose.hotreload)
@@ -37,25 +37,10 @@ kotlin {
     binaries.library()
   }
 
-  androidLibrary {
-    namespace = androidNamespace
-    compileSdk = androidCompileSdk.toInt()
-    minSdk = androidMinSdk.toInt()
-    withJava()
-    withHostTestBuilder {}
-    withDeviceTestBuilder { sourceSetTreeName = "test" }
-      .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
-
-    experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
-
+  androidTarget {
+    publishLibraryVariants("release")
     compilations.configureEach {
       compilerOptions.configure { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
-    }
-
-    packaging {
-      resources.excludes.addAll(
-        listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
-      )
     }
   }
 
@@ -105,7 +90,8 @@ kotlin {
 
     androidMain { resources.srcDir("res") }
 
-    getByName("androidDeviceTest") {
+    val androidInstrumentedTest by getting {
+      kotlin.srcDirs("src/androidCommonTest/kotlin")
       dependencies {
         implementation(libs.androidx.compose.ui.test.junit4)
         implementation(libs.androidx.compose.ui.test.manifest)
@@ -116,17 +102,24 @@ kotlin {
         implementation(libs.androidx.test.rules)
         implementation(libs.kotlinx.coroutines.test)
         implementation(libs.truth)
+        implementation("androidx.test.espresso:espresso-core:3.5.1")
       }
     }
 
-    getByName("androidHostTest") {
+    val androidUnitTest by getting {
+      kotlin.srcDirs("src/androidCommonTest/kotlin")
       dependencies {
         implementation(libs.androidx.fragment.testing)
         implementation(libs.androidx.test.core)
+        implementation(libs.androidx.test.ext.junit)
+        implementation(libs.androidx.test.ext.junit.ktx)
         implementation(libs.junit)
         implementation(libs.kotlin.test.junit)
         implementation(libs.kotlinx.coroutines.test)
         implementation(libs.truth)
+        implementation(libs.robolectric)
+        implementation(libs.androidx.compose.ui.test.manifest)
+        implementation("androidx.test.espresso:espresso-core:3.5.1")
       }
     }
 
@@ -137,7 +130,66 @@ kotlin {
         implementation(libs.kotlinx.coroutines.swing)
       }
     }
+
+    val commonTest by getting
+
+    val nonAndroidTest by creating {
+      dependsOn(commonTest)
+    }
+    val jvmTest by getting {
+      dependsOn(nonAndroidTest)
+    }
+    val jsTest by getting {
+      dependsOn(nonAndroidTest)
+    }
+    val wasmJsTest by getting {
+      dependsOn(nonAndroidTest)
+    }
+    listOf("iosSimulatorArm64Test", "iosArm64Test", "iosX64Test").forEach {
+      getByName(it) {
+        dependsOn(nonAndroidTest)
+      }
+    }
   }
+}
+
+android {
+  namespace = androidNamespace
+  compileSdk = androidCompileSdk.toInt()
+
+  defaultConfig {
+    minSdk = androidMinSdk.toInt()
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  testOptions {
+    unitTests {
+      isIncludeAndroidResources = true
+    }
+  }
+
+  packaging {
+    resources.excludes.addAll(
+      listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
+    )
+  }
+}
+
+val copyTestResourcesToPackagedDir = tasks.register<Copy>("copyTestResourcesToPackagedDir") {
+  dependsOn("prepareComposeResourcesTaskForCommonTest")
+  from("build/generated/compose/resourceGenerator/preparedResources/commonTest/composeResources/files")
+  into("src/androidUnitTest/resources/composeResources/kotlin_fhir_data_capture.datacapture.generated.resources/files")
+}
+
+val copyMainResourcesToPackagedDir = tasks.register<Copy>("copyMainResourcesToPackagedDir") {
+  dependsOn("prepareComposeResourcesTaskForCommonMain")
+  from("build/generated/compose/resourceGenerator/preparedResources/commonMain/composeResources")
+  into("src/androidUnitTest/resources/composeResources/kotlin_fhir_data_capture.datacapture.generated.resources")
+}
+
+tasks.matching { it.name.startsWith("process") && it.name.endsWith("UnitTestJavaRes") }.configureEach {
+  dependsOn(copyTestResourcesToPackagedDir)
+  dependsOn(copyMainResourcesToPackagedDir)
 }
 
 licensee {
@@ -188,3 +240,53 @@ mavenPublishing {
     }
   }
 }
+tasks.matching { it.name == "compileAndroidHostTestJavaWithJavac" }.configureEach {
+  val compileTask = this as JavaCompile
+  compileTask.sourceCompatibility = "1.8"
+  compileTask.targetCompatibility = "1.8"
+}
+
+tasks.withType<Test>().configureEach {
+  jvmArgs("-Xmx4g")
+  forkEvery = 50
+}
+
+tasks.matching { it.name == "testAndroidHostTest" }.configureEach {
+  val testTask = this as Test
+  testTask.jvmArgs("-Xmx4g")
+  testTask.doFirst {
+    val mockOutputDir = project.layout.buildDirectory.dir("mock-r").get().asFile
+    mockOutputDir.mkdirs()
+    project.exec {
+      commandLine(
+        "javac",
+        "-d", mockOutputDir.absolutePath,
+        project.file("mock-r/androidx/compose/ui/R.java").absolutePath
+      )
+    }
+    testTask.classpath = project.files(mockOutputDir) + testTask.classpath
+    testTask.classpath += files("build/generated/assets/copyAndroidMainComposeResourcesToAndroidAssets")
+  }
+}
+
+val copyCommonTestComposeResourcesToAndroidAssets by tasks.registering(Copy::class) {
+  dependsOn("prepareComposeResourcesTaskForCommonTest")
+  from("build/generated/compose/resourceGenerator/preparedResources/commonTest/composeResources")
+  into("build/generated/assets/copyAndroidMainComposeResourcesToAndroidAssets/composeResources/kotlin_fhir_data_capture.datacapture.generated.resources")
+}
+
+tasks.matching { it.name == "testAndroidHostTest" }.configureEach {
+  dependsOn(copyCommonTestComposeResourcesToAndroidAssets)
+}
+
+
+
+
+
+
+
+
+
+
+
+

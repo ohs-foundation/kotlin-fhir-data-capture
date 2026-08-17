@@ -67,7 +67,7 @@ internal object DialogSelectViewFactory : QuestionnaireItemViewFactory {
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val readOnly =
       remember(questionnaireViewItem) {
         questionnaireViewItem.questionnaireItem.readOnly?.value ?: false

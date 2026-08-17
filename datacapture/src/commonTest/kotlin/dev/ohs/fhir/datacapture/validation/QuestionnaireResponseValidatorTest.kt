@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
@@ -25,6 +27,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
+@RunWith(AndroidJUnit4::class)
 class QuestionnaireResponseValidatorTest {
 
   @Test

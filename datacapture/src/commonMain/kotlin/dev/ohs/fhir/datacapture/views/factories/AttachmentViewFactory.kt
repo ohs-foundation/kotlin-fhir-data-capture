@@ -101,7 +101,7 @@ internal object AttachmentViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val validationResult =
       remember(questionnaireViewItem.validationResult) { questionnaireViewItem.validationResult }
     var errorMessage by

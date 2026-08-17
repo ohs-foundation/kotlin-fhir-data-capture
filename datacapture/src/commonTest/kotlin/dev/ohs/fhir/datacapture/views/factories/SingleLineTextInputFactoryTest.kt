@@ -45,10 +45,20 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import dev.ohs.fhir.datacapture.AndroidJUnit4
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.setupRobolectricActivity
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class SingleLineTextInputFactoryTest {
+
+  @BeforeTest
+  fun setUp() {
+    setupRobolectricActivity()
+  }
 
   @Composable
   fun QuestionnaireEditTextSingleLineView(questionnaireViewItem: QuestionnaireViewItem) {

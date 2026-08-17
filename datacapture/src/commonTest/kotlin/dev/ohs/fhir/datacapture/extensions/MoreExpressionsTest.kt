@@ -15,12 +15,15 @@
  */
 package dev.ohs.fhir.datacapture.extensions
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Expression
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@RunWith(AndroidJUnit4::class)
 class MoreExpressionsTest {
 
   @Test

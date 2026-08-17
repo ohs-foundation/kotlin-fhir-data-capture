@@ -61,7 +61,7 @@ import kotlinx.coroutines.launch
 internal object QuantityViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val text = remember(questionnaireViewItem) { uiInputText(questionnaireViewItem) }
     val isReadOnly =
       remember(questionnaireViewItem) {

@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +37,7 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import dev.ohs.fhir.datacapture.waitUntilSynchronized
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ENTRY_FORMAT_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4DateType
@@ -63,6 +66,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.number
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class DateViewFactoryTest {
 
   @Composable
@@ -221,7 +225,7 @@ class DateViewFactoryTest {
 
     setContent { QuestionnaireDateView(item) }
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performTextInput("11/19/2020")
-    waitUntil { answers != null }
+    waitUntilSynchronized { answers != null }
 
     val answer = (answers!!.single().value?.asDate()?.value?.value as? FhirDate.Date)?.date
 
@@ -268,7 +272,7 @@ class DateViewFactoryTest {
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performSemanticsAction(SemanticsActions.SetText) {
       it(dateTextInput.toAnnotatedString())
     }
-    waitUntil { answers != null }
+    waitUntilSynchronized { answers != null }
     answers.shouldBeEmpty()
   }
 
@@ -345,7 +349,7 @@ class DateViewFactoryTest {
 
     setContent { QuestionnaireDateView(questionnaireItem) }
     questionnaireItem.setDraftAnswer("02/07")
-    waitUntil { answers != null }
+    waitUntilSynchronized { answers != null }
     answers.shouldBeEmpty()
   }
 
@@ -875,7 +879,7 @@ class DateViewFactoryTest {
     setContent { QuestionnaireDateView(questionnaireViewItem) }
 
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performTextInput("11/19/2020")
-    waitUntil { questionnaireResponseAnswers != null }
+    waitUntilSynchronized { questionnaireResponseAnswers != null }
     val dateAnswer =
       (questionnaireResponseAnswers!!.single().value?.asDate()?.value?.value as? FhirDate.Date)
         ?.date
@@ -883,13 +887,13 @@ class DateViewFactoryTest {
 
     questionnaireResponseAnswers = null
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performTextReplacement("11/19")
-    waitUntil { questionnaireResponseAnswers != null }
+    waitUntilSynchronized { questionnaireResponseAnswers != null }
     draftAnswer.shouldNotBeNull()
     draftAnswer.shouldBe("11/19")
 
     questionnaireResponseAnswers = null
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performTextClearance()
-    waitUntil { questionnaireResponseAnswers != null }
+    waitUntilSynchronized { questionnaireResponseAnswers != null }
     questionnaireResponseAnswers.shouldBeEmpty()
     assertTrue { draftAnswer.isNullOrEmpty() }
   }

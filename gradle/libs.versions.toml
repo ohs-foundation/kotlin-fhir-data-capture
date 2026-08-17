@@ -1,7 +1,7 @@
 [versions]
 android-gradle-plugin = "8.13.0"
 androidx-appcompat = "1.6.1"
-androidx-compose-ui = "1.9.4"
+androidx-compose-ui = "1.10.5"
 androidx-core = "1.10.1"
 androidx-fragment = "1.6.0"
 androidx-lifecycle-viewmodel = "2.9.3"
@@ -72,6 +72,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 ohs-fhir-model = { module = "dev.ohs.fhir:fhir-model", version.ref = "ohs-fhir" }
 ohs-fhir-path = { module = "dev.ohs.fhir:fhir-path", version.ref = "ohs-fhir-path" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.12.2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

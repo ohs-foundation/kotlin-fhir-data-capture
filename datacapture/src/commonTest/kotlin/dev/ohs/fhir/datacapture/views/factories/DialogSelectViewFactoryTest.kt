@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -63,6 +65,7 @@ import io.kotest.matchers.collections.shouldContainInOrder
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class DialogSelectViewFactoryTest {
 
   @Composable
@@ -603,6 +606,9 @@ class DialogSelectViewFactoryTest {
 
     // "Add Another" button should be displayed in multi-select mode
     onNodeWithText("Add another answer").assertIsDisplayed()
+
+    // Dismiss the dialog to clean up coroutines
+    onNodeWithText("Cancel").performClick()
   }
 
   @Test
@@ -654,6 +660,9 @@ class DialogSelectViewFactoryTest {
 
     // "Add Another" button should not be displayed when "Other" is unselected
     onNodeWithText("Add another answer").assertDoesNotExist()
+
+    // Dismiss the dialog to clean up coroutines
+    onNodeWithText("Cancel").performClick()
   }
 
   @Test
@@ -709,6 +718,9 @@ class DialogSelectViewFactoryTest {
 
     // "Add Another" button should still be displayed after clicking
     onNodeWithText(addAnotherText).assertIsDisplayed()
+
+    // Dismiss the dialog to clean up coroutines
+    onNodeWithText("Cancel").performClick()
   }
 
   @Test
@@ -777,6 +789,9 @@ class DialogSelectViewFactoryTest {
 
     // "Add Another" button should not be displayed when exclusive option is selected
     onNodeWithText("Add another answer").assertDoesNotExist()
+
+    // Dismiss the dialog to clean up coroutines
+    onNodeWithText("Cancel").performClick()
   }
 
   @Test
@@ -851,6 +866,9 @@ class DialogSelectViewFactoryTest {
       // selected
       onAllNodes(hasTestTag(OTHER_OPTION_TEXT_FIELD_TAG)).assertCountEquals(0)
       onNodeWithText("Add another answer").assertDoesNotExist()
+
+      // Dismiss the dialog to clean up coroutines
+      onNodeWithText("Cancel").performClick()
     }
 
   @Test
