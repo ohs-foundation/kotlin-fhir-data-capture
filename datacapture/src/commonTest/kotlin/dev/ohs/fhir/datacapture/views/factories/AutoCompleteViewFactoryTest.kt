@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -62,6 +64,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class AutoCompleteViewFactoryTest {
 
   @Composable

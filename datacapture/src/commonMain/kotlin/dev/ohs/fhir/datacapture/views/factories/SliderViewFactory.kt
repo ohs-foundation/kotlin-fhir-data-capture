@@ -89,7 +89,7 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
       remember(stepSize, minValue, maxValue) { (maxValue - minValue).div(stepSize).toInt() - 1 }
     val questionnaireViewItemAnswerValue =
       remember(answer) { answer?.value?.asInteger()?.value?.value?.toFloat() ?: minValue }
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
       modifier =

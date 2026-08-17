@@ -109,6 +109,8 @@ data class QuestionnaireDimensions(
   val dialogPadding: Dp = 24.dp,
   val dialogSubtitleMarginTop: Dp = 16.dp,
   val dialogTitleMarginBottom: Dp = 4.dp,
+  val dialogWidth: Dp = 350.dp,
+  val dialogHeight: Dp = 650.dp,
 
   // Dropdown
   val dropDownPadding: Dp = 16.dp,

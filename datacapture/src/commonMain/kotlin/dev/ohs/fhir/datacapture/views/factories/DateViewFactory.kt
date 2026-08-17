@@ -64,7 +64,7 @@ internal object DateViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val localDateTimeFormatter = getLocalDateTimeFormatter()
     val isReadOnly =
       remember(questionnaireViewItem) {

@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,8 +37,11 @@ import androidx.compose.ui.test.isPopup
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import dev.ohs.fhir.datacapture.advanceTimeAndIdleLooper
+import dev.ohs.fhir.datacapture.waitUntilSynchronized
 import androidx.compose.ui.text.AnnotatedString
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_ANSWER_MEDIA
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
@@ -76,6 +81,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class DropDownViewFactoryTest {
 
   @Composable
@@ -833,13 +839,15 @@ class DropDownViewFactoryTest {
       .assert(
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("Coding 3"))
       )
-    waitUntil { answerHolder != null }
+    waitUntilSynchronized { answerHolder != null }
 
     answerHolder?.single()?.value?.asCoding()?.value?.display?.value.shouldBe("Coding 3")
   }
 
   @Test
   fun shouldClearAutoCompleteTextViewOnRebindingView() = runComposeUiTest {
+    mainClock.autoAdvance = false
+
     var answerHolder: List<QuestionnaireResponse.Item.Answer>? = null
     var questionnaireViewItem by
       mutableStateOf(
@@ -852,7 +860,12 @@ class DropDownViewFactoryTest {
       )
 
     setContent { QuestionnaireDropDownView(questionnaireViewItem) }
+
+    advanceTimeAndIdleLooper(100)
+
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG).performClick()
+
+    advanceTimeAndIdleLooper(500)
 
     onNode(
         hasTestTag(DROP_DOWN_ANSWER_MENU_ITEM_TAG) and
@@ -861,21 +874,31 @@ class DropDownViewFactoryTest {
       )
       .assertIsDisplayed()
       .performClick()
+
+    advanceTimeAndIdleLooper(100)
+
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG)
       .assert(
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("Coding 3"))
       )
-    waitUntil { answerHolder != null }
+
+    waitUntilSynchronized { answerHolder != null }
     answerHolder.shouldNotBeNull()
     val newQuestionnaireResponseItem = responseOptions().copy(answer = answerHolder!!)
     questionnaireViewItem =
       questionnaireViewItem.copy(questionnaireResponseItem = newQuestionnaireResponseItem)
+
+    advanceTimeAndIdleLooper(100)
 
     onNodeWithTag(CLEAR_TEXT_ICON_BUTTON_TAG).assertIsDisplayed()
 
     // Reset QuestionnaireViewItem
     questionnaireViewItem =
       questionnaireViewItem.copy(questionnaireResponseItem = responseOptions())
+
+    advanceTimeAndIdleLooper(100)
+
+    onNodeWithTag(CLEAR_TEXT_ICON_BUTTON_TAG).assertDoesNotExist()
 
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG)
       .assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
@@ -907,6 +930,7 @@ class DropDownViewFactoryTest {
           hasTextExactly("Coding 3") and
           hasAnyAncestor(isPopup())
       )
+      .performScrollTo()
       .assertIsDisplayed()
       .performClick()
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG)
@@ -940,7 +964,7 @@ class DropDownViewFactoryTest {
       .assert(
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("Coding 1"))
       )
-    waitUntil { answerHolder != null }
+    waitUntilSynchronized { answerHolder != null }
 
     answerHolder?.single()?.value?.asString()?.value?.value.shouldBe("Coding 1")
   }
@@ -1039,7 +1063,7 @@ class DropDownViewFactoryTest {
       )
       .assertIsDisplayed()
       .performClick()
-    waitUntil { selectedAnswers != null }
+    waitUntilSynchronized { selectedAnswers != null }
 
     selectedAnswers!!.shouldHaveSize(1)
     selectedAnswers!!.first().value?.asString()?.value?.value.shouldBe("Coding 1")
@@ -1070,7 +1094,7 @@ class DropDownViewFactoryTest {
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("Coding 1"))
       )
     onNodeWithTag(CLEAR_TEXT_ICON_BUTTON_TAG).performClick()
-    waitUntil { selectedAnswers != null }
+    waitUntilSynchronized { selectedAnswers != null }
 
     selectedAnswers.shouldBeEmpty()
   }

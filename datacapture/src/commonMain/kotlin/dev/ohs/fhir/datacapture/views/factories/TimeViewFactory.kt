@@ -89,7 +89,7 @@ object TimeViewFactory : QuestionnaireItemViewFactory {
         questionnaireViewItemLocalTimeAnswer?.let { localDateTimeFormatter.localizedTimeString(it) }
       }
 
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
       modifier =

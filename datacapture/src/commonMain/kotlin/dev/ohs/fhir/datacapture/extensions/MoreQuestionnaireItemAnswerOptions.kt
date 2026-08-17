@@ -59,7 +59,13 @@ fun Questionnaire.Item.AnswerOption.itemAnswerOptionImage(): ImageBitmap? {
       when (it.contentType?.value!!) {
         "image/jpeg",
         "image/jpg",
-        "image/png" -> it.data?.data?.decodeToImageBitmap()
+        "image/png" -> {
+          try {
+            it.data?.data?.decodeToImageBitmap() ?: ImageBitmap(1, 1)
+          } catch (t: Throwable) {
+            ImageBitmap(1, 1)
+          }
+        }
 
         else -> null
       }

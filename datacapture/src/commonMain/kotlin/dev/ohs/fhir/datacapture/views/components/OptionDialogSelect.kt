@@ -20,7 +20,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -115,7 +117,9 @@ internal fun OptionDialogSelect(
     Surface(
       shape = MaterialTheme.shapes.extraLarge,
       tonalElevation = 6.dp,
-      modifier = Modifier.fillMaxWidth(),
+      modifier =
+        Modifier.width(QuestionnaireTheme.dimensions.dialogWidth)
+          .height(QuestionnaireTheme.dimensions.dialogHeight),
     ) {
       Column(modifier = Modifier.padding(QuestionnaireTheme.dimensions.dialogPadding)) {
         Text(
@@ -242,6 +246,7 @@ internal fun OptionDialogSelect(
                 OutlinedTextField(
                   value = option.currentText,
                   onValueChange = { newText ->
+                    println("--- OutlinedTextField onValueChange: index=$index newText='$newText' ---")
                     otherOptionEditTexts.removeAt(index)
                     otherOptionEditTexts.add(index, option.copy(currentText = newText))
                   },

@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.validation
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_CQF_CALCULATED_VALUE_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4DateType
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
@@ -41,6 +43,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class)
+@RunWith(AndroidJUnit4::class)
 class MaxValueValidatorTest {
 
   @Test

@@ -51,7 +51,7 @@ internal const val CHECKBOX_OPTION_TAG = "checkbox_group_option"
 internal object CheckBoxGroupViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val readOnly =
       remember(questionnaireViewItem) {
         questionnaireViewItem.questionnaireItem.readOnly?.value ?: false

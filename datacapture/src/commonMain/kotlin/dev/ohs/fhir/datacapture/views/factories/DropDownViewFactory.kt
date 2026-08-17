@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 internal object DropDownViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val hyphen = stringResource(Res.string.hyphen)
     val isQuestionnaireItemReadOnly =
       remember(questionnaireViewItem.questionnaireItem) {

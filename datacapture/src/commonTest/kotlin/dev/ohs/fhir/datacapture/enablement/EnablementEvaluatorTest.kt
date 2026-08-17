@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.enablement
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Boolean
@@ -41,6 +43,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+@RunWith(AndroidJUnit4::class)
 class EnablementEvaluatorTest {
   private val json = Json {
     explicitNulls = false

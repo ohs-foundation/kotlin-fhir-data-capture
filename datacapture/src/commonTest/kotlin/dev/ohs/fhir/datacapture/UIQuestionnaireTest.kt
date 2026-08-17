@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture
 
+import dev.ohs.fhir.datacapture.RunWith
+import dev.ohs.fhir.datacapture.AndroidJUnit4
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -67,6 +69,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(AndroidJUnit4::class)
 class UIQuestionnaireTest {
 
   private val fhirJson = Json {
