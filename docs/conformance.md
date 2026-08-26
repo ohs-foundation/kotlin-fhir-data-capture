@@ -1,0 +1,326 @@
+# Conformance
+
+This page documents the conformance of this library against the
+[Questionnaire](https://hl7.org/fhir/R4/questionnaire.html) resource in
+[HL7® FHIR® R4 (v4.0.1)](https://hl7.org/fhir/R4/) and the
+[Structured Data Capture implementation guide STU4 (v4.0.0)](https://hl7.org/fhir/uv/sdc/STU4/).
+
+The library operates on FHIR R4 resources only. There is no R4B or R5 support.
+
+## Table of Contents
+
+- [Status legend](#status-legend)
+- [FHIR Questionnaire specification](#fhir-questionnaire-specification)
+  - [Item types](#item-types)
+  - [Item controls](#item-controls)
+  - [Core form elements](#core-form-elements)
+  - [Rendering extensions](#rendering-extensions)
+  - [Validation extensions and elements](#validation-extensions-and-elements)
+  - [Validation orchestration](#validation-orchestration)
+  - [CQF extensions](#cqf-extensions)
+- [Structured Data Capture specification](#structured-data-capture-specification)
+  - [Advanced rendering](#advanced-rendering)
+  - [Form behavior and calculation](#form-behavior-and-calculation)
+  - [Expression languages](#expression-languages)
+  - [FHIRPath engine and supplements](#fhirpath-engine-and-supplements)
+  - [Form population](#form-population)
+  - [Data extraction](#data-extraction)
+- [Vendor extensions](#vendor-extensions)
+
+## Status legend
+
+- ✅ Fully supported and conforms to the specification.
+- ⚠️ Partially implemented, has a known bug, or diverges from the specification (see *Notes*).
+- ❌ Unimplemented.
+
+## FHIR Questionnaire specification
+
+This section documents conformance against the core
+[Questionnaire](https://hl7.org/fhir/R4/questionnaire.html) resource in FHIR R4 (v4.0.1). It covers
+the [item type](https://hl7.org/fhir/R4/valueset-item-type.html) and
+[item control](https://hl7.org/fhir/R4/valueset-questionnaire-item-control.html) value sets, the
+form behavior elements, and the standard extensions from the
+[FHIR extension registry](https://hl7.org/fhir/R4/extensibility-registry.html).
+
+### Item types
+
+This table documents rendering support for every code in the
+[QuestionnaireItemType](https://hl7.org/fhir/R4/valueset-item-type.html) value set. Widget dispatch
+happens in
+[`QuestionnaireLists.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireLists.kt).
+
+| Item type | Specification | Code | Status | Notes |
+|:-------------|:--------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|:-------|:----------------------------------------------------------------------------------------------------------------------------------------|
+| `group` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-group) | [`GroupViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/GroupViewFactory.kt) | ✅ | Child items render as a flat list without visual nesting. Repeating groups have add and delete controls. |
+| `display` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-display) | [`DisplayViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DisplayViewFactory.kt) | ✅ | Instructions, flyover, and help display items are folded into the enclosing item's header. |
+| `boolean` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-boolean) | [`BooleanChoiceViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/BooleanChoiceViewFactory.kt) | ✅ | Yes/No radio pair. Deselecting clears the answer. |
+| `decimal` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-decimal) | [`DecimalTextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DecimalTextInputFactory.kt) | ✅ | Unparsable input is held as a draft answer with a field error. |
+| `integer` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-integer) | [`IntegerTextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/IntegerTextInputFactory.kt) | ✅ | An item control such as `slider` may override the widget. |
+| `date` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-date) | [`DateViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DateViewFactory.kt) | ✅ | Localized text input plus date picker. Honors `entryFormat`, `minValue`, and `maxValue`. |
+| `dateTime` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-dateTime) | [`DateTimeViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DateTimeViewFactory.kt) | ✅ | Uses the device's short date pattern. Ignores `entryFormat`. |
+| `time` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-time) | [`TimeViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/TimeViewFactory.kt) | ✅ | Field opening a time picker dialog. |
+| `string` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-string) | [`SingleLineTextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/SingleLineTextInputFactory.kt) | ✅ | An item control may override the widget. |
+| `text` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-text) | [`MultiLineTextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/MultiLineTextInputFactory.kt) | ✅ | Always multi-line. Item controls are not consulted for `text` items. |
+| `url` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-url) | | ❌ | Throws `NotImplementedError` at render time. A [custom view factory](#vendor-extensions) can handle it. |
+| `choice` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-choice) | [`QuestionnaireLists.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireLists.kt) | ✅ | Widget chosen by item control if present. Otherwise 10 or more options use a dialog, `repeats` uses check boxes, 4 or more options use a drop-down, and fewer use radio buttons. |
+| `open-choice` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-open-choice) | [`DialogSelectViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DialogSelectViewFactory.kt) | ⚠️ | Renders only when answer options resolve. With zero options it throws `NotImplementedError`. The free text "Other" field requires the non-standard `open-choice` item control code. |
+| `quantity` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-quantity) | [`QuantityViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/QuantityViewFactory.kt) | ✅ | Decimal input with a unit drop-down from `questionnaire-unitOption`. |
+| `reference` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-reference) | [`QuestionnaireLists.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireLists.kt) | ⚠️ | Rendered with the choice widgets using options from `answerOption` or `answerExpression`. There is no reference picker or search UI. |
+| `attachment` | [item-type](https://hl7.org/fhir/R4/codesystem-item-type.html#item-type-attachment) | [`AttachmentViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/AttachmentViewFactory.kt) | ✅ | Photo capture and file upload with preview and delete. |
+
+### Item controls
+
+This table documents support for the codes in the
+[questionnaire-item-control](https://hl7.org/fhir/R4/valueset-questionnaire-item-control.html)
+value set, declared via the
+[questionnaire-itemControl](https://hl7.org/fhir/R4/extension-questionnaire-itemcontrol.html)
+extension. Recognized codes are declared in
+[`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt).
+
+| Item control | Specification | Code | Status | Notes |
+|:----------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|:-------|:--------------------------------------------------------------------------------------------------------|
+| `autocomplete` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-autocomplete) | [`AutoCompleteViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/AutoCompleteViewFactory.kt) | ✅ | Multi-select autocomplete with chips. |
+| `drop-down` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-drop-down) | [`DropDownViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DropDownViewFactory.kt) | ✅ | |
+| `check-box` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-check-box) | [`CheckBoxGroupViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/CheckBoxGroupViewFactory.kt) | ✅ | |
+| `lookup` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-lookup) | | ❌ | |
+| `radio-button` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-radio-button) | [`RadioGroupViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/RadioGroupViewFactory.kt) | ✅ | |
+| `slider` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-slider) | [`SliderViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/SliderViewFactory.kt) | ✅ | Range from `minValue` and `maxValue` (defaults 0 to 100). Step from `questionnaire-sliderStepValue`. |
+| `spinner` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-spinner) | | ❌ | |
+| `text-box` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-text-box) | | ❌ | The item falls back to its type-based default widget. |
+| `flyover` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-flyover) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ⚠️ | Rendered as the field label by the text, quantity, drop-down, and dialog widgets. Other widgets ignore it. |
+| `help` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-help) | [`Header.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/components/Header.kt) | ✅ | Help icon with an expandable card. |
+| `page` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html#questionnaire-item-control-page) | [`QuestionnaireViewModel.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireViewModel.kt) | ⚠️ | Drives pagination. Only top-level items are scanned for pages. |
+| `prompt`, `unit`, `lower`, `upper`, `inline` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html) | | ❌ | |
+| `list`, `table`, `htable`, `gtable`, `atable`, `header`, `footer` | [item-control](https://hl7.org/fhir/R4/codesystem-questionnaire-item-control.html) | | ❌ | No table or matrix rendering. |
+
+> [!NOTE]
+> Question item controls are accepted with either the HL7 code system or the vendor alias
+> (see [Vendor extensions](#vendor-extensions)). Display item controls (`flyover`, `page`, `help`)
+> are only recognized with the HL7 code system.
+
+### Core form elements
+
+This table documents the
+[Questionnaire.item](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item)
+elements that affect form behavior.
+
+| Element | Specification | Code | Status | Notes |
+|:-------------------------|:--------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:-------|:------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `item.enableWhen` | [Questionnaire.item.enableWhen](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.enableWhen) | [`EnablementEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/enablement/EnablementEvaluator.kt) | ⚠️ | All seven operators and all R4 answer types. Date and dateTime ordering compares text values, so partial dates may compare incorrectly. Quantity comparison ignores units. |
+| `item.enableBehavior` | [Questionnaire.item.enableBehavior](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.enableBehavior) | [`EnablementEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/enablement/EnablementEvaluator.kt) | ⚠️ | `all` and `any` are supported. When absent with more than one condition the evaluator throws instead of defaulting to `all`. |
+| `item.required` | [Questionnaire.item.required](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.required) | [`RequiredValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/RequiredValidator.kt) | ✅ | |
+| `item.repeats` | [Questionnaire.item.repeats](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.repeats) | [`QuestionnaireViewModel.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireViewModel.kt) | ⚠️ | Repeating groups are fully supported. Repeating questions collect multiple answers only through multi-select widgets. |
+| `item.readOnly` | [Questionnaire.item.readOnly](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.readOnly) | [`QuestionnaireViewItem.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/QuestionnaireViewItem.kt) | ✅ | Honored by every widget. A whole-form read-only mode is also available. |
+| `item.maxLength` | [Questionnaire.item.maxLength](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.maxLength) | [`MaxLengthValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MaxLengthValidator.kt) | ⚠️ | Validated for string answers only. The validator crashes on other answer types. |
+| `item.initial` | [Questionnaire.item.initial](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.initial) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ✅ | Invariants que-8, que-11, and que-13 are enforced. |
+| `item.answerOption` | [Questionnaire.item.answerOption](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.answerOption) | [`EnabledAnswerOptionsEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/expressions/EnabledAnswerOptionsEvaluator.kt) | ✅ | All option value types. `initialSelected` is honored. |
+| `item.answerValueSet` | [Questionnaire.item.answerValueSet](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.answerValueSet) | [`EnabledAnswerOptionsEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/expressions/EnabledAnswerOptionsEvaluator.kt) | ⚠️ | Contained value sets must carry a pre-expanded `expansion`. External URIs need a client-supplied `ExternalAnswerValueSetResolver`. |
+| `item.definition` | [Questionnaire.item.definition](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.definition) | | ❌ | Not consumed. |
+| `item.prefix`, `item.text` | [Questionnaire.item.prefix](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.prefix) | [`Header.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/components/Header.kt) | ✅ | Localized via the translation extension. Rendered as plain text. |
+| Nested items under answers | [Questionnaire.item.item](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.item) | [`QuestionnaireViewModel.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireViewModel.kt) | ✅ | Child items of a question are duplicated per answer. |
+
+### Rendering extensions
+
+This table documents the standard rendering extensions from the FHIR R4 extension registry.
+
+| Extension | Specification | Code | Status | Notes |
+|:---------------------------------|:-------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:-------|:-----------------------------------------------------------------------------------------------|
+| `questionnaire-itemControl` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-itemcontrol.html) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ✅ | See [Item controls](#item-controls) for per-code support. |
+| `questionnaire-hidden` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-hidden.html) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ✅ | Hidden items are not rendered and are excluded from validation. |
+| `questionnaire-choiceOrientation` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-choiceorientation.html) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ✅ | Honored by the radio, check box, and boolean widgets. |
+| `questionnaire-displayCategory` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-displaycategory.html) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ⚠️ | Only the `instructions` category is handled. |
+| `entryFormat` | [extension](https://hl7.org/fhir/R4/extension-entryformat.html) | [`DateViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DateViewFactory.kt) | ⚠️ | Consumed only by `date` items as the input pattern. Never shown as a placeholder. |
+| `questionnaire-sliderStepValue` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-sliderstepvalue.html) | [`SliderViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/SliderViewFactory.kt) | ✅ | Defaults to 1 when absent. |
+| `questionnaire-unit` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-unit.html) | [`TextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/TextInputFactory.kt) | ✅ | Rendered as suffix text on numeric fields. |
+| `questionnaire-unitOption` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-unitoption.html) | [`QuantityViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/QuantityViewFactory.kt) | ✅ | Populates the unit drop-down of `quantity` items. |
+| `questionnaire-unitValueSet` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-unitvalueset.html) | | ❌ | |
+| `questionnaire-optionExclusive` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-optionexclusive.html) | [`MoreQuestionnaireItemAnswerOptions.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItemAnswerOptions.kt) | ⚠️ | Honored by the check box group and dialog widgets. Ignored by the autocomplete widget. |
+| `questionnaire-optionPrefix` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-optionprefix.html) | | ❌ | |
+| `ordinalValue` | [extension](https://hl7.org/fhir/R4/extension-ordinalvalue.html) | | ❌ | |
+| `mimeType` | [extension](https://hl7.org/fhir/R4/extension-mimetype.html) | [`AttachmentViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/AttachmentViewFactory.kt) | ⚠️ | Filters the file picker and capture UI. Stored attachment answers are not validated against it. |
+| `maxSize` | [extension](https://hl7.org/fhir/R4/extension-maxsize.html) | [`AttachmentMediaHandler.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/AttachmentMediaHandler.kt) | ⚠️ | Enforced at capture time only, with a hard cap of 15 MiB. |
+| `translation` | [extension](https://hl7.org/fhir/R4/extension-translation.html) | [`MoreFhirR4types.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreFhirR4types.kt) | ✅ | Locale-aware text for item text, prefix, and coding display. |
+| `questionnaire-supportLink` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-supportlink.html) | | ❌ | |
+| `questionnaire-referenceResource` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-referenceresource.html) | | ❌ | `referenceProfile` and `referenceFilter` are also unsupported. |
+| `questionnaire-usageMode` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-usagemode.html) | | ❌ | |
+| `questionnaire-signatureRequired` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-signaturerequired.html) | | ❌ | |
+| `rendering-xhtml` | [extension](https://hl7.org/fhir/R4/extension-rendering-xhtml.html) | | ❌ | All text is rendered as plain text. `rendering-style` and `rendering-markdown` are also unsupported. |
+| `designNote` | [extension](https://hl7.org/fhir/R4/extension-designnote.html) | | ❌ | |
+
+### Validation extensions and elements
+
+This table documents answer validation support. Validators live in
+[`validation/`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation) and are
+orchestrated by
+[`QuestionnaireResponseItemValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/QuestionnaireResponseItemValidator.kt).
+The validator set is fixed and custom validators cannot be registered.
+
+| Constraint | Specification | Code | Status | Notes |
+|:---------------------------|:------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|:-------|:-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `required` | [Questionnaire.item.required](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.required) | [`RequiredValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/RequiredValidator.kt) | ✅ | |
+| `minValue` | [extension](https://hl7.org/fhir/R4/extension-minvalue.html) | [`MinValueValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MinValueValidator.kt) | ⚠️ | Inclusive bound for integer, decimal, date, dateTime, time, and quantity answers. Supports `cqf-calculatedValue`. Date and dateTime bounds compare as text. Quantity bounds require an exact unit code match. |
+| `maxValue` | [extension](https://hl7.org/fhir/R4/extension-maxvalue.html) | [`MaxValueValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MaxValueValidator.kt) | ⚠️ | Same support and divergences as `minValue`. Also bounds the date picker and slider. |
+| `minLength` | [extension](https://hl7.org/fhir/R4/extension-minlength.html) | [`MinLengthValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MinLengthValidator.kt) | ⚠️ | String answers only. Other answer types are treated as empty and fail the check. |
+| `maxLength` (element) | [Questionnaire.item.maxLength](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.maxLength) | [`MaxLengthValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MaxLengthValidator.kt) | ⚠️ | String answers only. The validator crashes on other answer types. |
+| `regex` | [extension](https://hl7.org/fhir/R4/extension-regex.html) | [`RegexValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/RegexValidator.kt) | ⚠️ | Full-match semantics. String answers only. Invalid patterns are logged and treated as valid. |
+| `maxDecimalPlaces` | [extension](https://hl7.org/fhir/R4/extension-maxdecimalplaces.html) | [`MaxDecimalPlacesValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/MaxDecimalPlacesValidator.kt) | ⚠️ | Decimal answers only. Values without a decimal point are miscounted and can fail incorrectly. |
+| `questionnaire-constraint` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-constraint.html) | [`ConstraintItemExtensionValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/ConstraintItemExtensionValidator.kt) | ⚠️ | FHIRPath constraints on items with error severity only. Warning constraints and questionnaire-level constraints are not evaluated. |
+| `questionnaire-minOccurs`, `questionnaire-maxOccurs` | [extension](https://hl7.org/fhir/R4/extension-questionnaire-minoccurs.html) | | ❌ | Repeat cardinality is not validated. |
+| Answer option membership | [Questionnaire.item.answerOption](https://hl7.org/fhir/R4/questionnaire-definitions.html#Questionnaire.item.answerOption) | | ❌ | Options constrain the widget, not validation. |
+
+### Validation orchestration
+
+The public validation API is
+[`QuestionnaireResponseValidator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/validation/QuestionnaireResponseValidator.kt).
+
+* **`validateQuestionnaireResponse(...)`** returns validation results keyed by `linkId`. It skips
+  items disabled by `enableWhen` and marks hidden items `NotValidated`. Known limitations are that
+  non-repeating `group` items are not themselves validated by this API, and for repeating groups
+  only the last instance's result survives in the map.
+* **`checkQuestionnaireResponse(...)`** performs structural checking only (linkId presence and
+  order, answer cardinality, and answer types). It throws `IllegalArgumentException` on mismatch.
+  Note that `url` answers always fail this check because the expected answer type name does not
+  match the R4 model.
+
+In the UI, answers are validated as the user modifies them, when navigating pages under the
+`prior-edit` and `sequential` [entry modes](#form-behavior-and-calculation), and on submit. A
+failed submit shows a dialog listing invalid questions, with an optional "Submit anyway" bypass.
+
+### CQF extensions
+
+| Extension | Specification | Code | Status | Notes |
+|:----------------------|:---------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:-------|:-------------------------------------------------------------------|
+| `cqf-expression` | [extension](https://hl7.org/fhir/R4/extension-cqf-expression.html) | [`MoreElements.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreElements.kt) | ⚠️ | Applied only to `Questionnaire.item.text` (dynamic question text). |
+| `cqf-calculatedValue` | [extension](https://hl7.org/fhir/R4/extension-cqf-calculatedvalue.html) | [`MoreExtensions.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreExtensions.kt) | ⚠️ | Applied only to the `minValue` and `maxValue` extension values. |
+| `cqf-library` | [extension](https://hl7.org/fhir/R4/extension-cqf-library.html) | | ❌ | No CQL support. |
+
+## Structured Data Capture specification
+
+This section documents conformance against the
+[SDC implementation guide STU4 (v4.0.0)](https://hl7.org/fhir/uv/sdc/STU4/) modules for
+[advanced rendering](https://hl7.org/fhir/uv/sdc/STU4/rendering.html),
+[form behavior](https://hl7.org/fhir/uv/sdc/STU4/behavior.html),
+[expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html),
+[population](https://hl7.org/fhir/uv/sdc/STU4/populate.html), and
+[extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html).
+
+### Advanced rendering
+
+| Extension | Specification | Code | Status | Notes |
+|:------------------------------------|:-----------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:-------|:-------------------------------------------------------------------------------------------|
+| `sdc-questionnaire-itemMedia` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-itemMedia.html) | [`MediaItem.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/components/MediaItem.kt) | ⚠️ | Image content only, from inline data or a URL via a client-supplied `UrlResolver`. |
+| `sdc-questionnaire-itemAnswerMedia` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-itemAnswerMedia.html) | [`MoreQuestionnaireItemAnswerOptions.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItemAnswerOptions.kt) | ⚠️ | Inline JPEG and PNG data only. Shown in the radio, check box, drop-down, and dialog option lists. |
+| `sdc-questionnaire-shortText` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-shortText.html) | | ❌ | |
+| `sdc-questionnaire-openLabel` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-openLabel.html) | | ❌ | |
+| `sdc-questionnaire-choiceColumn` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-choiceColumn.html) | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | ⚠️ | `path`, `label`, and `forDisplay` build option display strings. `width` and columnar layout are unimplemented. |
+| `sdc-questionnaire-preferredTerminologyServer` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-preferredTerminologyServer.html) | | ❌ | External value sets are resolved via `ExternalAnswerValueSetResolver` instead. |
+
+### Form behavior and calculation
+
+| Extension | Specification | Code | Status | Notes |
+|:------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:-------|:-------------------------------------------------------------------------------------------------------------------------------------|
+| `sdc-questionnaire-enableWhenExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-enableWhenExpression.html) | [`EnablementEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/enablement/EnablementEvaluator.kt) | ✅ | Takes precedence over `enableWhen` when both are present. An empty or failed evaluation disables the item. |
+| `sdc-questionnaire-calculatedExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-calculatedExpression.html) | [`ExpressionEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/fhirpath/ExpressionEvaluator.kt) | ✅ | Re-evaluated when referenced answers change. Stops updating an item once the user has edited it. Cycle detection only catches direct two-item cycles. |
+| `sdc-questionnaire-initialExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-initialExpression.html) | | ❌ | The URL is recognized but the expression is never evaluated. See [Form population](#form-population). |
+| `sdc-questionnaire-candidateExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-candidateExpression.html) | | ❌ | Parsed but never consumed. |
+| `sdc-questionnaire-answerExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-answerExpression.html) | [`EnabledAnswerOptionsEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/expressions/EnabledAnswerOptionsEvaluator.kt) | ✅ | FHIRPath and x-fhir-query languages. The latter requires an `XFhirQueryResolver`. |
+| `sdc-questionnaire-answerOptionsToggleExpression` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-answerOptionsToggleExpression.html) | [`EnabledAnswerOptionsEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/expressions/EnabledAnswerOptionsEvaluator.kt) | ✅ | FHIRPath only. Answers that become disallowed are removed from the response. |
+| `variable` | [extension](https://hl7.org/fhir/R4/extension-variable.html) | [`ExpressionEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/fhirpath/ExpressionEvaluator.kt) | ✅ | Questionnaire and item level with ancestor scope resolution. FHIRPath and x-fhir-query languages. |
+| `sdc-questionnaire-entryMode` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-entryMode.html) | [`MoreQuestionnaires.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaires.kt) | ✅ | `prior-edit`, `random`, and `sequential` gate page navigation and validation. |
+| `sdc-questionnaire-launchContext` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-launchContext.html) | [`MoreQuestionnaires.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaires.kt) | ⚠️ | Supplied resources are exposed as FHIRPath variables to all expressions. They are not used to populate answers. |
+| Modular forms (`sub-questionnaire`, assembly) | [modular](https://hl7.org/fhir/uv/sdc/STU4/modular.html) | | ❌ | |
+
+### Expression languages
+
+| Language | Specification | Status | Notes |
+|:-------------------------|:------------------------------------------------------------------------------|:-------|:---------------------------------------------------------------------------------------------------------------|
+| `text/fhirpath` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath) | ✅ | Supported by every expression-based feature. |
+| `application/x-fhir-query` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirquery) | ⚠️ | Supported only for `answerExpression` and `variable`. Requires a client-supplied `XFhirQueryResolver`. |
+| `text/cql` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#cql-in-expressions) | ❌ | Rejected where languages are checked. |
+
+> [!NOTE]
+> Language checking is inconsistent. `answerExpression`, `answerOptionsToggleExpression`,
+> `variable`, and `cqf-calculatedValue` reject unsupported languages. `enableWhenExpression`,
+> `calculatedExpression`, and `cqf-expression` pass the expression to the FHIRPath engine without
+> checking the declared language.
+
+### FHIRPath engine and supplements
+
+FHIRPath evaluation is delegated to
+[Kotlin FHIRPath](https://github.com/ohs-foundation/kotlin-fhirpath) (`dev.ohs.fhir:fhir-path`)
+through
+[`FhirPathService.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/fhirpath/FhirPathService.kt).
+See that library's own
+[conformance doc](https://github.com/ohs-foundation/kotlin-fhirpath/blob/main/docs/conformance.md)
+for FHIRPath language coverage.
+
+> [!WARNING]
+> All FHIRPath evaluation errors are caught, logged, and coerced to an empty result. A malformed
+> expression is indistinguishable from one that legitimately evaluates to `{}`. In boolean contexts
+> it silently becomes `false`.
+
+This table documents the
+[SDC environment variables](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath)
+supplied to expressions, populated in
+[`ExpressionEvaluator.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/fhirpath/ExpressionEvaluator.kt).
+
+| Variable | Specification | Status | Notes |
+|:------------------------|:------------------------------------------------------------------------------------------|:-------|:---------------------------------------------------------------------------------------------------------------|
+| `%resource` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath) | ✅ | The root `QuestionnaireResponse`. |
+| `%context` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath) | ⚠️ | The current `QuestionnaireResponse.item`. For `calculatedExpression` re-evaluation it is the changed item, not the item owning the expression. |
+| `%questionnaire` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath) | ✅ | The `Questionnaire` being processed. |
+| `%qitem` | [expressions](https://hl7.org/fhir/uv/sdc/STU4/expressions.html#fhirpath) | ⚠️ | Provided as `%qItem` (capital I). Lookup is case-sensitive, so the spec spelling `%qitem` does not resolve. |
+| Launch context variables | [launchContext](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-launchContext.html) | ✅ | Each declared launch context (such as `%patient`) resolves to the supplied resource. |
+| User-defined variables | [variable](https://hl7.org/fhir/R4/extension-variable.html) | ✅ | Resolved recursively with item, ancestor, then questionnaire scoping. |
+
+### Form population
+
+The library does not implement the SDC
+[population](https://hl7.org/fhir/uv/sdc/STU4/populate.html) module. Forms can only be pre-filled
+by passing an existing `QuestionnaireResponse`.
+
+| Feature | Specification | Code | Status | Notes |
+|:-------------------------------------------|:------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|:-------|:-------------------------------------------------------------------------------------|
+| Expression-based population (`$populate`) | [populate](https://hl7.org/fhir/uv/sdc/STU4/populate.html#exp-pop) | | ❌ | `initialExpression` is never evaluated. |
+| `sdc-questionnaire-itemPopulationContext` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-itemPopulationContext.html) | | ❌ | |
+| StructureMap-based population | [populate](https://hl7.org/fhir/uv/sdc/STU4/populate.html#map-pop) | | ❌ | `sourceQueries` is also unsupported. |
+| Pre-fill from a `QuestionnaireResponse` | *(library-specific)* | [`QuestionnaireComposable.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireComposable.kt) | ✅ | Via the `questionnaireResponseJson` parameter. The draft is checked and reconciled on load. |
+
+### Data extraction
+
+Of the SDC [extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html) mechanisms, only
+template-based extraction is implemented. The engine is a standalone API
+([`TemplateExtractionEngine.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extraction/template/TemplateExtractionEngine.kt))
+that is not invoked by the rendering flow. Call
+`TemplateExtractionEngine.extract(questionnaire, questionnaireResponse)` after obtaining the
+response.
+
+| Feature | Specification | Code | Status | Notes |
+|:-------------------------------------------|:----------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:-------|:---------------------------------------------------------------------------------------------------------|
+| Template-based extraction | [extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html#template-extract) | [`TemplateExtractionEngine.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extraction/template/TemplateExtractionEngine.kt) | ✅ | Produces a transaction `Bundle`. FHIRPath expressions only. |
+| `sdc-questionnaire-templateExtract` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-templateExtract.html) | [`MoreExtensions.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreExtensions.kt) | ✅ | All child directives (`template`, `fullUrl`, `resourceId`, `ifNoneMatch`, `ifModifiedSince`, `ifMatch`, `ifNoneExist`). |
+| `sdc-questionnaire-templateExtractBundle` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-templateExtractBundle.html) | [`MoreQuestionnaires.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaires.kt) | ✅ | |
+| `sdc-questionnaire-templateExtractContext`, `templateExtractValue` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-templateExtractContext.html) | [`TemplateExtractParsers.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extraction/template/TemplateExtractParsers.kt) | ✅ | |
+| `sdc-questionnaire-extractAllocateId` | [extension](https://hl7.org/fhir/uv/sdc/STU4/StructureDefinition-sdc-questionnaire-extractAllocateId.html) | [`TemplateExtractParsers.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extraction/template/TemplateExtractParsers.kt) | ✅ | Allocates identifiers exposed as variables. |
+| Definition-based extraction | [extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html#definition-extract) | | ❌ | `Questionnaire.item.definition` is not consumed. |
+| StructureMap-based extraction | [extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html#map-extract) | | ❌ | `targetStructureMap` is parsed into a public accessor but nothing consumes it. |
+| Observation-based extraction | [extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html#obs-extract) | | ❌ | |
+
+## Vendor extensions
+
+The following non-standard extensions are also recognized for compatibility with existing
+questionnaires. New questionnaires should prefer the standard equivalents.
+
+| Extension URL | Purpose | Code | Notes |
+|:---------------------------------------------------------------------------------|:----------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
+| `https://github.com/google/android-fhir/StructureDefinition/questionnaire-itemControl` | Alias for `questionnaire-itemControl` | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | Accepted for question item controls only. |
+| `open-choice` item control code | Dialog widget with a free text "Other" option | [`DialogSelectViewFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/DialogSelectViewFactory.kt) | Not part of the HL7 item control value set. |
+| `phone-number` item control code | Phone number input widget | [`PhoneNumberTextInputFactory.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/factories/PhoneNumberTextInputFactory.kt) | Not part of the HL7 item control value set. |
+| `https://github.com/google/android-fhir/StructureDefinition/dialog` | Forces the dialog widget for check box and radio selections | [`MoreQuestionnaireItems.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItems.kt) | |
+| `https://github.com/google/android-fhir/tree/master/datacapture/android-style` | Custom text styles | [`Header.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/views/components/Header.kt) | Parsed but the style is not currently applied to any text. |
+| `http://github.com/google-android/questionnaire-lastLaunched-timestamp` | Timestamp stamped on the response when the form is launched | [`MoreQuestionnaireResponses.kt`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireResponses.kt) | |
+
+Custom rendering for any item, including unsupported types such as `url`, can be supplied through
+[`QuestionnaireItemViewFactoryMatchersProvider`](../datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatchersProvider.kt),
+passed to the `Questionnaire` composable via its `matchersProvider` parameter. Client-supplied
+matchers are consulted before the built-in widget dispatch.
