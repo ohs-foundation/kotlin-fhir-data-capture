@@ -23,12 +23,15 @@ import kotlin_fhir_data_capture.catalog.generated.resources.Res
 import kotlin_fhir_data_capture.catalog.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
 
-fun main() = application {
-  Window(
-    onCloseRequest = ::exitApplication,
-    title = stringResource(Res.string.app_name),
-    state = WindowState(placement = WindowPlacement.Maximized),
-  ) {
-    App()
+fun main() {
+  val xFhirQueryResolver = catalogXFhirQueryResolver()
+  application {
+    Window(
+      onCloseRequest = ::exitApplication,
+      title = stringResource(Res.string.app_name),
+      state = WindowState(placement = WindowPlacement.Maximized),
+    ) {
+      App(xFhirQueryResolver = xFhirQueryResolver)
+    }
   }
 }

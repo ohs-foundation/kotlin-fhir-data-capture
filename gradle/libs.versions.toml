@@ -34,6 +34,7 @@ ohs-fhir-path = "1.0.0-beta05"
 permissions-camera = "0.20.1"
 spotless-plugin = "8.4.0"
 truth = "1.1.5"
+ohs-fhir-engine = "2.0.0-alpha02"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
@@ -72,6 +73,8 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 ohs-fhir-model = { module = "dev.ohs.fhir:fhir-model-r4", version.ref = "ohs-fhir" }
 ohs-fhir-path = { module = "dev.ohs.fhir:fhir-path-r4", version.ref = "ohs-fhir-path" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
+ohs-fhir-engine = { module = "dev.ohs.fhir:fhir-engine", version.ref = "ohs-fhir-engine" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

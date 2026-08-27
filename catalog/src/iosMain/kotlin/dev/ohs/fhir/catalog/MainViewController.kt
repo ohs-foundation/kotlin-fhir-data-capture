@@ -19,4 +19,7 @@ import androidx.compose.ui.window.ComposeUIViewController
 import platform.UIKit.UIViewController
 
 @Suppress("FunctionName", "unused")
-fun MainViewController(): UIViewController = ComposeUIViewController { App() }
+fun MainViewController(): UIViewController {
+  val xFhirQueryResolver = catalogXFhirQueryResolver()
+  return ComposeUIViewController { App(xFhirQueryResolver = xFhirQueryResolver) }
+}

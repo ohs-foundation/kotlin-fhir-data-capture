@@ -102,6 +102,7 @@ kotlin {
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.kscan)
       implementation(libs.navigation.compose)
+      implementation(libs.ohs.fhir.engine)
       implementation(libs.ohs.fhir.model)
       implementation(project(":datacapture"))
     }
