@@ -90,7 +90,7 @@ For Android projects, add the dependency to the `dependency` block in the module
 ```
 // e.g., app/build.gradle.kts
 dependencies {
-    implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha02")
+    implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha03")
 }
 ```
 
