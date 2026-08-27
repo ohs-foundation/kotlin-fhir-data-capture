@@ -17,8 +17,10 @@ package dev.ohs.fhir.datacapture.fhirpath
 
 import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.extraction.DataExtractionException
 import dev.ohs.fhir.fhirpath.FhirPathEngine
+import dev.ohs.fhir.fhirpath.forR4
 import dev.ohs.fhir.fhirpath.types.FhirPathDate
 import dev.ohs.fhir.fhirpath.types.FhirPathDateTime
 import dev.ohs.fhir.fhirpath.types.FhirPathQuantity
@@ -140,8 +142,7 @@ internal object FhirPathService {
             hour == null -> FhirDateTime.Date(LocalDate(value.year, month, day)).toString()
 
             minute != null && second != null && utcOffset != null -> {
-              val wholeSeconds = second.toInt()
-              val nanoseconds = second.rem(1).times(1_000_000_000.0).toInt()
+              val (wholeSeconds, nanoseconds) = second.toWholeSecondsAndNanoseconds()
               FhirDateTime.DateTime(
                   dateTime =
                     LocalDateTime(value.year, month, day, hour, minute, wholeSeconds, nanoseconds),
@@ -168,10 +169,10 @@ internal object FhirPathService {
                   second?.let { secondValue ->
                     append(':')
                     val normalized =
-                      if (secondValue % 1.0 == 0.0) {
-                        secondValue.toInt().toString().padStart(2, '0')
+                      if (secondValue.isWholeSecond()) {
+                        secondValue.toBigInteger().intValue().toString().padStart(2, '0')
                       } else {
-                        secondValue.toString().padStart(2, '0')
+                        secondValue.toPlainString().padStart(2, '0')
                       }
                     append(normalized)
                   }
@@ -192,8 +193,7 @@ internal object FhirPathService {
             second == null -> KotlinLocalTime(value.hour, minute).toString()
 
             else -> {
-              val wholeSeconds = second.toInt()
-              val nanoseconds = second.rem(1).times(1_000_000_000.0).toInt()
+              val (wholeSeconds, nanoseconds) = second.toWholeSecondsAndNanoseconds()
               KotlinLocalTime(value.hour, minute, wholeSeconds, nanoseconds).toString()
             }
           }
@@ -454,6 +454,23 @@ private fun fhirPathQuantityJsonElementOrNull(value: Any): JsonElement? =
 
     else -> null
   }
+
+private val NANOS_PER_SECOND = 1_000_000_000.toBigDecimal()
+
+/** Whether this fractional-second value has no sub-second component. */
+private fun BigDecimal.isWholeSecond(): Boolean =
+  compareTo(BigDecimal.fromBigInteger(toBigInteger())) == 0
+
+/** Splits a fractional-second value into whole seconds and its nanosecond remainder. */
+private fun BigDecimal.toWholeSecondsAndNanoseconds(): Pair<Int, Int> {
+  val wholeSecondsBigInteger = toBigInteger()
+  val nanoseconds =
+    (this - BigDecimal.fromBigInteger(wholeSecondsBigInteger))
+      .times(NANOS_PER_SECOND)
+      .toBigInteger()
+      .intValue()
+  return wholeSecondsBigInteger.intValue() to nanoseconds
+}
 
 private fun structuredJsonElementOrNull(json: Json, value: Any): JsonElement? =
   when (value) {
