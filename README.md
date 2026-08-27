@@ -35,7 +35,6 @@ The library also supports the following
 |:-------------------|:---------------------|:-----|:--------|
 | iosSimulatorArm64  | `-iossimulatorarm64` | 1    | ✅       |
 | iosArm64           | `-iosarm64`          | 1    | ✅       |
-| iosX64             | `-iosx64`            | 3    | ⛔       |
 
 ## Catalog app
 
