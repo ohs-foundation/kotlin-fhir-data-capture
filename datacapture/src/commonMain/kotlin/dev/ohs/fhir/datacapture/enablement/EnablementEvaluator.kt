@@ -18,6 +18,7 @@ package dev.ohs.fhir.datacapture.enablement
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.enableWhenExpression
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
+import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
@@ -73,6 +74,7 @@ internal class EnablementEvaluator(
   private val questionnaireItemParentMap: Map<Questionnaire.Item, Questionnaire.Item> = emptyMap(),
   private val questionnaireLaunchContextMap: Map<String, Resource>? = emptyMap(),
   private val xFhirQueryResolver: XFhirQueryResolver? = null,
+  expressionCache: QuestionnaireExpressionCache = QuestionnaireExpressionCache(),
 ) {
 
   private val expressionEvaluator =
@@ -82,6 +84,7 @@ internal class EnablementEvaluator(
       questionnaireItemParentMap,
       questionnaireLaunchContextMap,
       xFhirQueryResolver,
+      expressionCache,
     )
 
   /**
@@ -93,6 +96,12 @@ internal class EnablementEvaluator(
   /** The map from each item in the [QuestionnaireResponse] to its parent. */
   private val questionnaireResponseItemParentMap =
     mutableMapOf<QuestionnaireResponse.Item, QuestionnaireResponse.Item>()
+
+  private val questionnaireResponseItemPreOrderIndexMap =
+    mutableMapOf<QuestionnaireResponse.Item, Int>()
+
+  private val questionnaireResponseItemPreOrderIndicesByLinkId =
+    mutableMapOf<String?, MutableList<Int>>()
 
   init {
     /** Adds each child-parent pair in the [QuestionnaireResponse] to the parent map. */
@@ -112,6 +121,13 @@ internal class EnablementEvaluator(
 
     for (item in questionnaireResponse.item) {
       buildParentList(item)
+    }
+
+    questionnaireResponseItemPreOrderList.forEachIndexed { index, item ->
+      questionnaireResponseItemPreOrderIndexMap.putIfAbsent(item, index)
+      questionnaireResponseItemPreOrderIndicesByLinkId
+        .getOrPut(item.linkId.value) { mutableListOf() }
+        .add(index)
     }
   }
 
@@ -232,19 +248,18 @@ internal class EnablementEvaluator(
       parent = questionnaireResponseItemParentMap[parent]
     }
 
-    // Find the nearest item preceding the origin
-    val itemIndex = questionnaireResponseItemPreOrderList.indexOf(origin)
-    for (index in itemIndex - 1 downTo 0) {
-      if (questionnaireResponseItemPreOrderList[index].linkId.value == linkId) {
-        return questionnaireResponseItemPreOrderList[index]
-      }
-    }
+    val candidateIndices =
+      questionnaireResponseItemPreOrderIndicesByLinkId[linkId] ?: return null
+    val originIndex = questionnaireResponseItemPreOrderIndexMap[origin] ?: -1
+    val originPosition = candidateIndices.binarySearch(originIndex)
+    val precedingCount = if (originPosition >= 0) originPosition else -(originPosition + 1)
+    val succeedingFrom = if (originPosition >= 0) originPosition + 1 else precedingCount
 
-    // Find the nearest item succeeding the origin
-    for (index in itemIndex + 1 until questionnaireResponseItemPreOrderList.size) {
-      if (questionnaireResponseItemPreOrderList[index].linkId.value == linkId) {
-        return questionnaireResponseItemPreOrderList[index]
-      }
+    if (precedingCount > 0) {
+      return questionnaireResponseItemPreOrderList[candidateIndices[precedingCount - 1]]
+    }
+    if (succeedingFrom < candidateIndices.size) {
+      return questionnaireResponseItemPreOrderList[candidateIndices[succeedingFrom]]
     }
 
     return null

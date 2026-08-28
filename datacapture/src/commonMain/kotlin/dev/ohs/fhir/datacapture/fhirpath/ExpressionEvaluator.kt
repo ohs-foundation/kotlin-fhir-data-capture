@@ -56,6 +56,7 @@ internal class ExpressionEvaluator(
   private val questionnaireItemParentMap: Map<Questionnaire.Item, Questionnaire.Item> = emptyMap(),
   private val questionnaireLaunchContextMap: Map<String, Resource>? = emptyMap(),
   private val xFhirQueryResolver: XFhirQueryResolver? = null,
+  private val expressionCache: QuestionnaireExpressionCache = QuestionnaireExpressionCache(),
 ) {
 
   private val reservedItemVariables =
@@ -147,13 +148,36 @@ internal class ExpressionEvaluator(
     expression: Expression?,
   ): List<Any> {
     if (expression == null) return emptyList()
+    val expressionText = expression.expression?.value ?: ""
+    val cacheKey = if (expressionCache.isActive) sharableResultKey(expressionText) else null
+    cacheKey?.let { key ->
+      expressionCache.cachedResult(key)?.let {
+        return it
+      }
+    }
     val variables =
       extractItemDependentVariables(expression, questionnaireItem, questionnaireResponseItem)
-    return FhirPathService.evaluate(
-      expression.expression?.value ?: "",
-      questionnaireResponse,
-      variables,
-    )
+    val result =
+      FhirPathService.evaluate(
+        expressionText,
+        questionnaireResponse,
+        variables,
+      )
+    cacheKey?.let { expressionCache.cacheResult(it, result) }
+    return result
+  }
+
+  /**
+   * Share a result only when it cannot depend on the item it is evaluated for. Conservative: the
+   * expression must mention `%resource` or `%questionnaire` and must not mention `%context` or
+   * `%qItem`.
+   */
+  private fun sharableResultKey(expressionText: String): String? {
+    if (expressionText.contains("%context") || expressionText.contains("%qItem")) return null
+    if (!expressionText.contains("%resource") && !expressionText.contains("%questionnaire")) {
+      return null
+    }
+    return expressionText
   }
 
   /**
