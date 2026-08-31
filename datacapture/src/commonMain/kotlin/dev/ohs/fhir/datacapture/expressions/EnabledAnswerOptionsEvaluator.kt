@@ -136,7 +136,9 @@ internal class EnabledAnswerOptionsEvaluator(
       if (uri.startsWith("#")) {
         questionnaire.contained
           .firstOrNull { resource ->
-            resource.id.equals(uri) &&
+            // Contained ids are stored without the leading '#' in kotlin-fhir (unlike HAPI, which
+            // keeps it); normalize both sides so either notation matches.
+            resource.id?.removePrefix("#") == uri.removePrefix("#") &&
               resource is ValueSet &&
               resource.expansion != null &&
               resource.expansion!!.contains.isNotEmpty()
