@@ -21,7 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertRangeInfoEquals
@@ -63,6 +67,29 @@ class SliderViewFactoryTest {
   fun QuestionnaireSliderView(questionnaireViewItem: QuestionnaireViewItem) {
     QuestionnaireTheme { SliderViewFactory.Content(questionnaireViewItem) }
   }
+
+  /**
+   * Compose Material3's Slider computes [ProgressBarRangeInfo.current] via a fraction/position
+   * round-trip that isn't exactly reproducible across Kotlin targets (e.g. current=10 renders as
+   * 10.000000149011612 on Kotlin/JS but exactly 10 on JVM/Wasm). Asserts [current] with a tolerance
+   * instead of exact equality; [range] and [steps] are still checked exactly.
+   */
+  private fun SemanticsNodeInteraction.assertRangeInfoApproximatelyEquals(
+    expected: ProgressBarRangeInfo,
+    tolerance: Float = 0.001f,
+  ) =
+    assert(
+      SemanticsMatcher("ProgressBarRangeInfo ~= $expected (tolerance=$tolerance)") { node ->
+        if (SemanticsProperties.ProgressBarRangeInfo !in node.config) {
+          false
+        } else {
+          val actual = node.config[SemanticsProperties.ProgressBarRangeInfo]
+          kotlin.math.abs(actual.current - expected.current) <= tolerance &&
+            actual.range == expected.range &&
+            actual.steps == expected.steps
+        }
+      }
+    )
 
   @Test
   fun shouldSetQuestionHeader() = runComposeUiTest {
@@ -146,7 +173,9 @@ class SliderViewFactoryTest {
     setContent { QuestionnaireSliderView(questionnaireViewItem) }
 
     onNodeWithTag(SLIDER_TAG)
-      .assertRangeInfoEquals(ProgressBarRangeInfo(current = 10f, range = 0f..100f, steps = 99))
+      .assertRangeInfoApproximatelyEquals(
+        ProgressBarRangeInfo(current = 10f, range = 0f..100f, steps = 99)
+      )
   }
 
   @Test
@@ -772,7 +801,7 @@ class SliderViewFactoryTest {
       setContent { QuestionnaireSliderView(questionnaireViewItem) }
 
       onNodeWithTag(SLIDER_TAG)
-        .assertRangeInfoEquals(ProgressBarRangeInfo(10f, 0f..100f, steps = 99))
+        .assertRangeInfoApproximatelyEquals(ProgressBarRangeInfo(10f, 0f..100f, steps = 99))
 
       questionnaireViewItem =
         QuestionnaireViewItem(
@@ -816,7 +845,7 @@ class SliderViewFactoryTest {
         )
 
       onNodeWithTag(SLIDER_TAG)
-        .assertRangeInfoEquals(ProgressBarRangeInfo(12f, 0f..100f, steps = 99))
+        .assertRangeInfoApproximatelyEquals(ProgressBarRangeInfo(12f, 0f..100f, steps = 99))
 
       questionnaireViewItem =
         QuestionnaireViewItem(

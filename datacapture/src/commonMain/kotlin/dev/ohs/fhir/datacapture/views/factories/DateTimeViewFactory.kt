@@ -53,7 +53,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.date_format_validation_error_msg
 import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import kotlin_fhir_data_capture.datacapture.generated.resources.time
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -68,7 +67,7 @@ internal object DateTimeViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val localDateTimeFormatter = getLocalDateTimeFormatter()
     val itemReadOnly =
       remember(questionnaireViewItem.questionnaireItem) {

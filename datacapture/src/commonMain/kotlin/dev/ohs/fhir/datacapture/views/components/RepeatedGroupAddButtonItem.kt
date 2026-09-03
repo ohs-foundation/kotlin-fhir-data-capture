@@ -39,7 +39,6 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.add_24px
 import kotlin_fhir_data_capture.datacapture.generated.resources.add_repeated_group_item
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -48,7 +47,7 @@ internal const val ADD_REPEATED_GROUP_BUTTON_TAG = "addRepeatedGroupButton"
 
 @Composable
 internal fun RepeatedGroupAddButtonItem(questionnaireViewItem: QuestionnaireViewItem) {
-  val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+  val coroutineScope = rememberCoroutineScope()
   val questionText =
     remember(questionnaireViewItem) { questionnaireViewItem.questionText?.toString() ?: "" }
   val isQuestionnaireViewItemRepeatedGroup =

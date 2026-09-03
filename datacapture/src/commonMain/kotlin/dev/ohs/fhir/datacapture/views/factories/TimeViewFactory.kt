@@ -38,7 +38,6 @@ import kotlin.time.ExperimentalTime
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import kotlin_fhir_data_capture.datacapture.generated.resources.time
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -89,7 +88,7 @@ object TimeViewFactory : QuestionnaireItemViewFactory {
         questionnaireViewItemLocalTimeAnswer?.let { localDateTimeFormatter.localizedTimeString(it) }
       }
 
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
       modifier =

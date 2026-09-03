@@ -38,6 +38,7 @@ import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.ERROR_TEXT_AT_HEADER_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTION_HEADER_TAG
+import dev.ohs.fhir.datacapture.views.components.handleInputDebounceTime
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Integer
@@ -45,10 +46,25 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class MultiLineTextInputFactoryTest {
+
+  @BeforeTest
+  fun setUp() {
+    // The debounce relies on a real delay(), which runComposeUiTest's virtual clock does not
+    // resume on non-Android targets
+    // (https://github.com/JetBrains/compose-multiplatform/issues/4805).
+    handleInputDebounceTime = 0L
+  }
+
+  @AfterTest
+  fun tearDown() {
+    handleInputDebounceTime = 500L
+  }
 
   @Composable
   fun QuestionnaireEditTextMultiLineView(questionnaireViewItem: QuestionnaireViewItem) {

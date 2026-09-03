@@ -39,7 +39,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.delete
 import kotlin_fhir_data_capture.datacapture.generated.resources.delete_24px
 import kotlin_fhir_data_capture.datacapture.generated.resources.repeated_group_title
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -52,7 +51,7 @@ internal fun RepeatedGroupHeaderItem(
   repeatedGroupHeader: QuestionnaireAdapterItem.RepeatedGroupHeader,
   enabled: Boolean = true,
 ) {
-  val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+  val coroutineScope = rememberCoroutineScope()
   val indexNumber = remember(repeatedGroupHeader.index) { "${repeatedGroupHeader.index + 1}" }
   val title = remember(repeatedGroupHeader.title) { repeatedGroupHeader.title }
   val color =
