@@ -341,7 +341,9 @@ internal object FhirPathService {
    * Rehydrates a processed JSON object back into a typed Kotlin FHIR [Resource].
    *
    * This is the final structural validation pass for one extracted resource before it is attached
-   * to the output transaction bundle.
+   * to the output transaction bundle. It delegates to the shared generated `Resource` polymorphic
+   * serializer from the model dependency, so any R4 resource type exposed by that model is
+   * supported here.
    */
   internal fun jsonToResource(resourceJson: JsonObject, path: String): Resource =
     try {

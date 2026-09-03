@@ -24,8 +24,6 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 private const val FHIRPATH_LANGUAGE = "text/fhirpath"
-internal const val EXTENSION_EXTRACT_ALLOCATE_ID_URL: String =
-  "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-extractAllocateId"
 
 internal const val EXTENSION_TEMPLATE_EXTRACT_CONTEXT_URL: String =
   "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-templateExtractContext"
