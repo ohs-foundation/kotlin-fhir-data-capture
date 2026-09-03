@@ -103,7 +103,22 @@ kotlin {
       }
     }
 
-    androidMain { resources.srcDir("res") }
+    androidMain {
+      resources.srcDir("res")
+      dependencies {
+        implementation(libs.kscan)
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+      }
+    }
+
+    iosMain {
+      dependencies {
+        implementation(libs.kscan)
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+      }
+    }
 
     getByName("androidDeviceTest") {
       dependencies {
@@ -135,6 +150,15 @@ kotlin {
       dependencies {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutines.swing)
+      }
+    }
+
+    listOf("iosX64Main", "iosArm64Main", "iosSimulatorArm64Main").forEach {
+      getByName(it) {
+        dependencies {
+          implementation(libs.moko.permissions.camera)
+          implementation(libs.moko.permissions.compose)
+        }
       }
     }
   }

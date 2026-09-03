@@ -13,16 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.barcode
+package dev.ohs.fhir.datacapture.views.barcode
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 
-@Composable
-internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember {
-  object : CameraPermissionProvider {
-    override suspend fun providePermission(): Unit = throw NotImplementedError("Not supported")
-
-    override fun openSettings(): Unit = throw NotImplementedError("Not supported")
-  }
-}
+@Composable expect fun ScannerDialog(onDismiss: () -> Unit, onBarcode: (String?) -> Unit)
