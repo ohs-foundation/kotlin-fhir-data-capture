@@ -93,6 +93,8 @@ kotlin {
     }
 
     commonTest {
+      languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop")
+
       dependencies {
         implementation(libs.androidx.lifecycle.runtime.testing)
         implementation(libs.kotlin.test)

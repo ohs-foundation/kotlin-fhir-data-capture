@@ -118,7 +118,7 @@ class QuantityViewFactoryTest {
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
                       value =
-                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        quantity(
                           value = "5".toBigDecimal()
                         )
                     )
@@ -152,7 +152,7 @@ class QuantityViewFactoryTest {
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
                       value =
-                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        quantity(
                           value = "5".toBigDecimal()
                         )
                     )
@@ -199,7 +199,7 @@ class QuantityViewFactoryTest {
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
                       value =
-                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        quantity(
                           unit = "kg"
                         )
                     )
@@ -229,7 +229,7 @@ class QuantityViewFactoryTest {
                 value =
                   Questionnaire.Item.Initial.Value.Quantity(
                     value =
-                      _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                      quantity(
                         unit = "kg",
                         code = "kilo",
                       )
@@ -264,7 +264,7 @@ class QuantityViewFactoryTest {
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
                       value =
-                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        quantity(
                           unit = "kg"
                         )
                     )
@@ -330,7 +330,7 @@ class QuantityViewFactoryTest {
                 value =
                   QuestionnaireResponse.Item.Answer.Value.Quantity(
                     value =
-                      _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                      quantity(
                         value = 22.5.toBigDecimal()
                       )
                   )
@@ -480,7 +480,7 @@ class QuantityViewFactoryTest {
 
       with(answerHolder!!.single().value?.asQuantity()?.value) {
         shouldBe(
-          _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+          quantity(
             value = 22.0.toBigDecimal(),
             unit = "centimeter",
             code = "cm",
@@ -514,7 +514,7 @@ class QuantityViewFactoryTest {
 
       with(answerHolder!!.single().value?.asQuantity()?.value) {
         shouldBe(
-          _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+          quantity(
             value = 22.0.toBigDecimal(),
             unit = "centimeter",
             code = "cm",
@@ -659,7 +659,7 @@ class QuantityViewFactoryTest {
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Quantity(
                       value =
-                        _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                        quantity(
                           value = "5".toBigDecimal()
                         )
                     )
@@ -689,7 +689,7 @@ class QuantityViewFactoryTest {
                 value =
                   QuestionnaireResponse.Item.Answer.Value.Quantity(
                     value =
-                      _root_ide_package_.dev.ohs.fhir.datacapture.views.factories.quantity(
+                      quantity(
                         value = "7".toBigDecimal()
                       )
                   )
