@@ -53,6 +53,7 @@ import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.components.getRequiredOrOptionalText
 import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Decimal
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlinx.coroutines.Dispatchers
@@ -148,7 +149,7 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
     // Read decimal value and unit from complete answer
     questionnaireViewItem.answers.singleOrNull()?.let {
       val quantity = it.value?.asQuantity()?.value
-      decimal = quantity?.value?.value
+      decimal = quantity?.value?.value?.asBigDecimal()
       unit = quantity?.toCoding()
     }
 
@@ -171,7 +172,7 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
           value =
             QuestionnaireResponse.Item.Answer.Value.Quantity(
               Quantity(
-                value = Decimal(value = decimal),
+                value = Decimal(value = decimal?.let(FhirDecimal::fromBigDecimal)),
                 unit = unit.display,
                 code = unit.code,
                 system = unit.system,
@@ -197,6 +198,7 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
       ?.value
       ?.value
       ?.value
+      ?.asBigDecimal()
       ?.toStringExpanded()
       ?: questionnaireViewItem.draftAnswer?.let { if (it is BigDecimal) it.toString() else "" }
       ?: ""

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.model.r4.Decimal
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
@@ -35,7 +36,7 @@ internal val DecimalTextInputFactory =
         questionnaireItemViewItemDecimalAnswer == null && draftAnswer.isNullOrEmpty() -> ""
 
         questionnaireItemViewItemDecimalAnswer != null ->
-          questionnaireItemViewItemDecimalAnswer.value.value?.toStringExpanded()
+          questionnaireItemViewItemDecimalAnswer.value.value?.asBigDecimal()?.toStringExpanded()
 
         else -> draftAnswer
       }
@@ -45,7 +46,9 @@ internal val DecimalTextInputFactory =
         questionnaireViewItem.setAnswer(
           QuestionnaireResponse.Item.Answer(
             value =
-              QuestionnaireResponse.Item.Answer.Value.Decimal(Decimal(value = it.toBigDecimal()))
+              QuestionnaireResponse.Item.Answer.Value.Decimal(
+                Decimal(value = FhirDecimal.fromBigDecimal(it.toBigDecimal()))
+              )
           )
         )
       } ?: questionnaireViewItem.setDraftAnswer(inputText)

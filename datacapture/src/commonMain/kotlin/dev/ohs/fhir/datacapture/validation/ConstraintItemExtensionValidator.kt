@@ -22,8 +22,8 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_SE
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_QUESTIONNAIRE_CONSTRAINT_URL
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
-import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.ExtensibleEnumeration
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.String
@@ -57,7 +57,7 @@ internal class ConstraintItemExtensionValidator(
       .map { extension ->
         val expression =
           Expression.Builder(
-              language = Enumeration(value = Expression.ExpressionLanguage.Text_Fhirpath)
+              language = ExtensibleEnumeration.of(Expression.ExpressionLanguage.Text_Fhirpath)
             )
             .apply {
               expression =

@@ -15,13 +15,14 @@
  */
 package dev.ohs.fhir.datacapture.extensions
 
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractDefinition
+import dev.ohs.fhir.fhirpath.types.FhirPathDecimal
 import dev.ohs.fhir.model.r4.Element
 import dev.ohs.fhir.model.r4.Expression
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.FhirDate
 import dev.ohs.fhir.model.r4.FhirDateTime
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Quantity
 import kotlinx.datetime.LocalTime
 
@@ -192,7 +193,13 @@ internal suspend fun Extension.Value.populateCqfCalculatedValue(
       is Extension.Value.DateTime ->
         this.copy(value = value.copy(value = FhirDateTime.fromString(result.toString())))
 
-      is Extension.Value.Decimal -> this.copy(value = value.copy(value = result as BigDecimal))
+      is Extension.Value.Decimal ->
+        this.copy(
+          value =
+            value.copy(
+              value = FhirDecimal.fromBigDecimal((result as FhirPathDecimal).asBigDecimal())
+            )
+        )
 
       is Extension.Value.PositiveInt -> this.copy(value = value.copy(value = result as Int))
 

@@ -495,7 +495,14 @@ fun Questionnaire.Item.hasMimeTypeOnly(type: String): Boolean =
 
 /** The maximum size of an attachment in Bytes. */
 internal val Questionnaire.Item.maxSizeInBytes: BigDecimal?
-  get() = extension.firstOrNull { it.url == EXTENSION_MAX_SIZE }?.value?.asDecimal()?.value?.value
+  get() =
+    extension
+      .firstOrNull { it.url == EXTENSION_MAX_SIZE }
+      ?.value
+      ?.asDecimal()
+      ?.value
+      ?.value
+      ?.asBigDecimal()
 
 internal val Questionnaire.Item.maxAllowedAttachmentSize: BigDecimal
   get() =
@@ -731,7 +738,7 @@ internal fun Questionnaire.Item.extractAnswerOptions(
   when (this.type.value) {
     Questionnaire.QuestionnaireItemType.Reference -> {
       require(dataList.all { it is Resource }) {
-        "'${this.type.value?.getCode()}' cannot be used to populate $EXTENSION_CHOICE_COLUMN_URL. Only Resources can be used to populate the choice columns."
+        "'${this.type.value?.code}' cannot be used to populate $EXTENSION_CHOICE_COLUMN_URL. Only Resources can be used to populate the choice columns."
       }
 
       dataList.map { data ->
@@ -752,7 +759,7 @@ internal fun Questionnaire.Item.extractAnswerOptions(
 
     else -> {
       require(dataList.all { it !is Resource }) {
-        "$EXTENSION_CHOICE_COLUMN_URL not applicable for '${this.type.value?.getCode()}'. Only type reference is allowed with resource."
+        "$EXTENSION_CHOICE_COLUMN_URL not applicable for '${this.type.value?.code}'. Only type reference is allowed with resource."
       }
       dataList
     }

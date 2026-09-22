@@ -36,13 +36,12 @@ class QuestionnaireResponseValidatorTest {
         )
         .build()
     val questionnaire =
-      Questionnaire.Builder(status = Enumeration(PublicationStatus.Active.getCode()))
+      Questionnaire.Builder(status = Enumeration(PublicationStatus.Active.code))
         .apply { this.item.add(questionnaireItem.toBuilder()) }
         .build()
     val questionnaireResponse =
       QuestionnaireResponse.Builder(
-          status =
-            Enumeration(QuestionnaireResponse.QuestionnaireResponseStatus.Completed.getCode())
+          status = Enumeration(QuestionnaireResponse.QuestionnaireResponseStatus.Completed.code)
         )
         .apply {
           this.item.add(
@@ -82,13 +81,12 @@ class QuestionnaireResponseValidatorTest {
         .apply { required = dev.ohs.fhir.model.r4.Boolean.Builder().apply { value = true } }
         .build()
     val questionnaire =
-      Questionnaire.Builder(status = Enumeration(PublicationStatus.Active.getCode()))
+      Questionnaire.Builder(status = Enumeration(PublicationStatus.Active.code))
         .apply { this.item.add(questionnaireItem.toBuilder()) }
         .build()
     val questionnaireResponse =
       QuestionnaireResponse.Builder(
-          status =
-            Enumeration(QuestionnaireResponse.QuestionnaireResponseStatus.Completed.getCode())
+          status = Enumeration(QuestionnaireResponse.QuestionnaireResponseStatus.Completed.code)
         )
         .apply {
           this.item.add(

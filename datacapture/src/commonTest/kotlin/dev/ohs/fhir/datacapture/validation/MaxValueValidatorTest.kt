@@ -21,6 +21,7 @@ import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.ExtensibleEnumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.FhirDate
 import dev.ohs.fhir.model.r4.Integer
@@ -176,8 +177,8 @@ class MaxValueValidatorTest {
                                   value =
                                     Expression(
                                       language =
-                                        Enumeration(
-                                          value = Expression.ExpressionLanguage.Text_Fhirpath
+                                        ExtensibleEnumeration.of(
+                                          Expression.ExpressionLanguage.Text_Fhirpath
                                         ),
                                       expression = FhirR4String(value = "today() - 7 days"),
                                     )
@@ -244,8 +245,8 @@ class MaxValueValidatorTest {
                                   value =
                                     Expression(
                                       language =
-                                        Enumeration(
-                                          value = Expression.ExpressionLanguage.Text_Fhirpath
+                                        ExtensibleEnumeration.of(
+                                          Expression.ExpressionLanguage.Text_Fhirpath
                                         ),
                                       expression = FhirR4String(value = "today() - 7 days"),
                                     )
@@ -308,8 +309,8 @@ class MaxValueValidatorTest {
                                   value =
                                     Expression(
                                       language =
-                                        Enumeration(
-                                          value = Expression.ExpressionLanguage.Text_Fhirpath
+                                        ExtensibleEnumeration.of(
+                                          Expression.ExpressionLanguage.Text_Fhirpath
                                         ),
                                       expression =
                                         FhirR4String(
@@ -377,8 +378,8 @@ class MaxValueValidatorTest {
                                 value =
                                   Expression(
                                     language =
-                                      Enumeration(
-                                        value = Expression.ExpressionLanguage.Text_Fhirpath
+                                      ExtensibleEnumeration.of(
+                                        Expression.ExpressionLanguage.Text_Fhirpath
                                       ),
                                     expression = FhirR4String(value = "today()"),
                                   )

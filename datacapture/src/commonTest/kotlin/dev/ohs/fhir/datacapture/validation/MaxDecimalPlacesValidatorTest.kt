@@ -19,6 +19,7 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
@@ -43,7 +44,7 @@ class MaxDecimalPlacesValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.Decimal(
-              value = Decimal(value = "1.2345".toBigDecimal())
+              value = Decimal(value = FhirDecimal.fromBigDecimal("1.2345".toBigDecimal()))
             )
         }
         .build()
@@ -76,7 +77,7 @@ class MaxDecimalPlacesValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.Decimal(
-              value = Decimal(value = "1.23".toBigDecimal())
+              value = Decimal(value = FhirDecimal.fromBigDecimal("1.23".toBigDecimal()))
             )
         }
         .build()
@@ -109,7 +110,7 @@ class MaxDecimalPlacesValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.Decimal(
-              value = Decimal(value = "1.234".toBigDecimal())
+              value = Decimal(value = FhirDecimal.fromBigDecimal("1.234".toBigDecimal()))
             )
         }
         .build()
@@ -142,7 +143,7 @@ class MaxDecimalPlacesValidatorTest {
         .apply {
           value =
             QuestionnaireResponse.Item.Answer.Value.Decimal(
-              value = Decimal(value = "1.2345".toBigDecimal())
+              value = Decimal(value = FhirDecimal.fromBigDecimal("1.2345".toBigDecimal()))
             )
         }
         .build()

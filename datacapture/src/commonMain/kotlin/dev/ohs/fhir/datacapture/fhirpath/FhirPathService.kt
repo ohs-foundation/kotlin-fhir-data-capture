@@ -23,6 +23,7 @@ import dev.ohs.fhir.fhirpath.FhirPathEngine
 import dev.ohs.fhir.fhirpath.forR4
 import dev.ohs.fhir.fhirpath.types.FhirPathDate
 import dev.ohs.fhir.fhirpath.types.FhirPathDateTime
+import dev.ohs.fhir.fhirpath.types.FhirPathDecimal
 import dev.ohs.fhir.fhirpath.types.FhirPathQuantity
 import dev.ohs.fhir.fhirpath.types.FhirPathTime
 import dev.ohs.fhir.model.r4.Address
@@ -121,7 +122,7 @@ internal object FhirPathService {
       is Float,
       is Double -> value.toString()
 
-      is BigDecimal -> value.toPlainString()
+      is FhirPathDecimal -> value.asBigDecimal().toPlainString()
 
       is FhirPathDate -> value.toString()
 
@@ -290,7 +291,7 @@ internal object FhirPathService {
       is Long,
       is Float,
       is Double,
-      is BigDecimal,
+      is FhirPathDecimal,
       is FhirPathDate,
       is FhirPathDateTime,
       is FhirPathTime,
@@ -398,7 +399,7 @@ private fun FhirPathService.primitiveJsonElementOrNull(value: Any): JsonElement?
 
     is Double -> JsonPrimitive(value)
 
-    is BigDecimal -> JsonPrimitive(value.toString())
+    is FhirPathDecimal -> JsonPrimitive(value.asBigDecimal().toPlainString())
 
     is FhirPathDate,
     is FhirPathDateTime,
