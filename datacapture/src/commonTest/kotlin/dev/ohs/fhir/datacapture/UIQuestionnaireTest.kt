@@ -63,9 +63,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.button_paginatio
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
 import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
 import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -81,12 +78,12 @@ class UIQuestionnaireTest {
 
   @BeforeTest
   fun setUp() {
-    Dispatchers.setMain(Dispatchers.Unconfined)
+    setTestMainDispatcher()
   }
 
   @AfterTest
   fun tearDown() {
-    Dispatchers.resetMain()
+    resetTestMainDispatcher()
   }
 
   @Test

@@ -214,16 +214,11 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          # Compose UI tests on an emulator intermittently fail on Espresso/Compose
-          # synchronisation races unrelated to the assertions under test, so one retry is
-          # allowed; a genuine failure still fails both attempts. android-emulator-runner
-          # runs each line of `script` in its own shell, hence the single-line form.
           script: >-
-            run_tests() { ./gradlew :datacapture:connectedAndroidDeviceTest --stacktrace
+            ./gradlew :datacapture:connectedAndroidDeviceTest --stacktrace
             --no-daemon --no-parallel --no-configuration-cache --build-cache
             -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8"
-            -Dorg.gradle.workers.max=1 -Dkotlin.daemon.enabled=false; };
-            run_tests || { echo "::warning::Instrumented tests failed; retrying once."; run_tests; }
+            -Dorg.gradle.workers.max=1 -Dkotlin.daemon.enabled=false
 
       - name: Upload test reports
         if: always()
