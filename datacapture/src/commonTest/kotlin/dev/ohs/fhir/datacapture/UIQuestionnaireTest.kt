@@ -54,6 +54,8 @@ import dev.ohs.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_next
@@ -72,6 +74,16 @@ class UIQuestionnaireTest {
   private val fhirJson = Json {
     explicitNulls = false
     encodeDefaults = false
+  }
+
+  @BeforeTest
+  fun setUp() {
+    setTestMainDispatcher()
+  }
+
+  @AfterTest
+  fun tearDown() {
+    resetTestMainDispatcher()
   }
 
   @Test

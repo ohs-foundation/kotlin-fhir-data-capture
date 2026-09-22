@@ -35,6 +35,7 @@ import androidx.compose.ui.test.isPopup
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
@@ -907,6 +908,9 @@ class DropDownViewFactoryTest {
           hasTextExactly("Coding 3") and
           hasAnyAncestor(isPopup())
       )
+      // The menu sizes itself to the available window height, so on a short viewport this option
+      // starts off-screen and has to be scrolled into view first.
+      .performScrollTo()
       .assertIsDisplayed()
       .performClick()
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG)
