@@ -1019,23 +1019,18 @@ class DropDownViewFactoryTest {
   }
 
   @Test
-  fun shouldSelectAndClearAnswerInAutoCompleteDropdown() = runComposeUiTest {
+  fun shouldSelectAnswerInAutoCompleteDropdown() = runComposeUiTest {
     var selectedAnswers: List<QuestionnaireResponse.Item.Answer>? = null
-    val answerOptions = listOf("Coding 1", "Coding 2", "Coding 3")
-
-    var questionnaireItem by
-      mutableStateOf(
-        QuestionnaireViewItem(
-          createAnswerOptions(*answerOptions.toTypedArray()),
-          responseValueStringOptions(),
-          validationResult = NotValidated,
-          answersChangedCallback = { _, _, answers, _ -> selectedAnswers = answers },
-        )
+    val questionnaireItem =
+      QuestionnaireViewItem(
+        createAnswerOptions("Coding 1", "Coding 2", "Coding 3"),
+        responseValueStringOptions(),
+        validationResult = NotValidated,
+        answersChangedCallback = { _, _, answers, _ -> selectedAnswers = answers },
       )
 
     setContent { QuestionnaireDropDownView(questionnaireItem) }
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG).performClick()
-    // Test selection flow
     onNode(
         hasTestTag(DROP_DOWN_ANSWER_MENU_ITEM_TAG) and
           hasTextExactly("Coding 1") and
@@ -1047,28 +1042,20 @@ class DropDownViewFactoryTest {
 
     selectedAnswers!!.shouldHaveSize(1)
     selectedAnswers!!.first().value?.asString()?.value?.value.shouldBe("Coding 1")
+  }
 
-    selectedAnswers = null
-    // Test clearing flow
-    questionnaireItem =
+  @Test
+  fun shouldClearAnswerInAutoCompleteDropdown() = runComposeUiTest {
+    var selectedAnswers: List<QuestionnaireResponse.Item.Answer>? = null
+    val questionnaireItem =
       QuestionnaireViewItem(
-        createAnswerOptions(*answerOptions.toTypedArray()),
-        responseValueStringOptions()
-          .copy(
-            answer =
-              listOf(
-                QuestionnaireResponse.Item.Answer(
-                  value =
-                    QuestionnaireResponse.Item.Answer.Value.String(
-                      value = FhirR4String(value = "Coding 1")
-                    )
-                )
-              )
-          ),
+        createAnswerOptions("Coding 1", "Coding 2", "Coding 3"),
+        responseValueStringOptions("Coding 1"),
         validationResult = NotValidated,
         answersChangedCallback = { _, _, answers, _ -> selectedAnswers = answers },
       )
 
+    setContent { QuestionnaireDropDownView(questionnaireItem) }
     onNodeWithTag(DROP_DOWN_TEXT_FIELD_TAG)
       .assert(
         SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("Coding 1"))
