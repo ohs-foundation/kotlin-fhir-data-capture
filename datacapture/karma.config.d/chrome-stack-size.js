@@ -1,10 +1,9 @@
 ;(function (config) {
     // kotlin-fhirpath's generated sealed-interface dispatch (see MoreSealedInterfaces.kt) compiles
-    // to deeply nested JS that can exceed V8's default call-stack limit at runtime, surfacing as
-    // "RangeError: Maximum call stack size exceeded" during FHIRPath evaluation. That's swallowed by
-    // FhirPathService.evaluate()'s runCatching, so it looks like wrong/empty results downstream
-    // rather than a crash. Chrome's V8 stack size varies by build; raise it explicitly so evaluation
-    // isn't at the mercy of whatever headless Chrome happens to be installed.
+    // to deeply nested JS that can exceed V8's default call-stack limit during FHIRPath evaluation.
+    // The resulting "RangeError: Maximum call stack size exceeded" is swallowed by
+    // FhirPathService.evaluate()'s runCatching and surfaces as empty results rather than a crash.
+    // The limit is set explicitly because it varies between Chrome builds.
     config.set({
         customLaunchers: Object.assign({}, config.customLaunchers, {
             ChromeHeadlessBigStack: {

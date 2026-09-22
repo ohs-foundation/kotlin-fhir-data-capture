@@ -375,9 +375,9 @@ internal sealed class OptionSelectRow {
   /** "Add Another" other field button. Only used in multi-select when [OtherRow] is selected. */
   object OtherAddAnother : OptionSelectRow()
 
-  // `index` disambiguates `Option` rows instead of relying on the answer option's `toString()`,
-  // which on Kotlin/JS can collapse distinct FHIR element values to the same "[object Object]"
-  // string and cause LazyColumn key collisions.
+  // `Option` rows are keyed by index rather than by the answer option's value: on Kotlin/JS,
+  // string templating a FHIR element yields "[object Object]" for every option, which collides
+  // LazyColumn keys.
   fun key(index: Int) =
     when (this) {
       is Option -> "option_$index"

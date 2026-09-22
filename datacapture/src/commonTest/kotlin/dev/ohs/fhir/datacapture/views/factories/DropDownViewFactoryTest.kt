@@ -908,8 +908,8 @@ class DropDownViewFactoryTest {
           hasTextExactly("Coding 3") and
           hasAnyAncestor(isPopup())
       )
-      // The menu is scrollable and sizes itself to the available window height, so on a
-      // short viewport this option starts off-screen. Scroll it into view before asserting.
+      // The menu sizes itself to the available window height, so on a short viewport this option
+      // starts off-screen and has to be scrolled into view first.
       .performScrollTo()
       .assertIsDisplayed()
       .performClick()

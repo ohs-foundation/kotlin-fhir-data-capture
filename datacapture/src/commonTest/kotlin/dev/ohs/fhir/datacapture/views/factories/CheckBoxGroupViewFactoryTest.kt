@@ -262,10 +262,9 @@ class CheckBoxGroupViewFactoryTest {
       )
 
     setContent {
-      // Horizontal orientation uses a FlowRow whose options each carry Modifier.weight(1f).
-      // On a narrow viewport the options no longer fit on one line and FlowRow wraps them,
-      // making each option fill its line. Pin a wide viewport so the assertion below tests
-      // the side-by-side layout rather than the device's screen width.
+      // Horizontal orientation lays the options out in a FlowRow, each with Modifier.weight(1f).
+      // On a narrow viewport the row wraps and every option fills its own line, so a wide viewport
+      // is pinned to assert the side-by-side layout rather than the device's screen width.
       Box(Modifier.requiredWidth(600.dp)) {
         QuestionnaireCheckBoxGroup(
           QuestionnaireViewItem(

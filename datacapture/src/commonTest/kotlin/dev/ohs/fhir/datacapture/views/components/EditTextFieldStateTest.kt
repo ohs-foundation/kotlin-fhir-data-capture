@@ -29,13 +29,13 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 
 /**
- * Covers the debounce that [EditTextFieldState] applies to text input.
+ * Tests the debounce that [EditTextFieldState] applies to text input.
  *
- * These assertions live here rather than in the text input factory UI tests because
+ * The debounce is covered here rather than in the text input factory UI tests because
  * `runComposeUiTest`'s virtual clock does not resume a real `delay()` on non-Android targets
  * (https://github.com/JetBrains/compose-multiplatform/issues/4805). [EditTextFieldState] takes its
  * own [kotlinx.coroutines.CoroutineScope], so the debounce can be driven by
- * `kotlinx-coroutines-test`'s virtual time instead.
+ * `kotlinx-coroutines-test` virtual time.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditTextFieldStateTest {
@@ -100,10 +100,7 @@ class EditTextFieldStateTest {
     handled.shouldBeEmpty()
   }
 
-  /**
-   * The text input factory tests provide a zero debounce via `DataCaptureConfig`, so keep that
-   * configuration honest: every keystroke has to be handled.
-   */
+  /** The text input factory tests configure a zero debounce via `DataCaptureConfig`. */
   @Test
   fun shouldHandleEveryValueWhenTheDebounceIsZero() = runTest {
     val handled = mutableListOf<String>()
@@ -118,8 +115,8 @@ class EditTextFieldStateTest {
   }
 
   /**
-   * Builds the state under test and lets its `init` block start collecting, so that the first
-   * emission `EditTextFieldState` drops is the initial value rather than a value typed below.
+   * Creates the state under test and runs its `init` block, so the first emission it drops is the
+   * initial value rather than a value typed afterwards.
    */
   private fun TestScope.editTextFieldState(
     debounce: Duration,
@@ -141,8 +138,8 @@ class EditTextFieldStateTest {
       .also { runCurrent() }
 
   /**
-   * Mimics a keystroke. Outside of composition nothing applies the global snapshot for us, so
-   * `snapshotFlow` only sees the write once apply notifications are sent.
+   * Applies a text change. Outside composition the global snapshot is not applied automatically, so
+   * `snapshotFlow` observes the write only after apply notifications are sent.
    */
   private fun EditTextFieldState.type(text: String) {
     onInputTextChange(text)

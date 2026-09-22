@@ -134,23 +134,22 @@ jobs:
             **/build/test-results/
           retention-days: 14
 
-  # Android instrumented tests. androidDeviceTest dependsOn commonTest, so this runs the
-  # full common test suite against a real Android runtime rather than a JVM approximation.
-  # This is the only job that exercises the Android `actual` implementations
-  # (date/time formatting, number formatting, media handling).
+  # androidDeviceTest depends on commonTest, so the full common suite runs on an emulator.
+  # This is the only job that exercises the Android `actual` implementations (date/time
+  # formatting, number formatting, media handling).
   android-emulator:
     name: Android
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      # minSdk is 26; API 34 is the newest level with reliable google_apis x86_64 emulator images.
+      # minSdk is 26; API 34 is the newest level with reliable google_apis x86_64 images.
       API_LEVEL: 34
 
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
-      # The emulator needs hardware acceleration; GitHub's Linux runners support nested
+      # The emulator requires hardware acceleration. GitHub's Linux runners support nested
       # virtualisation but do not grant access to /dev/kvm by default.
       - name: Enable KVM
         run: |
@@ -181,8 +180,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Booting a cold AVD costs several minutes; caching the snapshot keeps that off the
-      # critical path for every run after the first on a given API level.
+      # A cold AVD boot costs several minutes; the cached snapshot avoids it on every run
+      # after the first for a given API level.
       - name: Cache AVD snapshot
         uses: actions/cache@v4
         id: avd-cache
@@ -215,19 +214,16 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          # Compose UI tests on an emulator intermittently hit Espresso/Compose
-          # synchronisation races ("isIdleNow() is returning true, but ...",
-          # "performMeasureAndLayout called during measure layout") that are unrelated to
-          # the assertions under test. Retry once so a flake does not fail the build; a
-          # genuine failure still fails both attempts.
-          # android-emulator-runner splits `script` on newlines and runs each line in
-          # its own `sh -c`, so the retry must fold into a single line.
+          # Compose UI tests on an emulator intermittently fail on Espresso/Compose
+          # synchronisation races unrelated to the assertions under test, so one retry is
+          # allowed; a genuine failure still fails both attempts. android-emulator-runner
+          # runs each line of `script` in its own shell, hence the single-line form.
           script: >-
             run_tests() { ./gradlew :datacapture:connectedAndroidDeviceTest --stacktrace
             --no-daemon --no-parallel --no-configuration-cache --build-cache
             -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8"
             -Dorg.gradle.workers.max=1 -Dkotlin.daemon.enabled=false; };
-            run_tests || { echo "::warning::Instrumented tests failed; retrying once to rule out emulator flake."; run_tests; }
+            run_tests || { echo "::warning::Instrumented tests failed; retrying once."; run_tests; }
 
       - name: Upload test reports
         if: always()

@@ -55,10 +55,9 @@ class IntegerTextInputFactoryTest {
 
   @Composable
   fun QuestionnaireEditTextIntegerView(questionnaireViewItem: QuestionnaireViewItem) {
-    // The debounce relies on a real delay(), which runComposeUiTest's virtual clock does
-    // not resume on non-Android targets
-    // (https://github.com/JetBrains/compose-multiplatform/issues/4805). Debounce
-    // behaviour itself is covered by EditTextFieldStateTest.
+    // The debounce uses a real delay(), which runComposeUiTest's virtual clock does not resume on
+    // non-Android targets (https://github.com/JetBrains/compose-multiplatform/issues/4805).
+    // EditTextFieldStateTest covers the debounce itself.
     CompositionLocalProvider(
       LocalDataCaptureConfig provides DataCaptureConfig(textInputDebounce = Duration.ZERO)
     ) {

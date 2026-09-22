@@ -52,11 +52,11 @@ data class DataCaptureConfig(
   val questionnaireItemView: QuestionnaireItemViewHolderFactoryMatchersProviderFactory? = null,
 
   /**
-   * How long text input is allowed to settle before it is handed to the answer handler. Keystrokes
-   * arriving within this window replace the pending value instead of triggering separate updates,
-   * which keeps validation and expression evaluation off the typing path.
+   * How long text input must settle before it is passed to the answer handler. Input arriving
+   * within this window replaces the pending value instead of triggering a separate update, which
+   * keeps validation and expression evaluation off the typing path.
    *
-   * Set this to [Duration.ZERO] to handle every keystroke immediately.
+   * Set to [Duration.ZERO] to handle every change immediately.
    */
   val textInputDebounce: Duration = 500.milliseconds,
 )
