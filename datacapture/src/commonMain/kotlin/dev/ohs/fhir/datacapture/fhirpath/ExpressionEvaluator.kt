@@ -496,6 +496,13 @@ internal class ExpressionEvaluator(
  * item, but kotlin-fhirpath resolves `%context` to the evaluation base, which here is the
  * QuestionnaireResponse. The underscore keeps it clear of author-declared variables, whose names
  * are FHIR `id`s.
+ *
+ * TODO(https://github.com/ohs-foundation/kotlin-fhirpath/issues/145): Binding the item here and
+ *   rewriting `%context` in [fhirPathFor] is a workaround. Evaluating with the item as the base
+ *   would make it `%context` by definition, but kotlin-fhirpath also resolves `%resource` to the
+ *   base, which must stay the QuestionnaireResponse. Once `%resource` can be set separately,
+ *   evaluate item expressions with the item as the base and the QuestionnaireResponse as the
+ *   resource, then remove this variable and [fhirPathFor].
  */
 private const val CONTEXT_VARIABLE = "_context"
 
