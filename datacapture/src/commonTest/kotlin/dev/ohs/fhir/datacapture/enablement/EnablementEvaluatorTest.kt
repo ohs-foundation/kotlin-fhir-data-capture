@@ -15,6 +15,7 @@
  */
 package dev.ohs.fhir.datacapture.enablement
 
+import dev.ohs.fhir.datacapture.extensions.EXTENSION_ENABLE_WHEN_EXPRESSION_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Boolean
@@ -24,6 +25,9 @@ import dev.ohs.fhir.model.r4.Date
 import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
+import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.ExtensibleEnumeration
+import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -348,6 +352,76 @@ class EnablementEvaluatorTest {
     assertTrue(
       EnablementEvaluator(questionnaire, questionnaireResponse)
         .evaluate(questionnaireItem, questionnaireResponse.item[1])
+    )
+  }
+
+  @Test
+  fun evaluate_ShouldResolveDelimitedContextToTheCurrentItem() = runTest {
+    assertEnabledByExpression(
+      String(
+        value = "%resource.repeat(item).where(linkId='1').answer.value.code = %'context'.linkId"
+      )
+    )
+  }
+
+  @Test
+  fun evaluate_ShouldLeaveContextInsideStringLiteralsUnchanged() = runTest {
+    assertEnabledByExpression(String(value = "'%context' = '%' & 'context'"))
+  }
+
+  private suspend fun assertEnabledByExpression(expression: String) {
+    val questionnaire =
+      Questionnaire(
+        status = Enumeration(value = PublicationStatus.Active),
+        item =
+          listOf(
+            Questionnaire.Item(
+              linkId = String(value = "1"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Choice),
+            ),
+            Questionnaire.Item(
+              linkId = String(value = "female"),
+              type = Enumeration(value = Questionnaire.QuestionnaireItemType.Boolean),
+              extension =
+                listOf(
+                  Extension(
+                    url = EXTENSION_ENABLE_WHEN_EXPRESSION_URL,
+                    value =
+                      Extension.Value.Expression(
+                        Expression(
+                          language =
+                            ExtensibleEnumeration.of(Expression.ExpressionLanguage.Text_Fhirpath),
+                          expression = expression,
+                        )
+                      ),
+                  )
+                ),
+            ),
+          ),
+      )
+    val questionnaireResponse =
+      QuestionnaireResponse(
+        status = Enumeration(value = QuestionnaireResponse.QuestionnaireResponseStatus.Completed),
+        item =
+          listOf(
+            QuestionnaireResponse.Item(
+              linkId = String(value = "1"),
+              answer =
+                listOf(
+                  QuestionnaireResponse.Item.Answer(
+                    value =
+                      QuestionnaireResponse.Item.Answer.Value.Coding(
+                        Coding(code = Code(value = "female"))
+                      )
+                  )
+                ),
+            ),
+            QuestionnaireResponse.Item(linkId = String(value = "female")),
+          ),
+      )
+    assertTrue(
+      EnablementEvaluator(questionnaire, questionnaireResponse)
+        .evaluate(questionnaire.item[1], questionnaireResponse.item[1])
     )
   }
 
