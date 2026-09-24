@@ -648,16 +648,27 @@ internal val Questionnaire.Item.expressionBasedExtensions
  * (e.g. if [item] has an expression `%resource.item.where(linkId='this-question')` where
  * `this-question` is the link ID of the current questionnaire item).
  */
-internal fun Questionnaire.Item.isReferencedBy(item: Questionnaire.Item) =
-  item.expressionBasedExtensions.any {
-    it.value
-      ?.asExpression()
-      ?.value
-      ?.expression
-      ?.value
-      ?.replace(" ", "")
-      ?.contains(Regex(".*linkId='${this.linkId}'.*")) == true
+private val LINK_ID_REFERENCE_REGEX = Regex("linkId='([^']*)'")
+
+private fun List<Extension>.expressionReferencedLinkIds(): Set<String> =
+  flatMapTo(mutableSetOf()) { extension ->
+    LINK_ID_REFERENCE_REGEX.findAll(
+        extension.value
+          ?.asExpression()
+          ?.value
+          ?.expression
+          ?.value
+          .orEmpty()
+          .replace(" ", ""),
+      )
+      .map { it.groupValues[1] }
   }
+
+internal val Questionnaire.Item.expressionReferencedLinkIds: Set<String>
+  get() = expressionBasedExtensions.expressionReferencedLinkIds()
+
+internal fun Questionnaire.Item.isReferencedBy(item: Questionnaire.Item) =
+  item.expressionReferencedLinkIds.contains(this.linkId.value)
 
 internal val Questionnaire.Item.answerExpression: Expression?
   get() =
