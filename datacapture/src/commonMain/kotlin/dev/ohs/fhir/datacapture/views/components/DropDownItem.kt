@@ -190,10 +190,6 @@ internal fun AutoCompleteDropDownItem(
     }
 
   LaunchedEffect(selectedDropDownAnswerOption) {
-    if (selectedDropDownAnswerOption != null) {
-      focusManager.clearFocus()
-    }
-
     if (selectedDropDownAnswerOption != selectedOption) {
       onDropDownAnswerOptionSelected(selectedDropDownAnswerOption)
     }
@@ -256,6 +252,9 @@ internal fun AutoCompleteDropDownItem(
           DropDownAnswerMenuItem(enabled, option) {
             selectedDropDownAnswerOption = option
             expanded = false
+            // Dismisses the keyboard the editable anchor opened. Clearing focus touches the
+            // platform focus owner, so it has to run from this event and never from composition.
+            focusManager.clearFocus()
           }
         }
       }
