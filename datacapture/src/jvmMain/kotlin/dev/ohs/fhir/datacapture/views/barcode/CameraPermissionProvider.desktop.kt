@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.barcode
+package dev.ohs.fhir.datacapture.views.barcode
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
-internal interface CameraPermissionProvider {
-  suspend fun providePermission()
+@Composable
+actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember {
+  object : CameraPermissionProvider {
+    override suspend fun providePermission() {}
 
-  fun openSettings()
+    override fun openSettings() {}
+  }
 }
-
-@Composable internal expect fun rememberCameraPermissionProvider(): CameraPermissionProvider
