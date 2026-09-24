@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.locationwidget
+package dev.ohs.fhir.datacapture.views.locationwidget
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import dev.jordond.compass.geolocation.Geolocator
-import dev.jordond.compass.geolocation.NotSupportedLocator
 
-@Composable
-internal actual fun rememberGeolocator(): Geolocator = remember { Geolocator(NotSupportedLocator) }
+@Composable expect fun rememberGeolocator(): Geolocator

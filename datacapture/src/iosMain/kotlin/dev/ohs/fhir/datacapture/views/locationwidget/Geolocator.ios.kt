@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.locationwidget
+package dev.ohs.fhir.datacapture.views.locationwidget
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import dev.jordond.compass.geolocation.Geolocator
+import dev.jordond.compass.geolocation.mobile
 
-internal data class LocationData(
-  val latitude: Double,
-  val longitude: Double,
-  val altitude: Double? = null,
-)
-
-internal object LocationEventBus {
-  private val _locationUpdates = MutableSharedFlow<LocationData>(extraBufferCapacity = 1)
-  val locationUpdates = _locationUpdates.asSharedFlow()
-
-  fun emit(locationData: LocationData) {
-    _locationUpdates.tryEmit(locationData)
-  }
-}
+@Composable actual fun rememberGeolocator(): Geolocator = remember { Geolocator.mobile() }

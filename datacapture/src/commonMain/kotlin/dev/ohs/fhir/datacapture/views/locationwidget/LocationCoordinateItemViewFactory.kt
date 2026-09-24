@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.locationwidget
+package dev.ohs.fhir.datacapture.views.locationwidget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,8 +38,8 @@ import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
-import kotlin_fhir_data_capture.catalog.generated.resources.Res
-import kotlin_fhir_data_capture.catalog.generated.resources.required_text_and_new_line
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
 import org.jetbrains.compose.resources.stringResource
 
 internal const val PRIMARY_GPS_COORDINATE_EXTENSION_URL =

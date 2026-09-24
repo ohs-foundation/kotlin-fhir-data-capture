@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.locationwidget
+package dev.ohs.fhir.datacapture.views.locationwidget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,9 +45,9 @@ import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.factories.QuestionnaireItemViewFactory
-import kotlin_fhir_data_capture.catalog.generated.resources.Res
-import kotlin_fhir_data_capture.catalog.generated.resources.gm_location_on_24
-import kotlin_fhir_data_capture.catalog.generated.resources.record_gps_location
+import kotlin_fhir_data_capture.datacapture.generated.resources.Res
+import kotlin_fhir_data_capture.datacapture.generated.resources.gm_location_on_24
+import kotlin_fhir_data_capture.datacapture.generated.resources.record_gps_location
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
