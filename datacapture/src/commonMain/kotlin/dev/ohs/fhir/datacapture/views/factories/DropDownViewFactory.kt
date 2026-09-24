@@ -38,14 +38,13 @@ import dev.ohs.fhir.datacapture.views.components.getRequiredOrOptionalText
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.hyphen
 import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 internal object DropDownViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val hyphen = stringResource(Res.string.hyphen)
     val isQuestionnaireItemReadOnly =
       remember(questionnaireViewItem.questionnaireItem) {

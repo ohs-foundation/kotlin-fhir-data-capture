@@ -43,7 +43,6 @@ import dev.ohs.fhir.datacapture.views.components.Header
 import dev.ohs.fhir.datacapture.views.components.MediaItem
 import dev.ohs.fhir.datacapture.views.isAnswerOptionSelected
 import dev.ohs.fhir.model.r4.Questionnaire
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal const val RADIO_OPTION_TAG = "radio_group_option"
@@ -51,7 +50,7 @@ internal const val RADIO_OPTION_TAG = "radio_group_option"
 internal object RadioGroupViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val readOnly =
       remember(questionnaireViewItem) {
         questionnaireViewItem.questionnaireItem.readOnly?.value ?: false

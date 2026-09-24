@@ -84,7 +84,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.upload_file
 import kotlin_fhir_data_capture.datacapture.generated.resources.upload_photo
 import kotlin_fhir_data_capture.datacapture.generated.resources.upload_video
 import kotlin_fhir_data_capture.datacapture.generated.resources.uploaded
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -101,7 +100,7 @@ internal object AttachmentViewFactory : QuestionnaireItemViewFactory {
 
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val validationResult =
       remember(questionnaireViewItem.validationResult) { questionnaireViewItem.validationResult }
     var errorMessage by

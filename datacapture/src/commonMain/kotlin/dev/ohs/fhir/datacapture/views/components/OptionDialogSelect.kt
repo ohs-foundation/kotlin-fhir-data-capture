@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import dev.ohs.fhir.datacapture.extensions.displayString
-import dev.ohs.fhir.datacapture.extensions.elementValue
 import dev.ohs.fhir.datacapture.extensions.itemAnswerOptionImage
 import dev.ohs.fhir.datacapture.extensions.optionExclusive
 import dev.ohs.fhir.datacapture.extensions.toAnnotatedString
@@ -139,7 +138,7 @@ internal fun OptionDialogSelect(
         ) {
           itemsIndexed(
             choiceOptions,
-            key = { _, row -> row.key() },
+            key = { index, row -> row.key(index) },
             contentType = { _, row -> row::class.simpleName },
           ) { index, optionSelectRow ->
             val label = optionSelectRow.option.displayString.toAnnotatedString()
@@ -229,7 +228,7 @@ internal fun OptionDialogSelect(
           if (otherOptionRowSelected) {
             itemsIndexed(
               otherOptionEditTexts,
-              key = { _, option -> option.key() },
+              key = { index, option -> option.key(index) },
               contentType = { _, _ -> OptionSelectRow.OtherEditText },
             ) { index, option ->
               Row(
@@ -376,9 +375,12 @@ internal sealed class OptionSelectRow {
   /** "Add Another" other field button. Only used in multi-select when [OtherRow] is selected. */
   object OtherAddAnother : OptionSelectRow()
 
-  fun key() =
+  // `Option` rows are keyed by index rather than by the answer option's value: on Kotlin/JS,
+  // string templating a FHIR element yields "[object Object]" for every option, which collides
+  // LazyColumn keys.
+  fun key(index: Int) =
     when (this) {
-      is Option -> "option_${option.item.elementValue}"
+      is Option -> "option_$index"
       is OtherRow -> "other_row"
       is OtherEditText -> "other_edit_$id"
       OtherAddAnother -> "add_another"

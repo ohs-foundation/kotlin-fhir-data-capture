@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.hasCode
 import dev.ohs.fhir.datacapture.extensions.hasDisplay
 import dev.ohs.fhir.datacapture.extensions.itemMedia
@@ -55,13 +56,12 @@ import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal object QuantityViewFactory : QuestionnaireItemViewFactory {
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val text = remember(questionnaireViewItem) { uiInputText(questionnaireViewItem) }
     val isReadOnly =
       remember(questionnaireViewItem) {
@@ -95,12 +95,14 @@ internal object QuantityViewFactory : QuestionnaireItemViewFactory {
       coroutineScope.launch { handleInput(questionnaireViewItem, quantity) }
     }
 
+    val textInputDebounce = LocalDataCaptureConfig.current.textInputDebounce
     val composeViewQuestionnaireState =
-      remember(questionnaireViewItem) {
+      remember(questionnaireViewItem, textInputDebounce) {
         EditTextFieldState(
           initialInputText = text,
           handleTextInputChange = { quantity = UiQuantity(it, quantity.unitDropDown) },
           coroutineScope = coroutineScope,
+          debounce = textInputDebounce,
           hint = questionnaireViewItem.enabledDisplayItems.localizedFlyoverAnnotatedString,
           helperText = validationUiMessage.takeIf { !it.isNullOrBlank() } ?: requiredOptionalText,
           isError = !validationUiMessage.isNullOrBlank(),

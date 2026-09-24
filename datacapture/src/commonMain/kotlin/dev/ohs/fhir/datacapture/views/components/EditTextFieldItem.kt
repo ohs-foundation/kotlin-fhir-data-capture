@@ -41,6 +41,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
+import kotlin.time.Duration
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.error_filled_24dp
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal const val EDIT_TEXT_FIELD_TEST_TAG = "text_input_edit_text"
 internal const val UNIT_TEXT_TEST_TAG = "unit_text_view"
-internal const val HANDLE_INPUT_DEBOUNCE_TIME = 500L
 
 @Composable
 internal fun EditTextFieldItem(modifier: Modifier, textFieldState: EditTextFieldState) {
@@ -175,6 +175,7 @@ internal data class EditTextFieldState(
   private val initialInputText: String,
   private val handleTextInputChange: suspend (String) -> Unit,
   private val coroutineScope: CoroutineScope,
+  private val debounce: Duration,
 ) {
   var inputText by mutableStateOf(initialInputText)
     private set
@@ -183,7 +184,7 @@ internal data class EditTextFieldState(
     coroutineScope.launch {
       snapshotFlow { inputText }
         .drop(1) // Drops the initial value emitted by snapshotFlow
-        .debounce(HANDLE_INPUT_DEBOUNCE_TIME)
+        .debounce(debounce)
         .collectLatest { handleTextInputChange(it) }
     }
   }

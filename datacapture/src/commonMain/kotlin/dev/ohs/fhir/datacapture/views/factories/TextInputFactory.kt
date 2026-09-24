@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.itemMedia
 import dev.ohs.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.unit
@@ -57,12 +58,14 @@ class TextInputFactory(
     val coroutineScope = rememberCoroutineScope()
     val requiredOptionalText = getRequiredOrOptionalText(questionnaireViewItem)
     val validationMessage = getValidationErrorMessage(questionnaireViewItem)
+    val textInputDebounce = LocalDataCaptureConfig.current.textInputDebounce
     val composeViewQuestionnaireState =
-      remember(questionnaireViewItem) {
+      remember(questionnaireViewItem, textInputDebounce) {
         EditTextFieldState(
           initialInputText = text,
           handleTextInputChange = { handleInput(it, questionnaireViewItem) },
           coroutineScope = coroutineScope,
+          debounce = textInputDebounce,
           hint = questionnaireViewItem.enabledDisplayItems.localizedFlyoverAnnotatedString,
           helperText = validationMessage.takeIf { !it.isNullOrBlank() } ?: requiredOptionalText,
           isError = !validationMessage.isNullOrBlank(),

@@ -15,7 +15,10 @@
  */
 package dev.ohs.fhir.datacapture.views.factories
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
@@ -29,6 +32,7 @@ import androidx.compose.ui.test.isOn
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.extensions.ChoiceOrientationTypes
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_CHOICE_ORIENTATION_URL
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_ANSWER_MEDIA
@@ -258,14 +262,19 @@ class CheckBoxGroupViewFactoryTest {
       )
 
     setContent {
-      QuestionnaireCheckBoxGroup(
-        QuestionnaireViewItem(
-          questionnaire,
-          QuestionnaireResponse.Item(linkId = FhirR4String(value = "checkbox-group-item")),
-          validationResult = NotValidated,
-          answersChangedCallback = { _, _, _, _ -> },
+      // Horizontal orientation lays the options out in a FlowRow, each with Modifier.weight(1f).
+      // On a narrow viewport the row wraps and every option fills its own line, so a wide viewport
+      // is pinned to assert the side-by-side layout rather than the device's screen width.
+      Box(Modifier.requiredWidth(600.dp)) {
+        QuestionnaireCheckBoxGroup(
+          QuestionnaireViewItem(
+            questionnaire,
+            QuestionnaireResponse.Item(linkId = FhirR4String(value = "checkbox-group-item")),
+            validationResult = NotValidated,
+            answersChangedCallback = { _, _, _, _ -> },
+          )
         )
-      )
+      }
     }
 
     onAllNodes(hasTestTag(CHECKBOX_OPTION_TAG)).assertCountEquals(2)
