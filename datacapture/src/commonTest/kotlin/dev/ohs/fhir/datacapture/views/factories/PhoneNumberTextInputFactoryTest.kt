@@ -16,6 +16,7 @@
 package dev.ohs.fhir.datacapture.views.factories
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,6 +29,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import dev.ohs.fhir.datacapture.DataCaptureConfig
+import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
@@ -50,12 +53,21 @@ import dev.ohs.fhir.model.r4.Uri
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
+import kotlin.time.Duration
 
 @OptIn(ExperimentalTestApi::class)
 class PhoneNumberTextInputFactoryTest {
+
   @Composable
   fun QuestionnaireEditTextPhoneNumberView(questionnaireViewItem: QuestionnaireViewItem) {
-    QuestionnaireTheme { PhoneNumberTextInputFactory.Content(questionnaireViewItem) }
+    // The debounce uses a real delay(), which runComposeUiTest's virtual clock does not resume on
+    // non-Android targets (https://github.com/JetBrains/compose-multiplatform/issues/4805).
+    // EditTextFieldStateTest covers the debounce itself.
+    CompositionLocalProvider(
+      LocalDataCaptureConfig provides DataCaptureConfig(textInputDebounce = Duration.ZERO)
+    ) {
+      QuestionnaireTheme { PhoneNumberTextInputFactory.Content(questionnaireViewItem) }
+    }
   }
 
   @Test

@@ -1079,7 +1079,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
           )
           .apply {
             if (parentIdPrefix.isNotEmpty()) {
-              id = "${parentIdPrefix}${questionnaireItem.linkId}"
+              id = "${parentIdPrefix}${questionnaireItem.linkId.value}"
             }
           }
       add(question)
@@ -1120,20 +1120,20 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
             if (!questionnaireItem.isRepeatedGroup) {
               // Case 2: Questions nested under a question (not a repeated group)
               if (parentIdPrefix.isEmpty()) {
-                "${index}_${question.item.questionnaireItem.linkId}_"
+                "${index}_${question.item.questionnaireItem.linkId.value}_"
               } else {
-                "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId}_"
+                "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId.value}_"
               }
             } else {
               // Case 3: Build hierarchical ID prefix for nested repeated groups
-              "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId}_"
+              "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId.value}_"
             }
 
           if (questionnaireItem.isRepeatedGroup) {
             // Case 3
             add(
               QuestionnaireAdapterItem.RepeatedGroupHeader(
-                id = "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId}",
+                id = "${parentIdPrefix}${index}_${question.item.questionnaireItem.linkId.value}",
                 index = index,
                 onDeleteClicked = { viewModelScope.launch { question.item.removeAnswerAt(index) } },
                 responses = nestedResponseItemList,
@@ -1155,7 +1155,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       if (questionnaireItem.isRepeatedGroup) {
         add(
           QuestionnaireAdapterItem.RepeatedGroupAddButton(
-            id = "${parentIdPrefix}${question.item.questionnaireItem.linkId}_add_btn",
+            id = "${parentIdPrefix}${question.item.questionnaireItem.linkId.value}_add_btn",
             item = question.item,
           )
         )

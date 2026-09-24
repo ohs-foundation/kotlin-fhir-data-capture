@@ -1,1 +1,6 @@
 /build
+
+# Generated at Karma startup by karma.config.d/compose-resources-testing.js and
+# karma.config.d/skiko-js-reexport.js
+karma.config.d/compose-resources-testing-setup.js
+karma.config.d/skiko-await-setup.mjs

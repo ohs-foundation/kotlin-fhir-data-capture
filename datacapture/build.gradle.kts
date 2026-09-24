@@ -43,6 +43,10 @@ kotlin {
     minSdk = androidMinSdk.toInt()
     withJava()
     withHostTestBuilder {}
+      .configure {
+        isIncludeAndroidResources = true
+        isReturnDefaultValues = true
+      }
     withDeviceTestBuilder { sourceSetTreeName = "test" }
       .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
 

@@ -57,7 +57,6 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.required_text_and_new_line
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,7 +66,7 @@ internal object DialogSelectViewFactory : QuestionnaireItemViewFactory {
   @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   override fun Content(questionnaireViewItem: QuestionnaireViewItem) {
-    val coroutineScope = rememberCoroutineScope { Dispatchers.Main }
+    val coroutineScope = rememberCoroutineScope()
     val readOnly =
       remember(questionnaireViewItem) {
         questionnaireViewItem.questionnaireItem.readOnly?.value ?: false
