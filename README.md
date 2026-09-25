@@ -85,9 +85,7 @@ The `catalog` module is a multiplatform demo application. To run the iOS variant
 
 ### Adding the library dependency to your project
 
-To use the Kotlin FHIR Data Capture library in your project, you need to add the library dependency
-to your project. To do that, first make sure to include the `mavenCentral()`[^1] repository in the
-`build.gradle.kts` file in your project root.
+Add the `mavenCentral()`[^1] repository to the `build.gradle.kts` file in your project root.
 
 [^1]: Early versions of this library (up to `1.0.0-beta02`) were published under the group ID
 `com.google.android.fhir` and artifact ID `data-capture` on
@@ -101,7 +99,7 @@ repositories {
 }
 ```
 
-Next, follow the instructions for your specific project type.
+Follow the instructions for your project type below.
 
 #### Kotlin Multiplatform Projects
 
@@ -161,6 +159,73 @@ Questionnaire(
     },
 )
 ```
+
+### Data Extraction
+
+**Extraction** converts a completed `QuestionnaireResponse` into other FHIR resources — for
+example, a `Patient` from a registration questionnaire, or an `Observation` from a clinical
+assessment. Extraction is defined by the [HL7 Structured Data Capture (SDC) Implementation
+Guide](https://build.fhir.org/ig/HL7/sdc/extraction.html).
+
+The `datacapture` module implements the SDC **template-based extraction** model:
+
+1. One or more template resources are declared on the `Questionnaire`, either contained within it
+   or supplied as a standalone template `Bundle`. See [Template resources](#template-resources).
+2. Each template resource is annotated with `templateExtractContext` and `templateExtractValue`
+   extensions that use FHIRPath expressions to bind fields in the template to data in the
+   `QuestionnaireResponse`.
+3. `TemplateExtractionEngine.extract()` evaluates those expressions against a given
+   `QuestionnaireResponse` and returns a `Bundle` containing the resulting resources.
+
+#### Template extensions
+
+- **`sdc-questionnaire-templateExtractContext`**: sets the evaluation context for the subtree of
+  the template it is attached to. The FHIRPath expression is evaluated against the current
+  context (the `QuestionnaireResponse` at the root) and re-evaluated relative to the enclosing
+  context for nested extensions. An expression that returns multiple results clones the subtree
+  once per result — this is how repeating answers produce repeated elements or resources.
+- **`sdc-questionnaire-templateExtractValue`**: replaces the primitive field it is attached to with
+  the result of the FHIRPath expression, evaluated against the current context.
+
+**No-result behavior**: if a `templateExtractContext` or `templateExtractValue` expression
+evaluates to zero results, the corresponding branch or property is omitted from the extracted
+resource. It is not set to an empty or null value. This is the mechanism for conditionally
+excluding fields and resources based on what was answered.
+
+#### Basic usage
+
+```kotlin
+val bundle: Bundle =
+  TemplateExtractionEngine.extract(
+    questionnaire = myQuestionnaire,
+    questionnaireResponse = myQuestionnaireResponse,
+  )
+```
+
+- `extract()` is a synchronous, non-suspending function.
+- The returned `Bundle` contains one entry per extracted resource (e.g. `Patient`, `Observation`).
+  Its `type` is `transaction` unless the referenced template `Bundle` specifies a different type.
+- `extract()` does not persist the returned `Bundle`. Submitting it to a FHIR server, or otherwise
+  storing it, is the caller's responsibility.
+- `extract()` throws `IllegalArgumentException` if the `Questionnaire` declares no template
+  extraction, if a declared template reference cannot be resolved to a contained resource, or if
+  `questionnaireResponse.questionnaire` does not match `questionnaire.url`. It throws
+  `DataExtractionException` if expression evaluation fails after those checks pass.
+
+#### Template resources
+
+A template referenced by a `templateExtractContext` / `templateExtractValue` extension is one of:
+
+- A resource **contained** within the `Questionnaire`, referenced via the
+  `sdc-questionnaire-templateExtract` extension.
+- A standalone **template `Bundle`**, referenced via the `sdc-questionnaire-templateExtractBundle`
+  extension.
+
+#### Learn more
+
+See the [SDC Form Data Extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html) spec page
+for the full extraction model, including repeating groups, conditional extraction, and cross-resource
+references via `allocateId`.
 
 See [`QuestionnaireConfig`](datacapture/src/commonMain/kotlin/dev/ohs/fhir/datacapture/QuestionnaireComposable.kt)
 for all display options (review page, read-only mode, required and optional labels, long-scroll
