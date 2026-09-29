@@ -19,12 +19,16 @@ import androidx.lifecycle.ViewModel
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlin_fhir_data_capture.catalog.generated.resources.Res
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 class QuestionnaireViewModel : ViewModel() {
+  // FHIR field encoding and null handling are done by the generated serializers; only the layout
+  // is configured here so the submitted response is readable.
+  @OptIn(ExperimentalSerializationApi::class)
   private val json = Json {
-    explicitNulls = false
-    encodeDefaults = false
+    prettyPrint = true
+    prettyPrintIndent = "  "
   }
 
   fun getQuestionnaireResponseJson(response: QuestionnaireResponse): String =

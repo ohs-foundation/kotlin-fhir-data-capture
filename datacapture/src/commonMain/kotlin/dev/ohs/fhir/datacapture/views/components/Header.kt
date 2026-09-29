@@ -15,6 +15,7 @@
  */
 package dev.ohs.fhir.datacapture.views.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -35,8 +36,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.extensions.StyleUrl
@@ -184,18 +187,20 @@ internal fun PrefixQuestionTitle(
 ) {
   Row(modifier = Modifier.fillMaxWidth()) {
     if (!prefixLocalizedText.isNullOrBlank()) {
-      Text(
+      CustomStyledText(
         prefixLocalizedText,
-        style = QuestionnaireTheme.textStyles.questionText,
+        defaultStyle = QuestionnaireTheme.textStyles.questionText,
+        customStyleName = readCustomStyleName(StyleUrl.PREFIX_TEXT_VIEW),
         modifier = Modifier.testTag(PREFIX_HEADER_TAG),
       )
       Spacer(modifier = Modifier.width(5.dp))
     }
 
-    Text(
+    CustomStyledText(
       questionLocalizedText,
-      style = QuestionnaireTheme.textStyles.questionText,
-      modifier = Modifier.testTag(QUESTION_HEADER_TAG),
+      defaultStyle = QuestionnaireTheme.textStyles.questionText,
+      customStyleName = readCustomStyleName(StyleUrl.QUESTION_TEXT_VIEW),
+      modifier = Modifier.weight(1f).testTag(QUESTION_HEADER_TAG),
     )
   }
 }
@@ -216,9 +221,10 @@ internal fun Help(
     itemVerticalAlignment = Alignment.CenterVertically,
   ) {
     hintLocalizedText?.let {
-      Text(
+      CustomStyledText(
         it,
-        style = QuestionnaireTheme.textStyles.subtitleText,
+        defaultStyle = QuestionnaireTheme.textStyles.subtitleText,
+        customStyleName = readCustomStyleName(StyleUrl.SUBTITLE_TEXT_VIEW),
         modifier = Modifier.testTag(HINT_HEADER_TAG),
       )
     }
@@ -267,4 +273,29 @@ internal fun Help(
       }
     }
   }
+}
+
+/**
+ * Header text that honours the custom style the questionnaire item requests through the
+ * android-style extension (see [dev.ohs.fhir.datacapture.theme.QuestionnaireCustomStyle]). Falls
+ * back to [defaultStyle] when the item names no style or the name is not registered in the theme.
+ */
+@Composable
+private fun CustomStyledText(
+  text: AnnotatedString,
+  defaultStyle: TextStyle,
+  customStyleName: String?,
+  modifier: Modifier = Modifier,
+) {
+  val customStyle = customStyleName?.let { QuestionnaireTheme.customStyles[it] }
+  Text(
+    text,
+    style = customStyle?.textStyle?.let { defaultStyle.merge(it) } ?: defaultStyle,
+    modifier =
+      if (customStyle != null && customStyle.background.isSpecified) {
+        modifier.background(customStyle.background)
+      } else {
+        modifier
+      },
+  )
 }

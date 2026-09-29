@@ -145,6 +145,70 @@
           ]
         }
       ]
+    },
+    {
+      "linkId": "10",
+      "text": "Success: all vital signs are within the normal range",
+      "type": "display",
+      "extension": [
+        {
+          "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+          "extension": [
+            {
+              "url": "question_text_view",
+              "valueString": "SuccessText"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "11",
+      "text": "Warning: blood pressure is slightly elevated",
+      "type": "display",
+      "extension": [
+        {
+          "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+          "extension": [
+            {
+              "url": "question_text_view",
+              "valueString": "WarningText"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "12",
+      "text": "Error: temperature is above the critical threshold",
+      "type": "display",
+      "extension": [
+        {
+          "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+          "extension": [
+            {
+              "url": "question_text_view",
+              "valueString": "ErrorText"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "13",
+      "text": "Info: measurements were taken at rest",
+      "type": "display",
+      "extension": [
+        {
+          "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+          "extension": [
+            {
+              "url": "question_text_view",
+              "valueString": "InfoText"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

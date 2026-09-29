@@ -71,7 +71,7 @@
     <string name="toolbar_text">Structured data capture \n Catalog</string>
     <string
         name="questionnaire_response_title"
-    >Default sample questionnaire</string>
+    >Questionnaire response</string>
     <string name="close">Close</string>
     <string name="questionnaire_submitted">Questionnaire submitted</string>
     <string

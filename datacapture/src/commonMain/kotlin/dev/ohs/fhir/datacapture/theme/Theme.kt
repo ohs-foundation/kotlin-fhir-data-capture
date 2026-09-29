@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -204,6 +205,31 @@ data class QuestionnaireAlphas(
   val reviewModeDivider: Float = 0.5f,
 )
 
+/**
+ * A named style that a questionnaire item can opt into through the
+ * `https://github.com/google/android-fhir/tree/master/datacapture/android-style` extension, e.g.
+ *
+ * ```
+ * {
+ *   "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+ *   "extension": [{ "url": "question_text_view", "valueString": "CustomStyle_1" }]
+ * }
+ * ```
+ *
+ * Register styles by name through [QuestionnaireTheme]'s `customStyles`. This is the Compose
+ * Multiplatform counterpart of android-fhir's Android XML styles (`questionnaire_textAppearance`
+ * and `questionnaire_background`). Names that are not registered fall back to the default style.
+ *
+ * @param textStyle merged over the default style of the styled text, so unset properties keep their
+ *   default values.
+ * @param background background color drawn behind the styled text.
+ */
+@Immutable
+data class QuestionnaireCustomStyle(
+  val textStyle: TextStyle? = null,
+  val background: Color = Color.Unspecified,
+)
+
 /** Local composition providers for Questionnaire theme. */
 val LocalQuestionnaireDimensions = staticCompositionLocalOf { QuestionnaireDimensions() }
 val LocalQuestionnaireShapes = staticCompositionLocalOf { QuestionnaireShapes() }
@@ -211,6 +237,9 @@ val LocalQuestionnaireTextStyles = staticCompositionLocalOf {
   QuestionnaireTextStyles(Typography())
 }
 val LocalQuestionnaireAlphas = staticCompositionLocalOf { QuestionnaireAlphas() }
+val LocalQuestionnaireCustomStyles = staticCompositionLocalOf {
+  emptyMap<String, QuestionnaireCustomStyle>()
+}
 
 /**
  * The default theme applied to the questionnaire rendered using Compose.
@@ -233,6 +262,8 @@ val LocalQuestionnaireAlphas = staticCompositionLocalOf { QuestionnaireAlphas() 
  * @param textStyles Custom textStyles for the questionnaire.
  * @param shapes Custom shapes for the questionnaire. Defaults to QuestionnaireShapes().
  * @param alphas Custom alpha values for the questionnaire. Defaults to QuestionnaireAlphas().
+ * @param customStyles Named styles that questionnaire items can reference through the android-style
+ *   extension. See [QuestionnaireCustomStyle].
  * @param content The composable content to be themed.
  */
 @Composable
@@ -249,6 +280,7 @@ fun QuestionnaireTheme(
   dimensions: QuestionnaireDimensions = QuestionnaireDimensions(),
   shapes: QuestionnaireShapes = QuestionnaireShapes(),
   alphas: QuestionnaireAlphas = QuestionnaireAlphas(),
+  customStyles: Map<String, QuestionnaireCustomStyle> = emptyMap(),
   content: @Composable () -> Unit,
 ) {
   val materialShapes =
@@ -264,6 +296,7 @@ fun QuestionnaireTheme(
       LocalQuestionnaireShapes provides shapes,
       LocalQuestionnaireTextStyles provides textStyles,
       LocalQuestionnaireAlphas provides alphas,
+      LocalQuestionnaireCustomStyles provides customStyles,
     ) {
       content()
     }
@@ -291,6 +324,12 @@ object QuestionnaireTheme {
   /** Retrieves the current [QuestionnaireAlphas] at the call site's position in the hierarchy. */
   val alphas: QuestionnaireAlphas
     @Composable get() = LocalQuestionnaireAlphas.current
+
+  /**
+   * Retrieves the named [QuestionnaireCustomStyle]s at the call site's position in the hierarchy.
+   */
+  val customStyles: Map<String, QuestionnaireCustomStyle>
+    @Composable get() = LocalQuestionnaireCustomStyles.current
 
   /**
    * Retrieves the current Material3 [androidx.compose.material3.ColorScheme] from MaterialTheme.
