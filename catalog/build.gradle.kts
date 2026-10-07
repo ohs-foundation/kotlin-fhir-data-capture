@@ -123,6 +123,19 @@ kotlin {
       }
     }
 
-    wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
+    wasmJsMain {
+      dependencies {
+        implementation(libs.compass.geolocation.browser)
+        // fhir-engine's `sqlite-wasm-worker` is a local npm module that doesn't propagate from
+        // Maven, so declare a copy here. See
+        // https://github.com/ohs-foundation/kotlin-fhir-engine#required-workaround-for-consumers-targeting-jswasmjs
+        implementation(
+          npm(
+            "sqlite-wasm-worker",
+            layout.projectDirectory.dir("src/wasmJsMain/npm/sqlite-wasm-worker").asFile,
+          )
+        )
+      }
+    }
   }
 }
