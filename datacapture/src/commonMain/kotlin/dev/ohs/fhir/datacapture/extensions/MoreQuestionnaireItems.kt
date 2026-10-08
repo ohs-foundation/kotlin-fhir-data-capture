@@ -20,7 +20,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import dev.ohs.fhir.datacapture.QuestionnaireItemViewType
-import dev.ohs.fhir.datacapture.extraction.template.EXTENSION_EXTRACT_ALLOCATE_ID_URL
 import dev.ohs.fhir.datacapture.extraction.template.ItemExtractionContext
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractDefinition
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
