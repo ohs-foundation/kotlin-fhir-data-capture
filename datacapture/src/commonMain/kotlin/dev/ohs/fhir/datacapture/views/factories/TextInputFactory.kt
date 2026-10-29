@@ -60,7 +60,10 @@ class TextInputFactory(
     val validationMessage = getValidationErrorMessage(questionnaireViewItem)
     val textInputDebounce = LocalDataCaptureConfig.current.textInputDebounce
     val composeViewQuestionnaireState =
-      remember(questionnaireViewItem, textInputDebounce) {
+      // `text` is a key because answers can change without the user typing (e.g. a
+      // calculatedExpression). The answer list is mutated in place, so the new
+      // QuestionnaireViewItem is still `equals` to the old one and would not rebuild this state.
+      remember(questionnaireViewItem, textInputDebounce, text) {
         EditTextFieldState(
           initialInputText = text,
           handleTextInputChange = { handleInput(it, questionnaireViewItem) },
