@@ -15,7 +15,6 @@
  */
 package dev.ohs.fhir.datacapture.extensions
 
-import dev.ohs.fhir.datacapture.extraction.template.EXTENSION_EXTRACT_ALLOCATE_ID_URL
 import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractDefinition
 import dev.ohs.fhir.model.r4.Bundle
 import dev.ohs.fhir.model.r4.Expression
