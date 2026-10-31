@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.ohs.fhir.catalog.views.barcode
+package dev.ohs.fhir.datacapture.views.factories.barcode
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 
 @Composable
-internal actual fun rememberCameraPermissionProvider(): CameraPermissionProvider = remember {
-  object : CameraPermissionProvider {
-    override suspend fun providePermission(): Unit = throw NotImplementedError("Not supported")
-
-    override fun openSettings(): Unit = throw NotImplementedError("Not supported")
+actual fun ScannerDialog(onDismiss: () -> Unit, onBarcode: (String?) -> Unit) {
+  Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Text("Barcode scanner not supported in WebAssembly")
   }
 }
