@@ -15,8 +15,12 @@
  */
 package dev.ohs.fhir.datacapture.expressions
 
+import dev.ohs.fhir.datacapture.ExternalAnswerValueSetResolver
+import dev.ohs.fhir.model.r4.Code
+import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import dev.ohs.fhir.model.r4.Uri
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -79,10 +83,51 @@ class EnabledAnswerOptionsEvaluatorTest {
       }
       .build()
 
+  /** A questionnaire whose contained value set has the given `compose` and no expansion. */
+  private fun questionnaireWithComposedValueSet(compose: String): Questionnaire =
+    json.decodeFromString(
+      Questionnaire.serializer(),
+      """
+      {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "contained": [
+          { "resourceType": "ValueSet", "id": "vs1", "status": "active", "compose": $compose }
+        ],
+        "item": [ { "linkId": "q1", "type": "choice", "answerValueSet": "#vs1" } ]
+      }
+      """
+        .trimIndent(),
+    )
+
+  private val externalValueSets =
+    mapOf(
+      "http://example.org/vs/x" to listOf("a", "b"),
+      "http://example.org/vs/y" to listOf("b", "c"),
+    )
+
+  private val externalValueSetResolver =
+    object : ExternalAnswerValueSetResolver {
+      override suspend fun resolve(uri: String): List<Coding> =
+        externalValueSets[uri].orEmpty().map { code ->
+          Coding.Builder()
+            .apply {
+              system = Uri.Builder().apply { value = "http://example.org/cs" }
+              this.code = Code.Builder().apply { value = code }
+            }
+            .build()
+        }
+    }
+
   private suspend fun evaluateOptions(
     questionnaire: Questionnaire
   ): List<Questionnaire.Item.AnswerOption> {
-    val evaluator = EnabledAnswerOptionsEvaluator(questionnaire, questionnaireResponse)
+    val evaluator =
+      EnabledAnswerOptionsEvaluator(
+        questionnaire,
+        questionnaireResponse,
+        externalValueSetResolver = externalValueSetResolver,
+      )
     val (options, _) =
       evaluator.evaluate(questionnaire.item.single(), questionnaireResponse.item.single())
     return options
@@ -104,6 +149,63 @@ class EnabledAnswerOptionsEvaluatorTest {
   @Test
   fun answerValueSet_unknownContainedReference_returnsNoOptions() = runTest {
     val options = evaluateOptions(questionnaireWithContainedValueSet(containedId = "other-vs"))
+
+    assertTrue(options.isEmpty())
+  }
+
+  private fun List<Questionnaire.Item.AnswerOption>.codes() = map {
+    (it.value as Questionnaire.Item.AnswerOption.Value.Coding).value.code?.value
+  }
+
+  @Test
+  fun answerValueSet_containedWithoutExpansion_returnsComposeConcepts() = runTest {
+    val options =
+      evaluateOptions(
+        questionnaireWithComposedValueSet(
+          """{ "include": [ { "system": "http://example.org/cs", "concept": [ { "code": "a", "display": "Option A" }, { "code": "b" } ] } ],
+               "exclude": [ { "system": "http://example.org/cs", "concept": [ { "code": "b" } ] } ] }"""
+        )
+      )
+
+    assertEquals(listOf("a"), options.codes())
+    assertEquals(
+      "Option A",
+      (options.single().value as Questionnaire.Item.AnswerOption.Value.Coding).value.display?.value,
+    )
+  }
+
+  @Test
+  fun answerValueSet_containedImportingValueSets_returnsResolvedCodings() = runTest {
+    val options =
+      evaluateOptions(
+        questionnaireWithComposedValueSet(
+          """{ "include": [ { "valueSet": [ "http://example.org/vs/x" ] }, { "valueSet": [ "http://example.org/vs/y" ] } ] }"""
+        )
+      )
+
+    assertEquals(listOf("a", "b", "c"), options.codes())
+  }
+
+  @Test
+  fun answerValueSet_containedImportingTwoValueSetsInOneInclude_returnsCodingsInBoth() = runTest {
+    val options =
+      evaluateOptions(
+        questionnaireWithComposedValueSet(
+          """{ "include": [ { "valueSet": [ "http://example.org/vs/x", "http://example.org/vs/y" ] } ] }"""
+        )
+      )
+
+    assertEquals(listOf("b"), options.codes())
+  }
+
+  @Test
+  fun answerValueSet_containedTakingWholeCodeSystem_returnsNoOptions() = runTest {
+    val options =
+      evaluateOptions(
+        questionnaireWithComposedValueSet(
+          """{ "include": [ { "system": "http://example.org/cs" } ] }"""
+        )
+      )
 
     assertTrue(options.isEmpty())
   }

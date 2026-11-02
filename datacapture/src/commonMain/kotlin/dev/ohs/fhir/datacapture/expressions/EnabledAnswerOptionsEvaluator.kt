@@ -15,6 +15,7 @@
  */
 package dev.ohs.fhir.datacapture.expressions
 
+import co.touchlab.kermit.Logger
 import dev.ohs.fhir.datacapture.ExternalAnswerValueSetResolver
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.answerExpression
@@ -134,35 +135,15 @@ internal class EnabledAnswerOptionsEvaluator(
 
     val options: List<Questionnaire.Item.AnswerOption> =
       if (uri.startsWith("#")) {
+        // uri is a fragment reference ("#IMMZ.C.DE5"); kotlin-fhir stores contained ids
+        // verbatim from JSON (no '#'), so strip the reference's '#' before comparing.
         questionnaire.contained
-          .firstOrNull { resource ->
-            // uri is a fragment reference ("#IMMZ.C.DE5"); kotlin-fhir stores contained ids
-            // verbatim from JSON (no '#'), so strip the reference's '#' before comparing.
-            resource.id == uri.removePrefix("#") &&
-              resource is ValueSet &&
-              resource.expansion != null &&
-              resource.expansion!!.contains.isNotEmpty()
-          }
-          ?.let { resource ->
-            val valueSet = resource as ValueSet
-            valueSet.expansion!!
-              .contains
-              .filterNot { it.abstract?.value == true || it.inactive?.value == true }
-              .map { component ->
-                Questionnaire.Item.AnswerOption.Builder(
-                    value =
-                      Questionnaire.Item.AnswerOption.Value.Coding(
-                        Coding.Builder()
-                          .apply {
-                            system = component.system?.toBuilder()
-                            code = component.code?.toBuilder()
-                            display = component.display?.toBuilder()
-                          }
-                          .build()
-                      )
-                  )
-                  .build()
-              }
+          .firstOrNull { resource -> resource.id == uri.removePrefix("#") && resource is ValueSet }
+          ?.let { resource -> containedValueSetCodings(resource as ValueSet) }
+          ?.map { coding ->
+            Questionnaire.Item.AnswerOption(
+              value = Questionnaire.Item.AnswerOption.Value.Coding(coding)
+            )
           }
       } else {
         // Ask the client to provide the answers from an external expanded value set.
@@ -175,6 +156,74 @@ internal class EnabledAnswerOptionsEvaluator(
     // save it so that we avoid have cache misses.
     answerValueSetMap[uri] = options
     return options
+  }
+
+  /**
+   * Returns the codings of a contained value set: its expansion, or if it has none, the concepts
+   * listed in its `compose`.
+   */
+  private suspend fun containedValueSetCodings(valueSet: ValueSet): List<Coding> {
+    val expansion =
+      valueSet.expansion
+        ?.contains
+        .orEmpty()
+        .filterNot { it.abstract?.value == true || it.inactive?.value == true }
+        .map { component ->
+          Coding.Builder()
+            .apply {
+              system = component.system?.toBuilder()
+              code = component.code?.toBuilder()
+              display = component.display?.toBuilder()
+            }
+            .build()
+        }
+    if (expansion.isNotEmpty()) return expansion
+
+    val compose = valueSet.compose ?: return emptyList()
+    val excluded = compose.exclude.flatMap { conceptSetCodings(it) }.map { it.key }.toSet()
+    return compose.include
+      .flatMap { conceptSetCodings(it) }
+      .filterNot { it.key in excluded }
+      .distinctBy { it.key }
+  }
+
+  private val Coding.key: Pair<String?, String?>
+    get() = system?.value to code?.value
+
+  /**
+   * Returns the codings of a `compose.include` or `compose.exclude`: the concepts it lists, in
+   * every value set it imports. An imported value set is resolved by the
+   * [externalValueSetResolver]. A concept set that selects by filter, or takes a whole code system,
+   * cannot be listed without the code system and gives no codings.
+   */
+  private suspend fun conceptSetCodings(conceptSet: ValueSet.Compose.Include): List<Coding> {
+    val imported =
+      conceptSet.valueSet.mapNotNull { canonical ->
+        canonical.value?.let { externalValueSetResolver?.resolve(it).orEmpty() }
+      }
+    val listed =
+      conceptSet.concept.map { concept ->
+        Coding.Builder()
+          .apply {
+            system = conceptSet.system?.toBuilder()
+            code = concept.code.toBuilder()
+            display = concept.display?.toBuilder()
+          }
+          .build()
+      }
+    if (conceptSet.system != null && listed.isEmpty()) {
+      Logger.w(
+        "Cannot list the codes of ${conceptSet.system?.value} without an expansion: the value set selects by filter or takes the whole code system."
+      )
+      return emptyList()
+    }
+    // A code is in the concept set if it is listed (when there is a system) and in every import.
+    return (listOfNotNull(listed.takeIf { conceptSet.system != null }) + imported)
+      .reduceOrNull { codings, other ->
+        val keys = other.map { it.key }.toSet()
+        codings.filter { it.key in keys }
+      }
+      .orEmpty()
   }
 
   // TODO persist previous answers in case options are changing and new list does not have selected

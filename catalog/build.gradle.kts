@@ -1,53 +1,17 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-  alias(libs.plugins.android.application)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.androidx.navigation.safeargs)
 }
 
 val androidNamespace: String by project
-val applicationId: String by project
-val applicationVersionCode: String by project
-val applicationVersionName: String by project
 val androidCompileSdk: String by project
 val androidMinSdk: String by project
-val androidTargetSdk: String by project
-
-android {
-  namespace = androidNamespace
-  compileSdk = androidCompileSdk.toInt()
-
-  defaultConfig {
-    applicationId = applicationId
-    minSdk = androidMinSdk.toInt()
-    targetSdk = androidTargetSdk.toInt()
-    versionCode = applicationVersionCode.toInt()
-    versionName = applicationVersionName
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-  }
-  buildTypes {
-    release {
-      isMinifyEnabled = true
-      isShrinkResources = true
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
-  packaging {
-    resources.excludes.addAll(
-      listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
-    )
-  }
-}
 
 kotlin {
   jvm()
@@ -66,7 +30,31 @@ kotlin {
     binaries.executable()
   }
 
-  androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
+  android {
+    namespace = androidNamespace
+    compileSdk = androidCompileSdk.toInt()
+    minSdk = androidMinSdk.toInt()
+
+    withHostTestBuilder {}
+      .configure {
+        isIncludeAndroidResources = true
+        isReturnDefaultValues = true
+      }
+    withDeviceTestBuilder { sourceSetTreeName = "test" }
+      .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+
+    experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+
+    packaging {
+      resources.excludes.addAll(
+        listOf("META-INF/ASL2.0", "META-INF/ASL-2.0.txt", "META-INF/LGPL-3.0.txt")
+      )
+    }
+  }
 
   listOf(iosSimulatorArm64(), iosArm64()).forEach {
     it.binaries.framework {
@@ -88,12 +76,12 @@ kotlin {
       }
     }
     commonMain.dependencies {
-      implementation(compose.runtime)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.ui)
-      implementation(compose.components.resources)
-      implementation(compose.components.uiToolingPreview)
+      implementation(libs.compose.runtime)
+      implementation(libs.compose.foundation)
+      implementation(libs.compose.material3)
+      implementation(libs.compose.ui)
+      implementation(libs.compose.components.resources)
+      implementation(libs.compose.ui.tooling.preview)
       implementation(libs.androidx.lifecycle.viewmodel.compose)
       implementation(libs.androidx.lifecycle.runtime.compose)
       implementation(libs.compass.geolocation)

@@ -45,7 +45,7 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.switch_to_clock_
 import kotlin_fhir_data_capture.datacapture.generated.resources.switch_to_text_input
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
