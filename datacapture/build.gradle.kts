@@ -95,6 +95,7 @@ kotlin {
         implementation(libs.ohs.fhir.model)
         implementation(libs.ohs.fhir.path)
         implementation(libs.compass.geolocation)
+        implementation(libs.kscan)
       }
     }
 
@@ -111,7 +112,6 @@ kotlin {
     androidMain {
       resources.srcDir("res")
       dependencies {
-        implementation(libs.kscan)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
       }
@@ -119,7 +119,6 @@ kotlin {
 
     iosMain {
       dependencies {
-        implementation(libs.kscan)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
       }
@@ -163,7 +162,6 @@ kotlin {
         implementation(libs.compass.permissions.mobile)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
-        implementation(libs.kscan)
       }
     }
 
