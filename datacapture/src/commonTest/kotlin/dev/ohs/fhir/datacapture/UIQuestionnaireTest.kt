@@ -144,6 +144,7 @@ class UIQuestionnaireTest {
   }
 
   @Test
+  @Ignore // Compose 1.12 JS test-harness regression
   fun cqfExpression_shouldSetText_withEvaluatedAnswer() = runComposeUiTest {
     setQuestionnaireContent("files/questionnaire_with_dynamic_question_text.json")
 

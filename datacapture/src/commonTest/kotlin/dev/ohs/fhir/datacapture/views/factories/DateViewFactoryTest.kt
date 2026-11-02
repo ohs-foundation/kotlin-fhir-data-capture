@@ -664,6 +664,7 @@ class DateViewFactoryTest {
   }
 
   @Test
+  @Ignore // Compose 1.12 JS test-harness regression
   fun bind_readOnly_shouldDisableView() = runComposeUiTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(
