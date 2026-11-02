@@ -49,7 +49,7 @@ class AttachmentViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayTakePhotoAndUploadPhotoButton() = runComposeUiTest {
     val questionnaireItemView =
       QuestionnaireViewItem(
@@ -77,7 +77,7 @@ class AttachmentViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayUploadAudioButton() = runComposeUiTest {
     val questionnaireItemView =
       QuestionnaireViewItem(
@@ -104,7 +104,7 @@ class AttachmentViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayUploadVideoButton() = runComposeUiTest {
     val questionnaireItemView =
       QuestionnaireViewItem(
@@ -131,7 +131,7 @@ class AttachmentViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayUploadDocumentButton() = runComposeUiTest {
     val questionnaireItemView =
       QuestionnaireViewItem(
@@ -158,7 +158,7 @@ class AttachmentViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayTakePhotoAndUploadFileButton() = runComposeUiTest {
     val questionnaireItemView =
       QuestionnaireViewItem(
@@ -570,7 +570,7 @@ class AttachmentViewFactoryTest {
     }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun deleteRemovesPreviewOfAnswerAttachment() = runComposeUiTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(

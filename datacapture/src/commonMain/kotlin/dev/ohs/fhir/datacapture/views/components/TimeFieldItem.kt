@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import dev.ohs.fhir.datacapture.getLocalDateTimeFormatter
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.gm_schedule_24
@@ -48,7 +49,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.time
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 
 internal const val TIME_PICKER_INPUT_FIELD = "time_picker_text_field"
 

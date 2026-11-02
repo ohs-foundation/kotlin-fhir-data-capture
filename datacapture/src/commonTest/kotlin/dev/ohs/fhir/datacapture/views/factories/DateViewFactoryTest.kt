@@ -566,7 +566,7 @@ class DateViewFactoryTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun showDateFormatInLowercaseInTheErrorMessage() = runComposeUiTest {
     val itemViewItem =
       QuestionnaireViewItem(

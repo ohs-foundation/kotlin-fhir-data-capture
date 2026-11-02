@@ -45,9 +45,7 @@ kotlin {
 
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
 
-    compilerOptions {
-      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-    }
+    compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
 
     packaging {
       resources.excludes.addAll(

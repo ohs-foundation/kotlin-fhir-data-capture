@@ -17,7 +17,6 @@ package dev.ohs.fhir.datacapture
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
@@ -38,6 +37,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.testing.TestLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
@@ -88,7 +88,7 @@ class UIQuestionnaireTest {
   }
 
   @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
-@Test
+  @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {
     setQuestionnaireContent("files/paginated_questionnaire_with_dependent_answer.json", true)
     val reviewButtonText = getString(Res.string.button_review)
