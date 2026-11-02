@@ -30,6 +30,7 @@ kotlin {
   wasmJs {
     browser()
     binaries.library()
+    binaries.executable()
   }
 
   js {
