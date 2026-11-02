@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.snapshots.Snapshot
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds

@@ -35,9 +35,10 @@ kotlin {
   js {
     browser()
     binaries.library()
+    binaries.executable()
   }
 
-  androidLibrary {
+  android {
     namespace = androidNamespace
     compileSdk = androidCompileSdk.toInt()
     minSdk = androidMinSdk.toInt()
@@ -52,8 +53,8 @@ kotlin {
 
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
 
-    compilations.configureEach {
-      compilerOptions.configure { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 
     packaging {
@@ -77,12 +78,12 @@ kotlin {
 
     commonMain {
       dependencies {
-        implementation(compose.runtime)
-        implementation(compose.foundation)
-        implementation(compose.material3)
-        implementation(compose.ui)
-        implementation(compose.components.resources)
-        implementation(compose.components.uiToolingPreview)
+        implementation(libs.compose.runtime)
+        implementation(libs.compose.foundation)
+        implementation(libs.compose.material3)
+        implementation(libs.compose.ui)
+        implementation(libs.compose.components.resources)
+        implementation(libs.compose.ui.tooling.preview)
         implementation(libs.androidx.lifecycle.viewmodel.compose)
         implementation(libs.androidx.lifecycle.runtime.compose)
         implementation(libs.filekit.dialogs.compose)
@@ -103,8 +104,7 @@ kotlin {
         implementation(libs.kotlin.test)
         implementation(libs.kotest.assertions.core)
 
-        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-        implementation(compose.uiTest)
+        implementation(libs.compose.ui.test)
       }
     }
 

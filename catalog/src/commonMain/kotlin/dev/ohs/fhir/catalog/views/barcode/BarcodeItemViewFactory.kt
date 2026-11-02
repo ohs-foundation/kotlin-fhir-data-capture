@@ -67,7 +67,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import org.ncgroup.kscan.BarcodeFormat
 import org.ncgroup.kscan.BarcodeResult
 import org.ncgroup.kscan.ScannerView
@@ -188,7 +188,6 @@ internal object BarcodeItemViewFactory : QuestionnaireItemViewFactory {
                 result.exception.printStackTrace()
               }
 
-              is BarcodeResult.OnCanceled -> {} // user canceled scanning, nothing to do
             }
           }
         }
