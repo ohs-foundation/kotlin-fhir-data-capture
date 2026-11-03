@@ -79,7 +79,6 @@ kotlin {
     it.binaries.framework { baseName = "KotlinFhirDataCapture" }
   }
 
-
   sourceSets {
     all {
       languageSettings {
