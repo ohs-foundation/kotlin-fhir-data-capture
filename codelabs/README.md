@@ -45,8 +45,8 @@ follow along from the start, delete the code below each numbered comment and add
 
 ### Project structure
 
-| Module       | Contents                                                                                     |
-|:-------------|:---------------------------------------------------------------------------------------------|
+| Module       | Contents                                                                                      |
+|:-------------|:----------------------------------------------------------------------------------------------|
 | `shared`     | Kotlin Multiplatform module. `commonMain` holds the `App()` composable and the questionnaire. |
 | `androidApp` | Android application. `MainActivity` calls `setContent { App() }`.                             |
 
