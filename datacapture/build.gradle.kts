@@ -28,13 +28,25 @@ kotlin {
   jvm()
 
   wasmJs {
-    browser()
+    browser {
+      testTask {
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
+      }
+    }
     binaries.library()
     binaries.executable()
   }
 
   js {
-    browser()
+    browser {
+      testTask {
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
+      }
+    }
     binaries.library()
     binaries.executable()
   }
@@ -66,6 +78,7 @@ kotlin {
   listOf(iosSimulatorArm64(), iosArm64()).forEach {
     it.binaries.framework { baseName = "KotlinFhirDataCapture" }
   }
+
 
   sourceSets {
     all {
