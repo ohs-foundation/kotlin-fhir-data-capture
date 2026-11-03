@@ -15,9 +15,7 @@ kotlin {
     compileSdk = 36
     minSdk = 26
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
-    compilations.configureEach {
-      compilerOptions.configure { jvmTarget.set(JvmTarget.JVM_11) }
-    }
+    compilations.configureEach { compilerOptions.configure { jvmTarget.set(JvmTarget.JVM_11) } }
   }
 
   sourceSets {
