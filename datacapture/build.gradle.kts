@@ -62,7 +62,8 @@ kotlin {
         isReturnDefaultValues = true
       }
     withDeviceTestBuilder { sourceSetTreeName = "test" }
-      .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+      .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        instrumentationRunnerArguments["notPackage"] = "dev.ohs.fhir.datacapture.views.factories" }
 
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
 
