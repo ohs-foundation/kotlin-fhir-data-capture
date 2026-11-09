@@ -15,7 +15,9 @@
  */
 package dev.ohs.fhir.codelab
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -23,7 +25,8 @@ import androidx.activity.enableEdgeToEdge
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
+    // White status bar icons over the app bar, as in the android-fhir codelab.
+    enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
     setContent { App() }
   }
 }

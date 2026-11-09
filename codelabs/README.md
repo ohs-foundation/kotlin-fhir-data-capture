@@ -116,6 +116,7 @@ Add the following code below the `// 4 Display the questionnaire` comment:
 questionnaireJson?.let { questionnaireJson ->
   Questionnaire(
     questionnaireJson = questionnaireJson,
+    config = QuestionnaireConfig(showCancelButton = false),
     onSubmit = { getQuestionnaireResponse ->
       scope.launch { submitQuestionnaire(questionnaireJson, getQuestionnaireResponse()) }
     },
@@ -124,7 +125,7 @@ questionnaireJson?.let { questionnaireJson ->
 }
 ```
 
-The `Questionnaire` composable takes the questionnaire as a JSON string. You do not need to know
+The `Questionnaire` composable takes the questionnaire as a JSON string. `QuestionnaireConfig` controls how the questionnaire is shown. This codelab hides the **Cancel** button, so only **Submit** is shown. You do not need to know
 the structure of a FHIR Questionnaire to render it. The library does this for you.
 
 When the user taps **Submit**, the library calls `onSubmit`. The `getQuestionnaireResponse`
@@ -190,6 +191,9 @@ this method, the questionnaire must contain a template of the resource to create
 
 *   Fields without an extension, such as the identifier `system`, are copied to the extracted
     resource as they are.
+*   The `definition` elements and the `sdc-questionnaire-itemExtractionContext` extension are for
+    [definition-based extraction](https://hl7.org/fhir/uv/sdc/STU4/extraction.html#definition-extract),
+    which the library does not support. The library ignores them.
 
 Add the following code below the `// 6 Extract FHIR resources from the questionnaire response`
 comment:
