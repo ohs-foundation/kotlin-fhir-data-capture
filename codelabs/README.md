@@ -4,11 +4,11 @@
 
 ### What you'll build
 
-In this codelab, you're going to build an Android app with the Kotlin FHIR Data Capture library.
-Your app will use the library to render and process FHIR Questionnaires and responses.
+In this codelab, you're going to build an app with the Kotlin FHIR Data Capture library. Your app
+will use the library to render and process FHIR Questionnaires and responses.
 
-The app keeps its logic in a Kotlin Multiplatform (KMP) `shared` module. The codelab runs on
-Android, but you can add other platforms later without changing the shared code.
+The app keeps its logic in a Kotlin Multiplatform (KMP) `shared` module. The same code runs on
+Android, iOS, Desktop (JVM) and Web (Wasm and JS).
 
 ### What you'll learn
 
@@ -21,6 +21,7 @@ Android, but you can add other platforms later without changing the shared code.
 
 *   A recent version of [Android Studio](https://developer.android.com/studio)
 *   [Android Emulator](https://developer.android.com/studio/run/emulator) or a physical Android device
+*   Optional: a Mac with [Xcode](https://developer.apple.com/xcode/) to run the iOS app
 *   The sample code
 *   Basic knowledge of Kotlin and [Jetpack Compose](https://developer.android.com/compose)
 
@@ -49,6 +50,12 @@ follow along from the start, delete the code below each numbered comment and add
 |:-------------|:----------------------------------------------------------------------------------------------|
 | `shared`     | Kotlin Multiplatform module. `commonMain` holds the `App()` composable and the questionnaire. |
 | `androidApp` | Android application. `MainActivity` calls `setContent { App() }`.                             |
+| `desktopApp` | Desktop (JVM) application. `main()` opens a window that shows `App()`.                        |
+| `webApp`     | Web application for Wasm and JS. `main()` shows `App()` in the browser page.                  |
+| `iosApp`     | Xcode project for iOS. It shows `App()` through `MainViewController()` in `shared/iosMain`.   |
+
+The entry point modules contain no codelab logic. All the steps of this codelab change only the
+`shared` module.
 
 The questionnaire is stored as a
 [Compose Multiplatform resource](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-resources.html)
@@ -71,6 +78,18 @@ You can also build the app from the command line:
 ```shell
 ./gradlew :androidApp:installDebug
 ```
+
+### Run the app on other platforms
+
+| Platform      | Command or action                                                                    |
+|:--------------|:-------------------------------------------------------------------------------------|
+| Desktop (JVM) | `./gradlew :desktopApp:run`                                                          |
+| Web (Wasm)    | `./gradlew :webApp:wasmJsBrowserDevelopmentRun`                                      |
+| Web (JS)      | `./gradlew :webApp:jsBrowserDevelopmentRun`                                          |
+| iOS           | Open `iosApp/iosApp.xcodeproj` in Xcode, select a simulator, and click **Run**.      |
+
+On iOS, Xcode builds the `shared` framework with Gradle. To run on a real device, see
+[`iosApp/README.md`](iosApp/README.md).
 
 ## 3. Add Kotlin FHIR Data Capture to the project
 
@@ -160,7 +179,8 @@ println("response: ${json.encodeToString(questionnaireResponse)}")
 `questionnaireResponse` is a
 [Kotlin FHIR](https://github.com/ohs-foundation/kotlin-fhir) `QuestionnaireResponse`. You can use it
 directly or encode it to JSON. The codelab encodes it with `kotlinx.serialization` and prints it.
-On Android, `println` output is shown in Logcat.
+The `println` output is shown in Logcat on Android, in the
+Xcode console on iOS, in the terminal on Desktop, and in the browser console on Web.
 
 Run the app, answer the questions, and tap **Submit**. In Logcat, search for `response:` to see the
 QuestionnaireResponse.
@@ -227,9 +247,7 @@ You used Kotlin FHIR Data Capture to process FHIR questionnaires and responses i
 
 ### Next steps
 
-*   Run the codelab on other platforms. Add targets such as `jvm()`, `wasmJs { browser() }`, or
-    `iosArm64()` to `shared/build.gradle.kts`, then add an entry point for each platform. The
-    [catalog app](../catalog) shows how to do this.
+*   Run the codelab on the other platforms: Desktop, Web and iOS
 *   Customize the questionnaire with `QuestionnaireConfig`, for example to show a review page
 *   Read the [conformance](../docs/conformance.md) document to see which Questionnaire and SDC
     features the library supports

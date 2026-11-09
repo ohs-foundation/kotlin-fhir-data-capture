@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,8 +9,21 @@ plugins {
 }
 
 kotlin {
-  // Add more targets here (jvm(), wasmJs { browser() }, iosArm64(), ...) to run the codelab on
-  // other platforms. The code in commonMain is shared by all of them.
+  // The code in commonMain is shared by all targets. Each platform has a small entry point module:
+  // androidApp, desktopApp, webApp and iosApp.
+  jvm()
+
+  js { browser() }
+
+  @OptIn(ExperimentalWasmDsl::class) wasmJs { browser() }
+
+  listOf(iosArm64(), iosSimulatorArm64()).forEach {
+    it.binaries.framework {
+      baseName = "Shared"
+      isStatic = true
+    }
+  }
+
   androidLibrary {
     namespace = "dev.ohs.fhir.codelab.shared"
     compileSdk = 36

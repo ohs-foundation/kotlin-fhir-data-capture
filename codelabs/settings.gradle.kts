@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "datacapture-codelab"
 
-include(":shared", ":androidApp")
+include(":shared", ":androidApp", ":desktopApp", ":webApp")
