@@ -43,8 +43,7 @@ kotlin {
       implementation(libs.kotlinx.serialization.json)
       implementation(libs.ohs.fhir.model)
 
-      // 3 Add the dependency for the Structured Data Capture Library
-      implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha05")
+      // 3 Add the dependency for Kotlin FHIR Data Capture
     }
   }
 }

@@ -41,54 +41,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import dev.ohs.fhir.codelab.shared.resources.Res
 import dev.ohs.fhir.codelab.shared.resources.app_name
-import dev.ohs.fhir.datacapture.Questionnaire
-import dev.ohs.fhir.datacapture.QuestionnaireConfig
-import dev.ohs.fhir.datacapture.extraction.template.TemplateExtractionEngine
-import dev.ohs.fhir.model.r4.Questionnaire as FhirQuestionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 
-// App bar colors of the android-fhir codelab theme (Theme.MaterialComponents.DayNight.DarkActionBar)
+// App bar colors of the android-fhir codelab theme
+// (Theme.MaterialComponents.DayNight.DarkActionBar)
 private val Purple500 = Color(0xFF6200EE)
 private val Purple700 = Color(0xFF3700B3)
 private val DarkActionBar = Color(0xFF272727)
 
-private val json = Json {
-  explicitNulls = false
-  encodeDefaults = false
-}
+// 5.1 Replace with code from the codelab to configure the JSON encoder.
 
 @Composable
 fun App() {
   val darkTheme = isSystemInDarkTheme()
   MaterialTheme(colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()) {
     Scaffold(topBar = { AppBar(darkTheme) }) { innerPadding ->
-      Box(modifier = Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding)) {
+      Box(
+        modifier = Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding)
+      ) {
         var questionnaireJson by remember { mutableStateOf<String?>(null) }
         LaunchedEffect(Unit) {
           questionnaireJson = Res.readBytes("files/questionnaire.json").decodeToString()
         }
         val scope = rememberCoroutineScope()
 
-        // 4 Display the questionnaire
-        questionnaireJson?.let { questionnaireJson ->
-          Questionnaire(
-            questionnaireJson = questionnaireJson,
-            config = QuestionnaireConfig(showCancelButton = false),
-            onSubmit = { getQuestionnaireResponse ->
-              // getQuestionnaireResponse() validates the answers first. If validation fails, the
-              // library shows an error dialog and cancels this coroutine.
-              scope.launch { submitQuestionnaire(questionnaireJson, getQuestionnaireResponse()) }
-            },
-            onCancel = {},
-          )
-        }
+        // 4 Replace with code from the codelab to display the questionnaire.
+        Text(text = "Hello World!", modifier = Modifier.align(Alignment.Center))
       }
     }
   }
@@ -118,11 +102,7 @@ private fun submitQuestionnaire(
   questionnaireJson: String,
   questionnaireResponse: QuestionnaireResponse,
 ) {
-  // 5 Print the questionnaire response
-  println("response: ${json.encodeToString(questionnaireResponse)}")
+  // 5.2 Replace with code from the codelab to print the questionnaire response.
 
-  // 6 Extract FHIR resources from the questionnaire response
-  val questionnaire = json.decodeFromString<FhirQuestionnaire>(questionnaireJson)
-  val bundle = TemplateExtractionEngine.extract(questionnaire, questionnaireResponse)
-  println("extraction result: ${json.encodeToString(bundle)}")
+  // 6 Replace with code from the codelab to extract FHIR resources from the questionnaire response.
 }
