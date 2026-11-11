@@ -30,10 +30,12 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performSemanticsAction
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -43,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.views.components.ADD_REPEATED_GROUP_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.components.DELETE_REPEATED_GROUP_ITEM_BUTTON_TAG
+import dev.ohs.fhir.datacapture.views.components.EDIT_TEXT_FIELD_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.HINT_HEADER_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTIONNAIRE_BOTTOM_NAVIGATION_TEST_TAG
 import dev.ohs.fhir.datacapture.views.components.QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG
@@ -53,22 +56,31 @@ import dev.ohs.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Questionnaire
+import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_next
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_previous
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_review
 import kotlin_fhir_data_capture.datacapture.generated.resources.edit_button_text
 import kotlin_fhir_data_capture.datacapture.generated.resources.submit_questionnaire
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.todayIn
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
-@OptIn(ExperimentalTestApi::class)
+@OptIn(ExperimentalTestApi::class, ExperimentalTime::class)
 class UIQuestionnaireTest {
 
   private val fhirJson = Json {
@@ -533,6 +545,154 @@ class UIQuestionnaireTest {
       .assertRangeInfoEquals(ProgressBarRangeInfo(current = 0f, range = 0f..127f, steps = 126))
   }
 
+  @Test
+  fun calculatedExpression_shouldCalculateAge_fromBirthDate() = runComposeUiTest {
+    setQuestionnaireContent(ageCalculationQuestionnaire(initialBirthDate = birthDateForAge30()))
+
+    waitForCalculatedValue("30")
+  }
+
+  @Test
+  fun calculatedExpression_shouldCalculateAge_fromQuestionnaireResponse() = runComposeUiTest {
+    val questionnaireResponse =
+      fhirJson.decodeFromString<QuestionnaireResponse>(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "status": "in-progress",
+          "item": [
+            {
+              "linkId": "birthdate",
+              "answer": [{ "valueDate": "${birthDateForAge30()}" }]
+            }
+          ]
+        }
+        """
+      )
+
+    setQuestionnaireContent(
+      ageCalculationQuestionnaire(),
+      questionnaireResponse = questionnaireResponse,
+    )
+
+    waitForCalculatedValue("30")
+  }
+
+  @Test
+  fun calculatedExpression_shouldUpdate_onlyWhenReferencedVariableChanges() = runComposeUiTest {
+    // No debounce, so typed answers are committed without depending on how each target
+    // advances the clock.
+    setQuestionnaireContent(
+      doubleWeightQuestionnaire(),
+      dataCaptureConfig = DataCaptureConfig(textInputDebounce = Duration.ZERO),
+    )
+    waitForCalculatedValue("80")
+
+    // Edit fields are rendered in item order: weight, notes, double-weight.
+    enterText(fieldIndex = 1, text = "Unrelated note")
+    onAllNodesWithTag(EDIT_TEXT_FIELD_TEST_TAG)[2].assertTextEquals("80")
+
+    enterText(fieldIndex = 0, text = "50")
+    waitForCalculatedValue("100")
+  }
+
+  private fun ComposeUiTest.enterText(fieldIndex: Int, text: String) {
+    onAllNodesWithTag(EDIT_TEXT_FIELD_TEST_TAG)[fieldIndex].performTextReplacement(text)
+    waitForIdle()
+  }
+
+  private fun doubleWeightQuestionnaire(): Questionnaire =
+    fhirJson.decodeFromString<Questionnaire>(
+      """
+      {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "item": [
+          {
+            "linkId": "weight",
+            "text": "Weight",
+            "type": "integer",
+            "initial": [{ "valueInteger": 40 }]
+          },
+          {
+            "linkId": "notes",
+            "text": "Notes",
+            "type": "string"
+          },
+          {
+            "linkId": "double-weight",
+            "text": "Double weight",
+            "type": "integer",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/variable",
+                "valueExpression": {
+                  "name": "weight",
+                  "language": "text/fhirpath",
+                  "expression": "%resource.repeat(item).where(linkId='weight').answer.value"
+                }
+              },
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                "valueExpression": {
+                  "language": "text/fhirpath",
+                  "expression": "%weight * 2"
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+    )
+
+  private fun birthDateForAge30(): LocalDate =
+    Clock.System.todayIn(TimeZone.currentSystemDefault())
+      .minus(30, DateTimeUnit.YEAR)
+      .minus(1, DateTimeUnit.DAY)
+
+  private fun ageCalculationQuestionnaire(initialBirthDate: LocalDate? = null): Questionnaire {
+    val initial = initialBirthDate?.let { """"initial": [{ "valueDate": "$it" }],""" } ?: ""
+    return fhirJson.decodeFromString<Questionnaire>(
+      """
+      {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "item": [
+          {
+            "linkId": "birthdate",
+            "text": "Date of birth",
+            $initial
+            "type": "date"
+          },
+          {
+            "linkId": "age",
+            "text": "Age",
+            "type": "integer",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                "valueExpression": {
+                  "language": "text/fhirpath",
+                  "expression": "%resource.repeat(item).where(linkId='birthdate' and answer.empty().not()).select(today().toString().substring(0,4).toInteger() - answer.value.toString().substring(0,4).toInteger() + iif(today().toString().substring(5,2) & today().toString().substring(8,2) > answer.value.toString().substring(5,2) & answer.value.toString().substring(8,2), 1, 0) - 1)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+    )
+  }
+
+  private fun ComposeUiTest.waitForCalculatedValue(value: String) {
+    waitUntil(timeoutMillis = 5_000) {
+      onAllNodes(hasTestTag(EDIT_TEXT_FIELD_TEST_TAG) and hasText(value))
+        .fetchSemanticsNodes()
+        .isNotEmpty()
+    }
+  }
+
   private suspend fun ComposeUiTest.setQuestionnaireContent(
     fileName: String,
     isReviewMode: Boolean = false,
@@ -567,10 +727,12 @@ class UIQuestionnaireTest {
 
   private suspend fun ComposeUiTest.setQuestionnaireContent(
     questionnaire: Questionnaire,
+    questionnaireResponse: QuestionnaireResponse? = null,
     isReviewMode: Boolean = false,
     showReviewPageFirst: Boolean = false,
     showNavigationLongScroll: Boolean = false,
     submitText: String? = null,
+    dataCaptureConfig: DataCaptureConfig = DataCaptureConfig(),
   ) {
     val questionnaireJsonString = fhirJson.encodeToString(questionnaire)
 
@@ -585,9 +747,11 @@ class UIQuestionnaireTest {
       CompositionLocalProvider(
         LocalLifecycleOwner provides testLifecycleOwner,
         LocalViewModelStoreOwner provides viewModelStoreOwner,
+        LocalDataCaptureConfig provides dataCaptureConfig,
       ) {
         Questionnaire(
           questionnaireJson = questionnaireJsonString,
+          questionnaireResponseJson = questionnaireResponse?.let { fhirJson.encodeToString(it) },
           config =
             QuestionnaireConfig(
               showReviewPage = isReviewMode,

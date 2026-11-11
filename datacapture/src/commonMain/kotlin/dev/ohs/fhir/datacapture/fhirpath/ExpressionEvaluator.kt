@@ -181,28 +181,25 @@ internal class ExpressionEvaluator(
    * calculated expression extension, which is dependent on value of updated response
    */
   suspend fun evaluateAllAffectedCalculatedExpressions(
-    questionnaireItem: Questionnaire.Item,
-    questionnaireResponseItem: QuestionnaireResponse.Item?,
+    questionnaireItem: Questionnaire.Item
   ): List<ItemToAnswersPair> =
     questionnaire.item
       .flattened()
       .filter { item ->
         // Condition 1. item is calculable
-        // Condition 2. item answer depends on the updated item answer OR has a variable dependency
+        // Condition 2. item answer depends on the updated item answer, directly or through a
+        // variable
         item.calculatedExpression != null &&
           (questionnaireItem.isReferencedBy(item) ||
-            findDependentVariables(item.calculatedExpression!!).isNotEmpty())
+            questionnaireItem.isReferencedThroughVariables(item.calculatedExpression!!, item))
       }
       .map { item ->
+        // Evaluate in the scope of the calculated item, not the updated one, so variables
+        // declared on the calculated item and its ancestors resolve.
         // TODO: Pass the questionnaire response item corresponding to the
         //  questionnaire item with the calculated expression for the FHIRPath supplement
         //  `%context`.
-        val updatedAnswer =
-          evaluateExpression(
-            questionnaireItem,
-            questionnaireResponseItem,
-            item.calculatedExpression!!,
-          )
+        val updatedAnswer = evaluateCalculatedExpression(item)
         item to updatedAnswer
       }
 
@@ -383,6 +380,42 @@ internal class ExpressionEvaluator(
       .findAll(expression.expression?.value.toString())
       .map { it.groupValues[1] }
       .toList()
+
+  /**
+   * Returns true if a variable used in [expression], or a variable that one of them uses in turn,
+   * is defined by an expression referencing this item's linkId.
+   *
+   * Reserved variables such as `%resource` are skipped: an expression navigating through them is
+   * already matched by its own linkId reference. Variables without a variable expression, such as
+   * launch contexts, are skipped because they do not change while the questionnaire is filled in.
+   *
+   * @param expression the [Expression] whose variables are checked
+   * @param questionnaireItem the [Questionnaire.Item] where [expression] is defined, used to
+   *   resolve the variables in scope
+   */
+  private fun Questionnaire.Item.isReferencedThroughVariables(
+    expression: Expression,
+    questionnaireItem: Questionnaire.Item,
+    visitedVariables: MutableSet<String> = mutableSetOf(),
+  ): Boolean =
+    findDependentVariables(expression)
+      .filter { it !in reservedItemVariables && visitedVariables.add(it) }
+      .any { variableName ->
+        val (definingItem, variableExpression) =
+          questionnaireItem.findVariableExpression(variableName)?.let { questionnaireItem to it }
+            ?: findVariableInAncestors(variableName, questionnaireItem)
+            ?: questionnaire.findVariableExpression(variableName)?.let { null to it }
+            ?: return@any false
+        variableExpression.referencesLinkId(linkId.value) ||
+          isReferencedThroughVariables(
+            variableExpression,
+            definingItem ?: questionnaireItem,
+            visitedVariables,
+          )
+      }
+
+  private fun Expression.referencesLinkId(linkId: String?) =
+    expression?.value?.replace(" ", "")?.contains("linkId='$linkId'") == true
 
   /**
    * Finds the dependent variables at questionnaire item level first, then in ancestors and then at
