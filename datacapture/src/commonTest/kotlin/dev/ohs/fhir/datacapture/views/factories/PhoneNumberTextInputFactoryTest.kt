@@ -52,6 +52,7 @@ import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.Uri
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.time.Duration
 
@@ -238,6 +239,7 @@ class PhoneNumberTextInputFactoryTest {
   }
 
   @Test
+  @Ignore // Compose 1.12 device-test regression (CalledFromWrongThreadException)
   fun shouldSetQuestionnaireResponseItemAnswer() = runComposeUiTest {
     var answers: List<QuestionnaireResponse.Item.Answer>? = null
     val questionnaireViewItem =

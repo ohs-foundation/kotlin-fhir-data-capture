@@ -1,5 +1,6 @@
 [versions]
-android-gradle-plugin = "8.13.0"
+android-gradle-plugin = "9.2.1"
+androidx-activity = "1.11.0"
 androidx-appcompat = "1.6.1"
 androidx-compose-ui = "1.9.4"
 androidx-core = "1.10.1"
@@ -11,18 +12,19 @@ androidx-test-rules = "1.5.0"
 androidx-test-runner = "1.5.0"
 compass-geolocation = "3.0.2"
 compose-hotreload = "1.0.0-rc04"
-compose-multiplatform = "1.11.1"
+compose-material3-version = "1.12.0-alpha03"
+compose-multiplatform = "1.12.0"
 filekit = "0.12.0"
 junit = "4.13.2"
 kermit = "2.0.8"
 kotest = "6.1.11"
-kotlin = "2.3.21"
-kotlinx-coroutines = "1.10.2"
+kotlin = "2.4.20"
+kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.9.0"
-kotlinx-coroutines-swing = "1.10.2"
+kotlinx-coroutines-swing = "1.11.0"
 kotlinx-io-core = "0.8.0"
-kscan = "0.8.1"
-ksp = "2.3.7"
+kscan = "0.10.0"
+ksp = "2.3.12"
 kt-lint = "1.8.0"
 licensee-plugin = "1.14.1"
 material = "1.13.0"
@@ -37,6 +39,14 @@ spotless-plugin = "8.4.0"
 truth = "1.1.5"
 
 [libraries]
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3-version" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose-multiplatform" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "androidx-compose-ui" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "androidx-compose-ui" }
@@ -84,6 +94,7 @@ cashapp-licensee = { id = "app.cash.licensee", version.ref = "licensee-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-hotreload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hotreload" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

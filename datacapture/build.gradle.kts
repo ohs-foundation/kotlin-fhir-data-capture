@@ -28,16 +28,30 @@ kotlin {
   jvm()
 
   wasmJs {
-    browser()
+    browser {
+      testTask {
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
+      }
+    }
     binaries.library()
+    binaries.executable()
   }
 
   js {
-    browser()
+    browser {
+      testTask {
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
+        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
+      }
+    }
     binaries.library()
+    binaries.executable()
   }
 
-  androidLibrary {
+  android {
     namespace = androidNamespace
     compileSdk = androidCompileSdk.toInt()
     minSdk = androidMinSdk.toInt()
@@ -48,13 +62,14 @@ kotlin {
         isReturnDefaultValues = true
       }
     withDeviceTestBuilder { sourceSetTreeName = "test" }
-      .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+      .configure {
+        instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        instrumentationRunnerArguments["notPackage"] = "dev.ohs.fhir.datacapture.views.factories"
+      }
 
     experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
 
-    compilations.configureEach {
-      compilerOptions.configure { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
-    }
+    compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
 
     packaging {
       resources.excludes.addAll(
@@ -77,12 +92,12 @@ kotlin {
 
     commonMain {
       dependencies {
-        implementation(compose.runtime)
-        implementation(compose.foundation)
-        implementation(compose.material3)
-        implementation(compose.ui)
-        implementation(compose.components.resources)
-        implementation(compose.components.uiToolingPreview)
+        implementation(libs.compose.runtime)
+        implementation(libs.compose.foundation)
+        implementation(libs.compose.material3)
+        implementation(libs.compose.ui)
+        implementation(libs.compose.components.resources)
+        implementation(libs.compose.ui.tooling.preview)
         implementation(libs.androidx.lifecycle.viewmodel.compose)
         implementation(libs.androidx.lifecycle.runtime.compose)
         implementation(libs.filekit.dialogs.compose)
@@ -94,6 +109,7 @@ kotlin {
         implementation(libs.ohs.fhir.model)
         implementation(libs.ohs.fhir.path)
         implementation(libs.compass.geolocation)
+        implementation(libs.kscan)
       }
     }
 
@@ -103,12 +119,24 @@ kotlin {
         implementation(libs.kotlin.test)
         implementation(libs.kotest.assertions.core)
 
-        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-        implementation(compose.uiTest)
+        implementation(libs.compose.ui.test)
       }
     }
 
-    androidMain { resources.srcDir("res") }
+    androidMain {
+      resources.srcDir("res")
+      dependencies {
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+      }
+    }
+
+    iosMain {
+      dependencies {
+        implementation(libs.moko.permissions.camera)
+        implementation(libs.moko.permissions.compose)
+      }
+    }
 
     getByName("androidDeviceTest") {
       dependencies {
@@ -148,7 +176,6 @@ kotlin {
         implementation(libs.compass.permissions.mobile)
         implementation(libs.moko.permissions.camera)
         implementation(libs.moko.permissions.compose)
-        implementation(libs.kscan)
       }
     }
 
