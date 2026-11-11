@@ -15,6 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.extraction.definition
 
+import dev.ohs.fhir.datacapture.extensions.allocateIdVariableNames
+import dev.ohs.fhir.datacapture.extensions.generateAllocatedFullUrl
 import dev.ohs.fhir.model.r4.Expression
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -95,6 +97,13 @@ internal data class QuestionnaireItemResponsePair(
   val questionnaireItem: Questionnaire.Item,
   val responseItem: QuestionnaireResponse.Item,
   val children: List<QuestionnaireItemResponsePair>,
+  /**
+   * `extractAllocateId` variables declared on [questionnaireItem], allocated once for this item
+   * instance (repetition) so the entry `fullUrl` and every expression evaluated within the instance
+   * resolve to the same id.
+   */
+  val allocatedIds: Map<String, String> =
+    questionnaireItem.allocateIdVariableNames.associateWith { generateAllocatedFullUrl() },
 )
 
 /**

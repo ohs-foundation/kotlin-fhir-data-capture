@@ -15,9 +15,7 @@
  */
 package dev.ohs.fhir.datacapture.extraction.definition
 
-import dev.ohs.fhir.datacapture.extensions.allocateIdVariableNames
 import dev.ohs.fhir.datacapture.extensions.elementValue
-import dev.ohs.fhir.datacapture.extensions.generateAllocatedFullUrl
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import kotlinx.serialization.json.JsonObject
@@ -38,9 +36,7 @@ internal fun extractNestedDefinitionScopeEntries(
   resolveProfileResourceType: ((String) -> String?)?,
 ): List<JsonObject> =
   pairs.flatMap { pair ->
-    val pairAllocateIds =
-      inheritedAllocateIds +
-        pair.questionnaireItem.allocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
+    val pairAllocateIds = inheritedAllocateIds + pair.allocatedIds
 
     extractEntriesForDefinitionScopePair(
       pair = pair,
@@ -100,7 +96,7 @@ private fun extractEntriesForDefinitionScopePair(
                 scopeBase = syntheticResponseItem,
                 scopeQuestionnaireItem = pair.questionnaireItem,
                 scopePairs = listOf(syntheticPair),
-                inheritedAllocateIds = inheritedAllocateIds,
+                inheritedAllocateIds = inheritedAllocateIds + syntheticPair.allocatedIds,
                 resolveProfileResourceType = resolveProfileResourceType,
               )
             }
@@ -147,9 +143,7 @@ internal fun applyQuestionnairePairToDefinitionScope(
     return
   }
 
-  val pairAllocateIds =
-    inheritedAllocateIds +
-      pair.questionnaireItem.allocateIdVariableNames.associateWith { generateAllocatedFullUrl() }
+  val pairAllocateIds = inheritedAllocateIds + pair.allocatedIds
 
   val definitionPath =
     pair.questionnaireItem.definition?.value?.let(::parseDefinitionPath)?.takeIf {
