@@ -144,11 +144,7 @@ kotlin {
       }
     }
 
-    iosMain {
-      dependencies {
-        implementation(libs.compass.geolocation.mobile)
-      }
-    }
+    iosMain { dependencies { implementation(libs.compass.geolocation.mobile) } }
 
     jsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
     wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
