@@ -39,6 +39,8 @@ DEX_CLASS_DEFS_OFFSET = 0x60
 COMPOSE_RESOURCES_PREFIX = "composeResources/"
 JS_MODULE_PREFIX = "kotlin-fhir-data-capture-"
 TOP_DEPENDENCIES = 15
+NOISE_BYTES = 1_024
+NOISE_PERCENT = 0.1
 
 
 def _first_file(pattern: str) -> Optional[str]:
@@ -464,24 +466,93 @@ def _fmt_value_delta(current: Optional[int], baseline: Optional[int], unit: str)
     return "—" if delta == 0 else f"{delta:+,}"
 
 
-def _render_summary(mod: str, current: dict, baseline: Optional[dict]) -> list[str]:
-    has_baseline = baseline is not None
-    header = "| Metric | Size | Baseline | Change |" if has_baseline else "| Metric | Size |"
-    divider = "|---|---:|---:|---:|" if has_baseline else "|---|---:|"
-    lines = [f"### `{mod}`", "", header, divider]
+def _is_changed(value: Optional[int], base: Optional[int], unit: str) -> bool:
+    if value is None or base is None:
+        return value != base
+    delta = abs(value - base)
+    if unit != "bytes":
+        return delta != 0
+    # Builds are not byte-for-byte reproducible, so ignore changes that are small in both terms.
+    return delta >= NOISE_BYTES or (base != 0 and delta / base * 100 >= NOISE_PERCENT)
+
+
+def _marker(value: Optional[int], base: Optional[int]) -> str:
+    if value is None:
+        return "➖"
+    if base is None:
+        return "🆕"
+    return "🔺" if value > base else "🟢"
+
+
+def _collect_rows(current: dict, baseline: Optional[dict]) -> list[dict]:
+    rows = []
     for label, path, unit in SUMMARY_ROWS:
         value = _get(current, *path)
-        base = _get(baseline, *path) if has_baseline else None
+        base = _get(baseline, *path) if baseline is not None else None
         if value is None and base is None:
             continue
-        shown = _fmt_value(value, unit) if value is not None else "—"
-        if has_baseline:
-            base_shown = _fmt_value(base, unit) if base is not None else "—"
-            lines.append(f"| {label} | {shown} | {base_shown} | {_fmt_value_delta(value, base, unit)} |")
-        else:
-            lines.append(f"| {label} | {shown} |")
-    lines.append("")
+        rows.append({
+            "label": label,
+            "unit": unit,
+            "value": value,
+            "base": base,
+            "changed": baseline is not None and _is_changed(value, base, unit),
+        })
+    return rows
+
+
+def _table(rows: list[dict], with_baseline: bool, bold: bool = False) -> list[str]:
+    def cell(value: Optional[int], unit: str) -> str:
+        return _fmt_value(value, unit) if value is not None else "—"
+
+    if not with_baseline:
+        lines = ["| Metric | Size |", "|---|---:|"]
+        return lines + [f"| {r['label']} | {cell(r['value'], r['unit'])} |" for r in rows]
+
+    lines = ["| Metric | Size | Baseline | Change |", "|---|---:|---:|---:|"]
+    for r in rows:
+        size = cell(r["value"], r["unit"])
+        change = _fmt_value_delta(r["value"], r["base"], r["unit"])
+        if bold:
+            size, change = f"**{size}**", f"{_marker(r['value'], r['base'])} **{change}**"
+        lines.append(f"| {r['label']} | {size} | {cell(r['base'], r['unit'])} | {change} |")
     return lines
+
+
+def _render_summary(mod: str, rows: list[dict], has_baseline: bool) -> list[str]:
+    lines = [f"### `{mod}`", ""]
+    if not has_baseline:
+        return lines + _table(rows, with_baseline=False) + [""]
+
+    changed = [r for r in rows if r["changed"]]
+    unchanged = [r for r in rows if not r["changed"]]
+    if changed:
+        lines += _table(changed, with_baseline=True, bold=True) + [""]
+    if unchanged:
+        summary = "All metrics" if not changed else "No significant change"
+        lines += [
+            "<details>",
+            f"<summary>{summary} ({len(unchanged)})</summary>",
+            "",
+            *_table(unchanged, with_baseline=True),
+            "",
+            "</details>",
+            "",
+        ]
+    return lines
+
+
+def _render_overview(rows: list[dict]) -> str:
+    changed = [r for r in rows if r["changed"]]
+    if not changed:
+        return "**No size changes.**"
+    text = f"**{len(changed)} of {len(rows)} metrics changed.**"
+    sized = [r for r in changed if r["unit"] == "bytes" and r["value"] is not None and r["base"] is not None]
+    if sized:
+        largest = max(sized, key=lambda r: abs(r["value"] - r["base"]))
+        delta = fmt_delta(largest["value"], largest["base"])
+        text += f" Largest change: {largest['label']} ({_marker(largest['value'], largest['base'])} {delta})."
+    return text
 
 
 def _render_dependency_changes(current: dict, baseline: Optional[dict]) -> list[str]:
@@ -537,17 +608,24 @@ def _render_top_dependencies(current: dict) -> list[str]:
 
 def render_markdown(report: dict, baseline: Optional[dict]) -> str:
     meta = report.get(METADATA_KEY, {})
+    modules = [mod for mod in MODULES if mod in report]
+    rows = {
+        mod: _collect_rows(report[mod], baseline.get(mod) if baseline else None) for mod in modules
+    }
+
     lines = ["## 📦 Binary size report", ""]
     if baseline is None:
         lines += ["_No baseline from `main` was found; showing absolute sizes only._", ""]
-    elif base_sha := baseline.get(METADATA_KEY, {}).get("commit_sha"):
-        lines += [f"Compared with `main` at {base_sha[:10]}.", ""]
+    else:
+        compared = "Compared with `main`"
+        if base_sha := baseline.get(METADATA_KEY, {}).get("commit_sha"):
+            compared += f" at {base_sha[:10]}"
+        all_rows = [r for mod_rows in rows.values() for r in mod_rows]
+        lines += [f"{compared}. {_render_overview(all_rows)}", ""]
 
-    for mod in MODULES:
-        if mod not in report:
-            continue
+    for mod in modules:
         base_mod = baseline.get(mod) if baseline else None
-        lines += _render_summary(mod, report[mod], base_mod)
+        lines += _render_summary(mod, rows[mod], baseline is not None)
         lines += _render_dependency_changes(report[mod], base_mod)
         lines += _render_top_dependencies(report[mod])
 
