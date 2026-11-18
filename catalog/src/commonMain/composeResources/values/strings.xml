@@ -84,6 +84,8 @@
     <string name="widgets">Widgets</string>
     <string name="misc_components">Miscellaneous components</string>
     <string name="open_questionnaire">Open questionnaire</string>
+    <string name="theme">Theme</string>
+    <string name="theme_preset_default">Default</string>
     <string name="validation_error_title">Errors found</string>
     <string
         name="validation_error_message"

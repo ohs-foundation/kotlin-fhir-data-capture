@@ -1,0 +1,861 @@
+public final class dev/ohs/fhir/datacapture/AndroidLocalDateFormatter : dev/ohs/fhir/datacapture/LocalDateTimeFormatter {
+	public static final field $stable I
+	public fun <init> (Landroid/content/Context;)V
+	public fun format (Lkotlinx/datetime/LocalDate;Ljava/lang/String;)Ljava/lang/String;
+	public fun getLocalDateShortFormatPattern ()Ljava/lang/String;
+	public fun localizedTimeString (Lkotlinx/datetime/LocalTime;)Ljava/lang/String;
+	public fun parseStringToLocalDate (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/datetime/LocalDate;
+}
+
+public final class dev/ohs/fhir/datacapture/ComposableSingletons$QuestionnaireScreenKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/ComposableSingletons$QuestionnaireScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$2145013801$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/ohs/fhir/datacapture/DataCaptureConfig {
+	public static final field $stable I
+	public synthetic fun <init> (Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Ldev/ohs/fhir/datacapture/UrlResolver;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Ldev/ohs/fhir/datacapture/UrlResolver;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;
+	public final fun component2 ()Ldev/ohs/fhir/datacapture/XFhirQueryResolver;
+	public final fun component3 ()Ldev/ohs/fhir/datacapture/UrlResolver;
+	public final fun component4 ()Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;
+	public final fun component5-UwyO8pc ()J
+	public final fun copy-9VgGkz4 (Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Ldev/ohs/fhir/datacapture/UrlResolver;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;J)Ldev/ohs/fhir/datacapture/DataCaptureConfig;
+	public static synthetic fun copy-9VgGkz4$default (Ldev/ohs/fhir/datacapture/DataCaptureConfig;Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Ldev/ohs/fhir/datacapture/UrlResolver;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;JILjava/lang/Object;)Ldev/ohs/fhir/datacapture/DataCaptureConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getQuestionnaireItemView ()Ldev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory;
+	public final fun getTextInputDebounce-UwyO8pc ()J
+	public final fun getUrlResolver ()Ldev/ohs/fhir/datacapture/UrlResolver;
+	public final fun getValueSetResolverExternal ()Ldev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver;
+	public final fun getXFhirQueryResolver ()Ldev/ohs/fhir/datacapture/XFhirQueryResolver;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/ExternalAnswerValueSetResolver {
+	public abstract fun resolve (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/ohs/fhir/datacapture/LocalDataCaptureConfigKt {
+	public static final fun getLocalDataCaptureConfig ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/LocalDateTimeFormatter {
+	public abstract fun format (Lkotlinx/datetime/LocalDate;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun format$default (Ldev/ohs/fhir/datacapture/LocalDateTimeFormatter;Lkotlinx/datetime/LocalDate;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun getLocalDateShortFormatPattern ()Ljava/lang/String;
+	public abstract fun localizedTimeString (Lkotlinx/datetime/LocalTime;)Ljava/lang/String;
+	public abstract fun parseStringToLocalDate (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/datetime/LocalDate;
+}
+
+public final class dev/ohs/fhir/datacapture/LocalDateTimeFormatter$DefaultImpls {
+	public static synthetic fun format$default (Ldev/ohs/fhir/datacapture/LocalDateTimeFormatter;Lkotlinx/datetime/LocalDate;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/LocalDateTimeFormatter_androidKt {
+	public static final fun getLocalDateTimeFormatter (Landroidx/compose/runtime/Composer;I)Ldev/ohs/fhir/datacapture/LocalDateTimeFormatter;
+}
+
+public final class dev/ohs/fhir/datacapture/NumberFormatter {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/NumberFormatter;
+	public final fun formatInteger (I)Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireComposableKt {
+	public static final fun Questionnaire (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ldev/ohs/fhir/datacapture/QuestionnaireConfig;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatchersProvider;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireConfig {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (ZZZZZZZZZLjava/lang/String;Z)V
+	public synthetic fun <init> (ZZZZZZZZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (ZZZZZZZZZLjava/lang/String;Z)Ldev/ohs/fhir/datacapture/QuestionnaireConfig;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/QuestionnaireConfig;ZZZZZZZZZLjava/lang/String;ZILjava/lang/Object;)Ldev/ohs/fhir/datacapture/QuestionnaireConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getShowAsterisk ()Z
+	public final fun getShowCancelButton ()Z
+	public final fun getShowNavigationLongScroll ()Z
+	public final fun getShowOptionalText ()Z
+	public final fun getShowRequiredText ()Z
+	public final fun getShowReviewPage ()Z
+	public final fun getShowReviewPageFirst ()Z
+	public final fun getShowSubmitAnywayWhenValidationFails ()Z
+	public final fun getShowSubmitButton ()Z
+	public final fun getSubmitButtonText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isReadOnly ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher {
+	public static final field $stable I
+	public fun <init> (Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;Lkotlin/jvm/functions/Function1;)V
+	public final fun component1 ()Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;
+	public final fun component2 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;Lkotlin/jvm/functions/Function1;)Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher;Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFactory ()Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;
+	public final fun getMatches ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatchersProvider {
+	public abstract fun get ()Ljava/util/List;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/QuestionnaireItemViewHolderFactoryMatchersProviderFactory {
+	public abstract fun get (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatchersProvider;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireItemViewType : java/lang/Enum {
+	public static final field ATTACHMENT Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field AUTO_COMPLETE Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field BOOLEAN_TYPE_PICKER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field CHECK_BOX_GROUP Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field DATE_PICKER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field DATE_TIME_PICKER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field DIALOG_SELECT Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field DISPLAY Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field DROP_DOWN Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field EDIT_TEXT_DECIMAL Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field EDIT_TEXT_INTEGER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field EDIT_TEXT_MULTI_LINE Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field EDIT_TEXT_SINGLE_LINE Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field GROUP Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field PHONE_NUMBER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field QUANTITY Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field RADIO_GROUP Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field SLIDER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static final field TIME_PICKER Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireListsKt {
+	public static final field MINIMUM_NUMBER_OF_ANSWER_OPTIONS_FOR_DIALOG I
+	public static final field MINIMUM_NUMBER_OF_ANSWER_OPTIONS_FOR_DROP_DOWN I
+	public static final field QUESTIONNAIRE_EDIT_LIST Ljava/lang/String;
+	public static final fun getQuestionnaireItemViewFactory (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;Ljava/util/List;)Ldev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireNavigationUIState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;)V
+	public synthetic fun <init> (Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun component2 ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun component3 ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun component4 ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun component5 ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun copy (Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;)Ldev/ohs/fhir/datacapture/QuestionnaireNavigationUIState;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/QuestionnaireNavigationUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/QuestionnaireNavigationUIState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNavCancel ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun getNavNext ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun getNavPrevious ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun getNavReview ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public final fun getNavSubmit ()Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState {
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Enabled : dev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlin/jvm/functions/Function0;
+	public final fun copy (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Enabled;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Enabled;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Enabled;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabelText ()Ljava/lang/String;
+	public final fun getOnClickAction ()Lkotlin/jvm/functions/Function0;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Hidden : dev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/QuestionnaireNavigationViewUIState$Hidden;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/QuestionnaireScreenKt {
+	public static final field CANCEL_REQUEST_KEY Ljava/lang/String;
+	public static final field SUBMIT_REQUEST_KEY Ljava/lang/String;
+	public static final fun QuestionnaireTitleBar (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/UrlResolver {
+	public abstract fun resolveBitmapUrl (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/XFhirQueryResolver {
+	public abstract fun resolve (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/ohs/fhir/datacapture/enablement/FhirValueComparatorsKt {
+	public static final fun compareFhirValue (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer$Value;Ljava/lang/Object;)I
+	public static final fun equalsFhirValue (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer$Value;Ljava/lang/Object;)Z
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes : java/lang/Enum {
+	public static final field HORIZONTAL Ldev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes;
+	public static final field VERTICAL Ldev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getExtensionCode ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/ConstraintSeverityTypes : java/lang/Enum {
+	public static final field ERROR Ldev/ohs/fhir/datacapture/extensions/ConstraintSeverityTypes;
+	public static final field WARNING Ldev/ohs/fhir/datacapture/extensions/ConstraintSeverityTypes;
+	public final fun getCode ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/ConstraintSeverityTypes;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/extensions/ConstraintSeverityTypes;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/EntryMode : java/lang/Enum {
+	public static final field Companion Ldev/ohs/fhir/datacapture/extensions/EntryMode$Companion;
+	public static final field PRIOR_EDIT Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+	public static final field RANDOM Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+	public static final field SEQUENTIAL Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/EntryMode$Companion {
+	public final fun from (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/ItemControlTypes : java/lang/Enum {
+	public static final field AUTO_COMPLETE Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field CHECK_BOX Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field DROP_DOWN Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field OPEN_CHOICE Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field PHONE_NUMBER Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field RADIO_BUTTON Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final field SLIDER Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getExtensionCode ()Ljava/lang/String;
+	public final fun getViewHolderType ()Ldev/ohs/fhir/datacapture/QuestionnaireItemViewType;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MimeType : java/lang/Enum {
+	public static final field AUDIO Ldev/ohs/fhir/datacapture/extensions/MimeType;
+	public static final field DOCUMENT Ldev/ohs/fhir/datacapture/extensions/MimeType;
+	public static final field IMAGE Ldev/ohs/fhir/datacapture/extensions/MimeType;
+	public static final field VIDEO Ldev/ohs/fhir/datacapture/extensions/MimeType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ldev/ohs/fhir/datacapture/extensions/MimeType;
+	public static fun values ()[Ldev/ohs/fhir/datacapture/extensions/MimeType;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreExtensionsKt {
+	public static final fun readStringExtension (Ldev/ohs/fhir/model/r4/Extension;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreIntsKt {
+	public static final fun length (I)I
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItemAnswerOptionsKt {
+	public static final fun displayString (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public static final fun getElementValue (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;)Ldev/ohs/fhir/model/r4/Element;
+	public static final fun getId (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption$Value;)Ljava/lang/String;
+	public static final fun itemAnswerOptionImage (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;)Landroidx/compose/ui/graphics/ImageBitmap;
+	public static final fun toQuestionnaireResponseItemAnswer (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;)Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItemInitialsKt {
+	public static final fun toQuestionnaireResponseItemAnswer (Ldev/ohs/fhir/model/r4/Questionnaire$Item$Initial;)Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireItemsKt {
+	public static final fun flattened (Ljava/util/List;)Ljava/util/List;
+	public static final fun getChoiceOrientation (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ldev/ohs/fhir/datacapture/extensions/ChoiceOrientationTypes;
+	public static final fun getEnableWhenExpression (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ldev/ohs/fhir/model/r4/Expression;
+	public static final fun getEntryFormat (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ljava/lang/String;
+	public static final fun getHasHelpButton (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Z
+	public static final fun getInitialExpression (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ldev/ohs/fhir/model/r4/Expression;
+	public static final fun getItemControl (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ldev/ohs/fhir/datacapture/extensions/ItemControlTypes;
+	public static final fun getItemControlCode (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ljava/lang/String;
+	public static final fun getItemMedia (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ldev/ohs/fhir/model/r4/Attachment;
+	public static final fun getLocalizedFlyoverAnnotatedString (Ljava/util/List;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLocalizedHelpAnnotatedString (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLocalizedHelpAnnotatedString (Ljava/util/List;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLocalizedInstructionsAnnotatedString (Ljava/util/List;Ljava/lang/String;)Landroidx/compose/ui/text/AnnotatedString;
+	public static synthetic fun getLocalizedInstructionsAnnotatedString$default (Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLocalizedPrefixAnnotatedString (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLocalizedTextAnnotatedString (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Landroidx/compose/ui/text/AnnotatedString;
+	public static final fun getLogicalId (Ldev/ohs/fhir/model/r4/Resource;)Ljava/lang/String;
+	public static final fun getMimeTypes (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ljava/util/List;
+	public static final fun getShouldUseDialog (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Z
+	public static final fun getSliderStepValue (Ldev/ohs/fhir/model/r4/Questionnaire$Item;)Ljava/lang/Integer;
+	public static final fun hasMimeType (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ljava/lang/String;)Z
+	public static final fun hasMimeTypeOnly (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ljava/lang/String;)Z
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireResponseItemAnswersKt {
+	public static final fun getElementValue (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;)Ldev/ohs/fhir/model/r4/Element;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireResponseItemComponentsKt {
+	public static final fun getDescendant (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;)Ljava/util/List;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnaireResponsesKt {
+	public static final fun getAllItems (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Builder;)Ljava/util/List;
+}
+
+public final class dev/ohs/fhir/datacapture/extensions/MoreQuestionnairesKt {
+	public static final fun getEntryMode (Ldev/ohs/fhir/model/r4/Questionnaire;)Ldev/ohs/fhir/datacapture/extensions/EntryMode;
+	public static final fun getTargetStructureMap (Ldev/ohs/fhir/model/r4/Questionnaire;)Ljava/lang/String;
+	public static final fun isPaginated (Ldev/ohs/fhir/model/r4/Questionnaire;)Z
+}
+
+public final class dev/ohs/fhir/datacapture/extraction/DataExtractionException : java/lang/RuntimeException {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class dev/ohs/fhir/datacapture/extraction/template/TemplateExtractionEngine {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/extraction/template/TemplateExtractionEngine;
+	public final fun canExtract (Ldev/ohs/fhir/model/r4/Questionnaire;)Z
+	public final fun extract (Ldev/ohs/fhir/model/r4/Questionnaire;Ldev/ohs/fhir/model/r4/QuestionnaireResponse;)Ldev/ohs/fhir/model/r4/Bundle;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/QuestionnaireAlphas {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (FF)V
+	public synthetic fun <init> (FFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun copy (FF)Ldev/ohs/fhir/datacapture/theme/QuestionnaireAlphas;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/theme/QuestionnaireAlphas;FFILjava/lang/Object;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireAlphas;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReviewModeAnswer ()F
+	public final fun getReviewModeDivider ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/QuestionnaireDimensions {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component10-D9Ej5fM ()F
+	public final fun component11-D9Ej5fM ()F
+	public final fun component12-D9Ej5fM ()F
+	public final fun component13-D9Ej5fM ()F
+	public final fun component14-D9Ej5fM ()F
+	public final fun component15-D9Ej5fM ()F
+	public final fun component16-D9Ej5fM ()F
+	public final fun component17-D9Ej5fM ()F
+	public final fun component18-D9Ej5fM ()F
+	public final fun component19-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component20-D9Ej5fM ()F
+	public final fun component21-D9Ej5fM ()F
+	public final fun component22-D9Ej5fM ()F
+	public final fun component23-D9Ej5fM ()F
+	public final fun component24-D9Ej5fM ()F
+	public final fun component25-D9Ej5fM ()F
+	public final fun component26-D9Ej5fM ()F
+	public final fun component27-D9Ej5fM ()F
+	public final fun component28-D9Ej5fM ()F
+	public final fun component29-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component30-D9Ej5fM ()F
+	public final fun component31-D9Ej5fM ()F
+	public final fun component32-D9Ej5fM ()F
+	public final fun component33-D9Ej5fM ()F
+	public final fun component34-D9Ej5fM ()F
+	public final fun component35-D9Ej5fM ()F
+	public final fun component36-D9Ej5fM ()F
+	public final fun component37-D9Ej5fM ()F
+	public final fun component38-D9Ej5fM ()F
+	public final fun component39-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component40-D9Ej5fM ()F
+	public final fun component41-D9Ej5fM ()F
+	public final fun component42-D9Ej5fM ()F
+	public final fun component43-D9Ej5fM ()F
+	public final fun component44-D9Ej5fM ()F
+	public final fun component45-D9Ej5fM ()F
+	public final fun component46-D9Ej5fM ()F
+	public final fun component47-D9Ej5fM ()F
+	public final fun component48-D9Ej5fM ()F
+	public final fun component49-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component50-D9Ej5fM ()F
+	public final fun component51-D9Ej5fM ()F
+	public final fun component52-D9Ej5fM ()F
+	public final fun component53-D9Ej5fM ()F
+	public final fun component54-D9Ej5fM ()F
+	public final fun component55-D9Ej5fM ()F
+	public final fun component56-D9Ej5fM ()F
+	public final fun component57-D9Ej5fM ()F
+	public final fun component58-D9Ej5fM ()F
+	public final fun component59-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component60-D9Ej5fM ()F
+	public final fun component61-D9Ej5fM ()F
+	public final fun component62-D9Ej5fM ()F
+	public final fun component63-D9Ej5fM ()F
+	public final fun component64-D9Ej5fM ()F
+	public final fun component65-D9Ej5fM ()F
+	public final fun component66-D9Ej5fM ()F
+	public final fun component67-D9Ej5fM ()F
+	public final fun component68-D9Ej5fM ()F
+	public final fun component69-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component70-D9Ej5fM ()F
+	public final fun component71-D9Ej5fM ()F
+	public final fun component72-D9Ej5fM ()F
+	public final fun component73-D9Ej5fM ()F
+	public final fun component74-D9Ej5fM ()F
+	public final fun component75-D9Ej5fM ()F
+	public final fun component76-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9-D9Ej5fM ()F
+	public final fun copy-v6R0-jw (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)Ldev/ohs/fhir/datacapture/theme/QuestionnaireDimensions;
+	public static synthetic fun copy-v6R0-jw$default (Ldev/ohs/fhir/datacapture/theme/QuestionnaireDimensions;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFIIILjava/lang/Object;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireDimensions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActionButtonMarginHorizontal-D9Ej5fM ()F
+	public final fun getActionButtonMarginVertical-D9Ej5fM ()F
+	public final fun getAttachmentActionButtonIconSize-D9Ej5fM ()F
+	public final fun getAttachmentActionButtonMarginEnd-D9Ej5fM ()F
+	public final fun getAttachmentActionButtonPaddingHorizontal-D9Ej5fM ()F
+	public final fun getAttachmentDividerHeight-D9Ej5fM ()F
+	public final fun getAttachmentDividerMarginTop-D9Ej5fM ()F
+	public final fun getAttachmentErrorMarginTop-D9Ej5fM ()F
+	public final fun getAttachmentPreviewDividerMarginTop-D9Ej5fM ()F
+	public final fun getAttachmentPreviewFileIconMargin-D9Ej5fM ()F
+	public final fun getAttachmentPreviewMarginTop-D9Ej5fM ()F
+	public final fun getAttachmentPreviewPhotoHeight-D9Ej5fM ()F
+	public final fun getAttachmentPreviewPhotoWidth-D9Ej5fM ()F
+	public final fun getAttachmentPreviewTitleMarginHorizontal-D9Ej5fM ()F
+	public final fun getAttachmentUploadedLabelMarginBottom-D9Ej5fM ()F
+	public final fun getAttachmentUploadedLabelMarginTop-D9Ej5fM ()F
+	public final fun getAutoCompleteChipMargin-D9Ej5fM ()F
+	public final fun getAutoCompleteChipMarginBottom-D9Ej5fM ()F
+	public final fun getAutoCompleteTextFieldContentPadding-D9Ej5fM ()F
+	public final fun getBarcodeQuestionMarginEnd-D9Ej5fM ()F
+	public final fun getBarcodeQuestionMarginStart-D9Ej5fM ()F
+	public final fun getBottomContainerPaddingVertical-D9Ej5fM ()F
+	public final fun getChoiceButtonImage-D9Ej5fM ()F
+	public final fun getDatePickerAndTimePickerGap-D9Ej5fM ()F
+	public final fun getDialogConfirmationButtonPadding-D9Ej5fM ()F
+	public final fun getDialogContentScrollMarginVertical-D9Ej5fM ()F
+	public final fun getDialogOptionScrollMarginTop-D9Ej5fM ()F
+	public final fun getDialogPadding-D9Ej5fM ()F
+	public final fun getDialogSubtitleMarginTop-D9Ej5fM ()F
+	public final fun getDialogTitleMarginBottom-D9Ej5fM ()F
+	public final fun getDropDownClearIconMarginEnd-D9Ej5fM ()F
+	public final fun getDropDownClearIconMarginTop-D9Ej5fM ()F
+	public final fun getDropDownPadding-D9Ej5fM ()F
+	public final fun getErrorIconHeight-D9Ej5fM ()F
+	public final fun getErrorIconMarginEnd-D9Ej5fM ()F
+	public final fun getErrorIconWidth-D9Ej5fM ()F
+	public final fun getErrorTextAtHeaderMarginTop-D9Ej5fM ()F
+	public final fun getErrorTextMarginHorizontal-D9Ej5fM ()F
+	public final fun getErrorTextMarginVertical-D9Ej5fM ()F
+	public final fun getHeaderMarginBottom-D9Ej5fM ()F
+	public final fun getHeaderPaddingBottom-D9Ej5fM ()F
+	public final fun getHelpButtonHeight-D9Ej5fM ()F
+	public final fun getHelpButtonMarginStart-D9Ej5fM ()F
+	public final fun getHelpButtonWidth-D9Ej5fM ()F
+	public final fun getHelpCardMarginTop-D9Ej5fM ()F
+	public final fun getHelpContainerMarginTop-D9Ej5fM ()F
+	public final fun getHelpHeaderMarginBottom-D9Ej5fM ()F
+	public final fun getHelpHeaderMarginHorizontal-D9Ej5fM ()F
+	public final fun getHelpHeaderMarginTop-D9Ej5fM ()F
+	public final fun getHelpIconPadding-D9Ej5fM ()F
+	public final fun getHelpMarginBottom-D9Ej5fM ()F
+	public final fun getHelpTextMarginBottom-D9Ej5fM ()F
+	public final fun getHelpTextMarginHorizontal-D9Ej5fM ()F
+	public final fun getIconDrawablePadding-D9Ej5fM ()F
+	public final fun getIconInset-D9Ej5fM ()F
+	public final fun getItemAnswerMediaImageSize-D9Ej5fM ()F
+	public final fun getItemMarginHorizontal-D9Ej5fM ()F
+	public final fun getItemMarginVertical-D9Ej5fM ()F
+	public final fun getItemMediaImageMarginHorizontal-D9Ej5fM ()F
+	public final fun getItemMediaImageMarginVertical-D9Ej5fM ()F
+	public final fun getItemMediaImageMaxHeight-D9Ej5fM ()F
+	public final fun getItemMediaImageMaxWidth-D9Ej5fM ()F
+	public final fun getItemMediaImagePreviewMaxHeight-D9Ej5fM ()F
+	public final fun getItemMediaImagePreviewMaxWidth-D9Ej5fM ()F
+	public final fun getOptionItemAfterTextPadding-D9Ej5fM ()F
+	public final fun getOptionItemBetweenTextAndIconPadding-D9Ej5fM ()F
+	public final fun getOptionItemMarginHorizontal-D9Ej5fM ()F
+	public final fun getOptionItemMarginVertical-D9Ej5fM ()F
+	public final fun getOptionItemPadding-D9Ej5fM ()F
+	public final fun getPaddingAfterText-D9Ej5fM ()F
+	public final fun getPaddingBetweenTextAndIcon-D9Ej5fM ()F
+	public final fun getPrefixPaddingEnd-D9Ej5fM ()F
+	public final fun getSimpleQuestionViewAnswerMarginTop-D9Ej5fM ()F
+	public final fun getSimpleQuestionViewDividerMarginTop-D9Ej5fM ()F
+	public final fun getTitleLayoutMarginHorizontal-D9Ej5fM ()F
+	public final fun getTitleMarginEnd-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/QuestionnaireShapes {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public final fun component2 ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public final fun component3 ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public final fun copy (Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireShapes;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/theme/QuestionnaireShapes;Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;Landroidx/compose/foundation/shape/RoundedCornerShape;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireShapes;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddRepeatedGroupButton ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public final fun getAttachmentPreviewPhoto ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public final fun getDeleteRepeatedGroupButton ()Landroidx/compose/foundation/shape/RoundedCornerShape;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)V
+	public final fun component1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component10 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component11 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component12 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component13 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component14 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component15 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component16 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component17 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component4 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component5 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component6 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component7 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component8 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component9 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAttachmentPreviewTitle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getAttachmentUploadedLabel ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDialogTitle ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDropDownSelectedText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDropDownText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getErrorText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getGroupTypeQuestionText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getHelpHeaderText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getHelpText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getQuestionText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getReviewModeAnswerText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getReviewModeNotAnsweredText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getReviewModeQuestionText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getSubtitleText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getTitleText ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getValidationDialogBody ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getValidationDialogTitle ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/QuestionnaireTheme {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/theme/QuestionnaireTheme;
+	public final fun getAlphas (Landroidx/compose/runtime/Composer;I)Ldev/ohs/fhir/datacapture/theme/QuestionnaireAlphas;
+	public final fun getColorScheme (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/ColorScheme;
+	public final fun getDimensions (Landroidx/compose/runtime/Composer;I)Ldev/ohs/fhir/datacapture/theme/QuestionnaireDimensions;
+	public final fun getShapes (Landroidx/compose/runtime/Composer;I)Ldev/ohs/fhir/datacapture/theme/QuestionnaireShapes;
+	public final fun getTextStyles (Landroidx/compose/runtime/Composer;I)Ldev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles;
+	public final fun getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+}
+
+public final class dev/ohs/fhir/datacapture/theme/ThemeKt {
+	public static final fun QuestionnaireTheme (ZLandroidx/compose/material3/ColorScheme;Landroidx/compose/material3/Typography;Ldev/ohs/fhir/datacapture/theme/QuestionnaireTextStyles;Ldev/ohs/fhir/datacapture/theme/QuestionnaireDimensions;Ldev/ohs/fhir/datacapture/theme/QuestionnaireShapes;Ldev/ohs/fhir/datacapture/theme/QuestionnaireAlphas;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getLocalQuestionnaireAlphas ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getLocalQuestionnaireDimensions ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getLocalQuestionnaireShapes ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getLocalQuestionnaireTextStyles ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class dev/ohs/fhir/datacapture/validation/Invalid : dev/ohs/fhir/datacapture/validation/ValidationResult {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public final fun copy (Ljava/util/List;)Ldev/ohs/fhir/datacapture/validation/Invalid;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/validation/Invalid;Ljava/util/List;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/validation/Invalid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSingleStringValidationMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/validation/NotValidated : dev/ohs/fhir/datacapture/validation/ValidationResult {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/validation/NotValidated;
+}
+
+public final class dev/ohs/fhir/datacapture/validation/QuestionnaireResponseValidator {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/validation/QuestionnaireResponseValidator;
+	public final fun checkQuestionnaireResponse (Ldev/ohs/fhir/model/r4/Questionnaire;Ldev/ohs/fhir/model/r4/QuestionnaireResponse;)V
+	public final fun validateQuestionnaireResponse (Ldev/ohs/fhir/model/r4/Questionnaire;Ldev/ohs/fhir/model/r4/QuestionnaireResponse;Ljava/util/Map;Ljava/util/Map;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun validateQuestionnaireResponse$default (Ldev/ohs/fhir/datacapture/validation/QuestionnaireResponseValidator;Ldev/ohs/fhir/model/r4/Questionnaire;Ldev/ohs/fhir/model/r4/QuestionnaireResponse;Ljava/util/Map;Ljava/util/Map;Ldev/ohs/fhir/datacapture/XFhirQueryResolver;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class dev/ohs/fhir/datacapture/validation/Valid : dev/ohs/fhir/datacapture/validation/ValidationResult {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/validation/Valid;
+}
+
+public abstract class dev/ohs/fhir/datacapture/validation/ValidationResult {
+	public static final field $stable I
+}
+
+public final class dev/ohs/fhir/datacapture/views/QuestionTextConfiguration {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (ZZZ)V
+	public synthetic fun <init> (ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (ZZZ)Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;ZZZILjava/lang/Object;)Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getShowAsterisk ()Z
+	public final fun getShowOptionalText ()Z
+	public final fun getShowRequiredText ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/views/QuestionnaireViewItem {
+	public static final field $stable I
+	public fun <init> (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;Ldev/ohs/fhir/datacapture/validation/ValidationResult;Lkotlin/jvm/functions/Function5;Ljava/util/List;Ldev/ohs/fhir/model/r4/Extension$Value;Ldev/ohs/fhir/model/r4/Extension$Value;Ljava/lang/Object;Ljava/util/List;Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;ZLkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;Ldev/ohs/fhir/datacapture/validation/ValidationResult;Lkotlin/jvm/functions/Function5;Ljava/util/List;Ldev/ohs/fhir/model/r4/Extension$Value;Ldev/ohs/fhir/model/r4/Extension$Value;Ljava/lang/Object;Ljava/util/List;Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;ZLkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addAnswer (Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun clearAnswer (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun component1 ()Ldev/ohs/fhir/model/r4/Questionnaire$Item;
+	public final fun component10 ()Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;
+	public final fun component11 ()Z
+	public final fun component12 ()Lkotlin/jvm/functions/Function2;
+	public final fun component3 ()Ldev/ohs/fhir/datacapture/validation/ValidationResult;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ldev/ohs/fhir/model/r4/Extension$Value;
+	public final fun component7 ()Ldev/ohs/fhir/model/r4/Extension$Value;
+	public final fun component8 ()Ljava/lang/Object;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;Ldev/ohs/fhir/datacapture/validation/ValidationResult;Lkotlin/jvm/functions/Function5;Ljava/util/List;Ldev/ohs/fhir/model/r4/Extension$Value;Ldev/ohs/fhir/model/r4/Extension$Value;Ljava/lang/Object;Ljava/util/List;Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;ZLkotlin/jvm/functions/Function2;)Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Ldev/ohs/fhir/model/r4/Questionnaire$Item;Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;Ldev/ohs/fhir/datacapture/validation/ValidationResult;Lkotlin/jvm/functions/Function5;Ljava/util/List;Ldev/ohs/fhir/model/r4/Extension$Value;Ldev/ohs/fhir/model/r4/Extension$Value;Ljava/lang/Object;Ljava/util/List;Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnswers ()Ljava/util/List;
+	public final fun getDraftAnswer ()Ljava/lang/Object;
+	public final fun getEnabledAnswerOptions ()Ljava/util/List;
+	public final fun getEnabledDisplayItems ()Ljava/util/List;
+	public final fun getHelpCardStateChangedCallback ()Lkotlin/jvm/functions/Function2;
+	public final fun getMaxAnswerValue ()Ldev/ohs/fhir/model/r4/Extension$Value;
+	public final fun getMinAnswerValue ()Ldev/ohs/fhir/model/r4/Extension$Value;
+	public final fun getQuestionText ()Landroidx/compose/ui/text/AnnotatedString;
+	public final fun getQuestionViewTextConfiguration ()Ldev/ohs/fhir/datacapture/views/QuestionTextConfiguration;
+	public final fun getQuestionnaireItem ()Ldev/ohs/fhir/model/r4/Questionnaire$Item;
+	public final fun getQuestionnaireResponseItem ()Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item;
+	public final fun getValidationResult ()Ldev/ohs/fhir/datacapture/validation/ValidationResult;
+	public fun hashCode ()I
+	public final fun isHelpCardOpen ()Z
+	public final fun removeAnswer ([Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setAnswer ([Ldev/ohs/fhir/model/r4/QuestionnaireResponse$Item$Answer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setDraftAnswer (Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun setDraftAnswer$default (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Ljava/lang/Object;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$DateFieldItemKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$DateFieldItemKt;
+	public fun <init> ()V
+	public final fun getLambda$-1211091051$datacapture ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1805620087$datacapture ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2144519047$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$DropDownItemKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$DropDownItemKt;
+	public fun <init> ()V
+	public final fun getLambda$940545152$datacapture ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$HeaderKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$HeaderKt;
+	public fun <init> ()V
+	public final fun getLambda$-293605906$datacapture ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$OptionDialogSelectKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$OptionDialogSelectKt;
+	public fun <init> ()V
+	public final fun getLambda$-1169818132$datacapture ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-991275667$datacapture ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1058137260$datacapture ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1393090998$datacapture ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2102236525$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$TimeFieldItemKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$TimeFieldItemKt;
+	public fun <init> ()V
+	public final fun getLambda$-1975592892$datacapture ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$TimePickerDialogKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$TimePickerDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$-201455956$datacapture ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1109822117$datacapture ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1454650279$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ComposableSingletons$ValidationErrorDialogKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/components/ComposableSingletons$ValidationErrorDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$-451955372$datacapture ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-798317544$datacapture ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$290532283$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/HeaderKt {
+	public static final fun Header (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;ZZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/MediaItemKt {
+	public static final fun ImageMediaItem (Landroidx/compose/ui/graphics/ImageBitmap;Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
+	public static final fun MediaItem (Ldev/ohs/fhir/model/r4/Attachment;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/OptionSelectOption {
+	public static final field $stable I
+	public fun <init> (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;Z)V
+	public final fun component1 ()Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;
+	public final fun component2 ()Z
+	public final fun copy (Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;Z)Ldev/ohs/fhir/datacapture/views/components/OptionSelectOption;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/views/components/OptionSelectOption;Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;ZILjava/lang/Object;)Ldev/ohs/fhir/datacapture/views/components/OptionSelectOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisplayString (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public final fun getItem ()Ldev/ohs/fhir/model/r4/Questionnaire$Item$AnswerOption;
+	public final fun getSelected ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/SelectedOptions {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Ldev/ohs/fhir/datacapture/views/components/SelectedOptions;
+	public static synthetic fun copy$default (Ldev/ohs/fhir/datacapture/views/components/SelectedOptions;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ldev/ohs/fhir/datacapture/views/components/SelectedOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOptions ()Ljava/util/List;
+	public final fun getOtherOptions ()Ljava/util/List;
+	public final fun getSelectedSummary (Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/TimePickerDialogKt {
+	public static final fun TimePickerDialogPreview (Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/UtilsKt {
+	public static final fun getRequiredOrOptionalText (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)Ljava/lang/String;
+}
+
+public final class dev/ohs/fhir/datacapture/views/components/ValidationErrorDialogKt {
+	public static final fun ValidationErrorDialog (Ljava/util/List;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/ComposableSingletons$AttachmentViewFactoryKt {
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/factories/ComposableSingletons$AttachmentViewFactoryKt;
+	public fun <init> ()V
+	public final fun getLambda$-680253920$datacapture ()Lkotlin/jvm/functions/Function3;
+}
+
+public abstract interface class dev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory {
+	public abstract fun Content (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/TextInputFactory : dev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/foundation/text/KeyboardOptions;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZLorg/jetbrains/compose/resources/StringResource;[Ljava/lang/Object;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/text/KeyboardOptions;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZLorg/jetbrains/compose/resources/StringResource;[Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun Content (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/TimeViewFactory : dev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/factories/TimeViewFactory;
+	public fun Content (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/locationwidget/Geolocator_androidKt {
+	public static final fun rememberGeolocator (Landroidx/compose/runtime/Composer;I)Ldev/jordond/compass/geolocation/Geolocator;
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCaptureItemViewFactory : dev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCaptureItemViewFactory;
+	public fun Content (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCaptureItemViewFactoryKt {
+	public static final fun getLocationCaptureItemViewFactoryMatcher ()Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher;
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCoordinateItemViewFactory : dev/ohs/fhir/datacapture/views/factories/QuestionnaireItemViewFactory {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCoordinateItemViewFactory;
+	public fun Content (Ldev/ohs/fhir/datacapture/views/QuestionnaireViewItem;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class dev/ohs/fhir/datacapture/views/factories/locationwidget/LocationCoordinateItemViewFactoryKt {
+	public static final fun getLocationCoordinateItemViewFactoryMatcher ()Ldev/ohs/fhir/datacapture/QuestionnaireItemViewFactoryMatcher;
+}
+

@@ -22,8 +22,14 @@ jobs:
       matrix:
         include:
           # xvfb is required for Compose Multiplatform desktop/JVM UI tests running in a headless CI environment.
-          - target: ":datacapture:jvmTest"
+          - target: ":datacapture:jvmTest :datacapture:checkKotlinAbi"
             name: JVM
+            os: ubuntu-latest
+            xvfb: true
+          # Screenshot baselines in catalog/screenshots are recorded on this job's OS only, because
+          # text renders differently on each OS.
+          - target: ":catalog:verifyRoborazziJvm :catalog:assembleDebug :catalog:compileKotlinWasmJs"
+            name: Catalog
             os: ubuntu-latest
             xvfb: true
           - target: ":datacapture:wasmJsBrowserTest"
@@ -118,6 +124,25 @@ jobs:
           -Dorg.gradle.workers.max=1
           -Dkotlin.daemon.enabled=false
 
+      # When the screenshots differ from the baselines, record new ones so they can be reviewed and,
+      # if the change is intended, committed to catalog/screenshots.
+      - name: Record new screenshots
+        if: failure() && matrix.name == 'Catalog'
+        run: >-
+          xvfb-run --auto-servernum
+          ./gradlew :catalog:recordRoborazziJvm
+          --no-daemon
+          --no-configuration-cache
+          -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8"
+
+      - name: Upload new screenshots
+        if: failure() && matrix.name == 'Catalog'
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-screenshots
+          path: catalog/screenshots/
+          retention-days: 14
+
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -126,6 +151,7 @@ jobs:
           path: |
             **/build/reports/tests/
             **/build/test-results/
+            **/build/outputs/roborazzi/
           retention-days: 14
 
   # androidDeviceTest depends on commonTest, so the full common suite runs on an emulator.

@@ -50,6 +50,8 @@ import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireResponseScreen
 import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireScreen
 import dev.ohs.fhir.catalog.ui.questionnaire.QuestionnaireViewModel
 import dev.ohs.fhir.catalog.ui.theme.AppTheme
+import dev.ohs.fhir.catalog.ui.theme.LocalThemePresetSelection
+import dev.ohs.fhir.catalog.ui.theme.ThemePresetSelection
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
@@ -86,8 +88,12 @@ sealed class Screen(val route: String, val label: String, val icon: @Composable 
 fun App(xFhirQueryResolver: XFhirQueryResolver) {
   val dataCaptureConfig =
     remember(xFhirQueryResolver) { DataCaptureConfig(xFhirQueryResolver = xFhirQueryResolver) }
-  CompositionLocalProvider(LocalDataCaptureConfig provides dataCaptureConfig) {
-    AppTheme {
+  val themePresetSelection = remember { ThemePresetSelection() }
+  CompositionLocalProvider(
+    LocalDataCaptureConfig provides dataCaptureConfig,
+    LocalThemePresetSelection provides themePresetSelection,
+  ) {
+    AppTheme(preset = themePresetSelection.selected) {
       Surface {
         val navController: NavHostController = rememberNavController()
         val componentViewModel: ComponentListViewModel = viewModel { ComponentListViewModel() }

@@ -25,6 +25,10 @@ val mavenVersion: String by project
 kotlin {
   jvmToolchain(21)
 
+  // Public API dump in datacapture/api. Run updateKotlinAbi after an intended API change.
+  @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+  abiValidation { enabled.set(true) }
+
   jvm()
 
   wasmJs {
