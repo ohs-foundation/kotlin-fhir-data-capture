@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.androidx.navigation.safeargs)
+  alias(libs.plugins.roborazzi)
 }
 
 val androidNamespace: String by project
@@ -114,6 +115,16 @@ kotlin {
     @Suppress("unused")
     val jvmMain by getting { dependencies { implementation(compose.desktop.currentOs) } }
 
+    @Suppress("unused")
+    val jvmTest by getting {
+      dependencies {
+        implementation(compose.desktop.uiTestJUnit4)
+        implementation(libs.androidx.lifecycle.runtime.testing)
+        implementation(libs.junit)
+        implementation(libs.roborazzi.compose.desktop)
+      }
+    }
+
     iosMain {
       dependencies {
         implementation(libs.compass.geolocation.mobile)
@@ -126,3 +137,5 @@ kotlin {
     wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
   }
 }
+
+roborazzi { outputDir.set(layout.projectDirectory.dir("screenshots")) }

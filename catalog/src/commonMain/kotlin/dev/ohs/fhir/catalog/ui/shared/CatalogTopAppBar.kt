@@ -17,13 +17,16 @@ package dev.ohs.fhir.catalog.ui.shared
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,9 +34,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import dev.ohs.fhir.catalog.ui.theme.LocalThemePresetSelection
+import dev.ohs.fhir.catalog.ui.theme.ThemePreset
 import kotlin_fhir_data_capture.catalog.generated.resources.Res
 import kotlin_fhir_data_capture.catalog.generated.resources.more_vert_filled_24dp
 import kotlin_fhir_data_capture.catalog.generated.resources.open_questionnaire
+import kotlin_fhir_data_capture.catalog.generated.resources.theme
 import kotlin_fhir_data_capture.catalog.generated.resources.toolbar_text
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -42,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun CatalogTopAppBar(onOpenQuestionnaireAction: () -> Unit = {}) {
   var showMenu by remember { mutableStateOf(false) }
+  val themePresetSelection = LocalThemePresetSelection.current
 
   CenterAlignedTopAppBar(
     title = {
@@ -80,6 +89,24 @@ fun CatalogTopAppBar(onOpenQuestionnaireAction: () -> Unit = {}) {
               onOpenQuestionnaireAction()
             },
           )
+          HorizontalDivider()
+          Text(
+            text = stringResource(Res.string.theme),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+          )
+          ThemePreset.entries.forEach { preset ->
+            DropdownMenuItem(
+              text = { Text(stringResource(preset.label)) },
+              leadingIcon = {
+                RadioButton(selected = themePresetSelection.selected == preset, onClick = null)
+              },
+              onClick = {
+                showMenu = false
+                themePresetSelection.selected = preset
+              },
+            )
+          }
         }
       }
     },

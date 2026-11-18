@@ -76,7 +76,11 @@ private val LightColorScheme =
   )
 
 @Composable
-fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun AppTheme(
+  preset: ThemePreset = ThemePreset.DEFAULT,
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable () -> Unit,
+) {
   val colorScheme =
     if (darkTheme) {
       DarkColorScheme
@@ -84,5 +88,7 @@ fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable ()
       LightColorScheme
     }
 
-  QuestionnaireTheme(colorScheme = colorScheme, content = content)
+  when (preset) {
+    ThemePreset.DEFAULT -> QuestionnaireTheme(colorScheme = colorScheme, content = content)
+  }
 }

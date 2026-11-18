@@ -33,6 +33,7 @@ ohs-fhir = "1.0.0-rc03"
 ohs-fhir-engine = "2.0.0-alpha04"
 ohs-fhir-path = "1.0.0-beta06"
 permissions-camera = "0.20.1"
+roborazzi = "1.77.0"
 spotless-plugin = "8.4.0"
 truth = "1.1.5"
 
@@ -73,6 +74,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 ohs-fhir-engine = { module = "dev.ohs.fhir:fhir-engine", version.ref = "ohs-fhir-engine" }
 ohs-fhir-model = { module = "dev.ohs.fhir:fhir-model-r4", version.ref = "ohs-fhir" }
 ohs-fhir-path = { module = "dev.ohs.fhir:fhir-path-r4", version.ref = "ohs-fhir-path" }
+roborazzi-compose-desktop = { module = "io.github.takahirom.roborazzi:roborazzi-compose-desktop", version.ref = "roborazzi" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
 
@@ -88,4 +90,5 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
