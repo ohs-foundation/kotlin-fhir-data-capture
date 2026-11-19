@@ -31,10 +31,11 @@ import dev.ohs.fhir.datacapture.extensions.calculatedExpression
 import dev.ohs.fhir.datacapture.extensions.copyNestedItemsToChildlessAnswers
 import dev.ohs.fhir.datacapture.extensions.cqfExpression
 import dev.ohs.fhir.datacapture.extensions.createQuestionnaireResponseItem
+import dev.ohs.fhir.datacapture.extensions.descendant
 import dev.ohs.fhir.datacapture.extensions.entryMode
 import dev.ohs.fhir.datacapture.extensions.filterByCodeInNameExtension
+import dev.ohs.fhir.datacapture.extensions.flattened
 import dev.ohs.fhir.datacapture.extensions.forEachItemPair
-import dev.ohs.fhir.datacapture.extensions.hasDifferentAnswerSet
 import dev.ohs.fhir.datacapture.extensions.isDisplayItem
 import dev.ohs.fhir.datacapture.extensions.isHelpCode
 import dev.ohs.fhir.datacapture.extensions.isHidden
@@ -63,6 +64,8 @@ import dev.ohs.fhir.datacapture.validation.Valid
 import dev.ohs.fhir.datacapture.validation.ValidationResult
 import dev.ohs.fhir.datacapture.views.QuestionTextConfiguration
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
+import dev.ohs.fhir.fhirpath.types.FhirPathDate
+import dev.ohs.fhir.fhirpath.types.FhirPathDecimal
 import dev.ohs.fhir.model.r4.Attachment
 import dev.ohs.fhir.model.r4.Canonical
 import dev.ohs.fhir.model.r4.Coding
@@ -71,7 +74,9 @@ import dev.ohs.fhir.model.r4.DateTime
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDate
 import dev.ohs.fhir.model.r4.FhirDateTime
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Integer
 import dev.ohs.fhir.model.r4.Quantity
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -160,22 +165,21 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
           )
         }
 
-        questionnaireResponseDraft =
+        val questionnaireResponseInput =
           jsonR4.decodeFromString(
             readFileContent(state[EXTRA_QUESTIONNAIRE_RESPONSE_JSON_URI]!! as String)
           ) as QuestionnaireResponse
-
-        addMissingResponseItems(questionnaire.item, questionnaireResponseDraft.item.toMutableList())
-        checkQuestionnaireResponse(questionnaire, questionnaireResponseDraft)
+        checkQuestionnaireResponse(questionnaire, questionnaireResponseInput)
+        questionnaireResponseDraft = questionnaireResponseInput.withMissingResponseItems()
       }
 
       state.contains(EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING) -> {
         val questionnaireResponseJson: String =
           state[EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING] as String
-        questionnaireResponseDraft =
+        val questionnaireResponseInput =
           jsonR4.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
-        addMissingResponseItems(questionnaire.item, questionnaireResponseDraft.item.toMutableList())
-        checkQuestionnaireResponse(questionnaire, questionnaireResponseDraft)
+        checkQuestionnaireResponse(questionnaire, questionnaireResponseInput)
+        questionnaireResponseDraft = questionnaireResponseInput.withMissingResponseItems()
       }
 
       else -> {
@@ -420,7 +424,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       }
       modifiedQuestionnaireResponseItemSet.add(questionnaireResponseItem)
 
-      updateAnswerWithAffectedCalculatedExpression(questionnaireItem, questionnaireResponseItem)
+      updateAnswerWithAffectedCalculatedExpression(questionnaireItem)
 
       modificationCount.update { it + 1 }
     }
@@ -456,50 +460,58 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
   private val questionnaireResponseItemValidator: QuestionnaireResponseItemValidator =
     QuestionnaireResponseItemValidator(expressionEvaluator)
 
+  /** Returns a copy of this response with [addMissingResponseItems] applied to its items. */
+  private fun QuestionnaireResponse.withMissingResponseItems(): QuestionnaireResponse =
+    toBuilder()
+      .apply {
+        item =
+          addMissingResponseItems(
+              this@QuestionnaireViewModel.questionnaire.item,
+              this@withMissingResponseItems.item,
+            )
+            .map { it.toBuilder() }
+            .toMutableList()
+      }
+      .build()
+
   /**
-   * Adds empty [QuestionnaireResponse.Item]s to `responseItems` so that each [Questionnaire.Item]
-   * in `questionnaireItems` has at least one corresponding [QuestionnaireResponse.Item]. This is
-   * because user-provided [QuestionnaireResponse] might not contain answers to unanswered or
-   * disabled questions. This function should only be used for unpacked questionnaire.
+   * Returns `responseItems` with empty [QuestionnaireResponse.Item]s added so that each
+   * [Questionnaire.Item] in `questionnaireItems` has at least one corresponding
+   * [QuestionnaireResponse.Item]. This is because user-provided [QuestionnaireResponse] might not
+   * contain answers to unanswered or disabled questions. The result follows the order of
+   * `questionnaireItems`. This function should only be used for unpacked questionnaire.
    */
   @VisibleForTesting
   internal fun addMissingResponseItems(
     questionnaireItems: List<Questionnaire.Item>,
-    responseItems: MutableList<QuestionnaireResponse.Item>,
-  ) {
+    responseItems: List<QuestionnaireResponse.Item>,
+  ): List<QuestionnaireResponse.Item> {
     // To associate the linkId to QuestionnaireResponse.Item, do not use associateBy().
     // Instead, use groupBy().
     // This is because a questionnaire response may have multiple
     // QuestionnaireResponseItemComponents with the same linkId.
     val responseItemMap = responseItems.groupBy { it.linkId }
 
-    // Clear the response item list, and then add the missing and existing response items back to
-    // the list
-    responseItems.clear()
+    return questionnaireItems.flatMap { questionnaireItem ->
+      val existingResponseItems = responseItemMap[questionnaireItem.linkId]
+      when {
+        existingResponseItems.isNullOrEmpty() ->
+          listOf(questionnaireItem.createQuestionnaireResponseItem().build())
 
-    questionnaireItems.forEach {
-      if (responseItemMap[it.linkId].isNullOrEmpty()) {
-        responseItems.add(it.createQuestionnaireResponseItem().build())
-      } else {
-        if (
-          it.type.value == Questionnaire.QuestionnaireItemType.Group && it.repeats?.value != true
-        ) {
-          addMissingResponseItems(
-            questionnaireItems = it.item,
-            responseItems = responseItemMap[it.linkId]!!.single().item.toMutableList(),
-          )
-        }
-        if (
-          it.type.value == Questionnaire.QuestionnaireItemType.Group && it.repeats?.value == true
-        ) {
-          responseItemMap[it.linkId]!!.forEach { rItem ->
-            addMissingResponseItems(
-              questionnaireItems = it.item,
-              responseItems = rItem.item.toMutableList(),
-            )
+        questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group ->
+          existingResponseItems.map { responseItem ->
+            responseItem
+              .toBuilder()
+              .apply {
+                item =
+                  addMissingResponseItems(questionnaireItem.item, responseItem.item)
+                    .map { it.toBuilder() }
+                    .toMutableList()
+              }
+              .build()
           }
-        }
-        responseItems.addAll(responseItemMap[it.linkId]!!)
+
+        else -> existingResponseItems
       }
     }
   }
@@ -702,61 +714,52 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
 
   /**
    * Updates all items that has [dev.ohs.fhir.datacapture.extensions.calculatedExpression] that
-   * reference the given [questionnaireItem] within their calculations.
+   * reference the given [questionnaireItem] within their calculations, then the items that
+   * reference those, and so on: a calculated item can depend on another calculated item.
    *
    * If item X has a [dev.ohs.fhir.datacapture.extensions.calculatedExpression], but that item does
-   * not reference the given [questionnaireItem], then item X should not be calculated.
+   * not reference the given [questionnaireItem] or an item recalculated because of it, then item X
+   * should not be calculated.
    *
-   * Only items that have not been modified by the user will be updated to prevent any event loops.
+   * Each item is evaluated after the items it depends on have been updated, so it never reads a
+   * stale value. Only items that have not been modified by the user will be updated to prevent any
+   * event loops.
    *
    * @param questionnaireItem The questionnaire item referenced by other items through
    *   [dev.ohs.fhir.datacapture.extensions.calculatedExpression].
    */
   private suspend fun updateAnswerWithAffectedCalculatedExpression(
-    questionnaireItem: Questionnaire.Item,
-    questionnaireResponseItem: QuestionnaireResponse.Item,
+    questionnaireItem: Questionnaire.Item
   ) {
-    expressionEvaluator
-      .evaluateAllAffectedCalculatedExpressions(questionnaireItem, questionnaireResponseItem)
-      .forEach { (questionnaireItem, calculatedAnswers) ->
-        // update all response item with updated values
-        questionnaireResponse.value
-          .toBuilder()
-          .allItems
-          // Item answer should not be modified and touched by user;
-          // https://build.fhir.org/ig/HL7/sdc/StructureDefinition-sdc-questionnaire-calculatedExpression.html
-          .filter {
-            it.linkId == questionnaireItem.linkId &&
-              !modifiedQuestionnaireResponseItemSet.contains(it)
-          }
-          .forEach { questionnaireResponseItem ->
-            // update and notify only if new answer has changed to prevent any event loop
-            if (questionnaireResponseItem.answer.hasDifferentAnswerSet(calculatedAnswers)) {
-              questionnaireResponseItem.toBuilder().apply {
-                answer =
-                  calculatedAnswers.mapNotNullTo(mutableListOf()) {
-                    when (it) {
-                      is FhirR4Boolean -> QuestionnaireResponse.Item.Answer.Value.Boolean(it)
-                      is Decimal -> QuestionnaireResponse.Item.Answer.Value.Decimal(it)
-                      is Integer -> QuestionnaireResponse.Item.Answer.Value.Integer(it)
-                      is FhirR4String -> QuestionnaireResponse.Item.Answer.Value.String(it)
-                      is Coding -> QuestionnaireResponse.Item.Answer.Value.Coding(it)
-                      is Reference -> QuestionnaireResponse.Item.Answer.Value.Reference(it)
-                      is Date -> QuestionnaireResponse.Item.Answer.Value.Date(it)
-                      is DateTime -> QuestionnaireResponse.Item.Answer.Value.DateTime(it)
-                      is Time -> QuestionnaireResponse.Item.Answer.Value.Time(it)
-                      is Uri -> QuestionnaireResponse.Item.Answer.Value.Uri(it)
-                      is Attachment -> QuestionnaireResponse.Item.Answer.Value.Attachment(it)
-                      is Quantity -> QuestionnaireResponse.Item.Answer.Value.Quantity(it)
-                      else -> null
-                    }?.let { item ->
-                      QuestionnaireResponse.Item.Answer.Builder().apply { value = item }
-                    }
-                  }
-              }
+    val changedItems = ArrayDeque(listOf(questionnaireItem))
+    // Guards against a cycle through several items, which the pairwise check at initialization
+    // does not detect. An acyclic chain settles well within this bound.
+    var remainingUpdates = calculatedItemCount * calculatedItemCount + 1
+    while (changedItems.isNotEmpty() && remainingUpdates-- > 0) {
+      val changedItem = changedItems.removeFirst()
+      expressionEvaluator.affectedCalculatedItems(changedItem).forEach { calculatedItem ->
+        // Evaluate in the scope of the calculated item, not the updated one, so variables
+        // declared on the calculated item and its ancestors resolve.
+        val calculatedAnswers = expressionEvaluator.evaluateCalculatedExpression(calculatedItem)
+        // Walk the live response items (not builder copies) so the update is actually applied.
+        val updated =
+          questionnaireResponse.value.item
+            .flatMap { it.descendant }
+            // Item answer should not be modified and touched by user;
+            // https://build.fhir.org/ig/HL7/sdc/StructureDefinition-sdc-questionnaire-calculatedExpression.html
+            .filter {
+              it.linkId == calculatedItem.linkId &&
+                !modifiedQuestionnaireResponseItemSet.contains(it)
             }
-          }
+            .map { it.setCalculatedAnswers(calculatedAnswers) }
+            .any { it }
+        if (updated && calculatedItem !in changedItems) changedItems.addLast(calculatedItem)
       }
+    }
+  }
+
+  private val calculatedItemCount: Int by lazy {
+    questionnaire.item.flattened().count { it.calculatedExpression != null }
   }
 
   /**
@@ -776,29 +779,81 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
     if (modifiedQuestionnaireResponseItemSet.contains(questionnaireResponseItem)) return
     val answers = expressionEvaluator.evaluateCalculatedExpression(questionnaireItem)
     if (answers.isEmpty()) return
-    if (questionnaireResponseItem.answer.hasDifferentAnswerSet(answers)) {
-      questionnaireResponseItem.toBuilder().apply {
-        answer =
-          answers.mapNotNullTo(mutableListOf()) {
-            when (it) {
-              is FhirR4Boolean -> QuestionnaireResponse.Item.Answer.Value.Boolean(it)
-              is Decimal -> QuestionnaireResponse.Item.Answer.Value.Decimal(it)
-              is Integer -> QuestionnaireResponse.Item.Answer.Value.Integer(it)
-              is FhirR4String -> QuestionnaireResponse.Item.Answer.Value.String(it)
-              is Coding -> QuestionnaireResponse.Item.Answer.Value.Coding(it)
-              is Reference -> QuestionnaireResponse.Item.Answer.Value.Reference(it)
-              is Date -> QuestionnaireResponse.Item.Answer.Value.Date(it)
-              is DateTime -> QuestionnaireResponse.Item.Answer.Value.DateTime(it)
-              is Time -> QuestionnaireResponse.Item.Answer.Value.Time(it)
-              is Uri -> QuestionnaireResponse.Item.Answer.Value.Uri(it)
-              is Attachment -> QuestionnaireResponse.Item.Answer.Value.Attachment(it)
-              is Quantity -> QuestionnaireResponse.Item.Answer.Value.Quantity(it)
-              else -> null
-            }?.let { item -> QuestionnaireResponse.Item.Answer.Builder().apply { value = item } }
-          }
-      }
-    }
+    questionnaireResponseItem.setCalculatedAnswers(answers)
   }
+
+  /**
+   * Replaces this item's answers with [calculatedValues], in place, if they differ. The answer list
+   * is mutated directly (as in [answersChangedCallback]) because `toBuilder()` returns a detached
+   * copy, so changes made through it are never reflected in the questionnaire response.
+   *
+   * Update only when the value has changed, to prevent any event loop. Returns whether it changed.
+   */
+  private fun QuestionnaireResponse.Item.setCalculatedAnswers(
+    calculatedValues: List<Any>
+  ): Boolean {
+    val newValues = calculatedValues.mapNotNull { it.toAnswerValue() }
+    if (answer.map { it.value } == newValues) return false
+    val answerList = answer as? MutableList ?: return false
+    answerList.clear()
+    answerList.addAll(
+      newValues.map { QuestionnaireResponse.Item.Answer.Builder().apply { value = it }.build() }
+    )
+    return true
+  }
+
+  /**
+   * Converts a FHIRPath evaluation result into an answer value. FHIRPath returns FHIR model types
+   * when navigating the resource, but System types (Kotlin [Int], [String], [Boolean],
+   * [FhirPathDecimal], [FhirPathDate], ...) for computed results such as arithmetic.
+   */
+  private fun Any.toAnswerValue(): QuestionnaireResponse.Item.Answer.Value? =
+    when (this) {
+      // FHIR model types
+      is Attachment -> QuestionnaireResponse.Item.Answer.Value.Attachment(this)
+
+      is FhirR4Boolean -> QuestionnaireResponse.Item.Answer.Value.Boolean(this)
+
+      is Coding -> QuestionnaireResponse.Item.Answer.Value.Coding(this)
+
+      is Date -> QuestionnaireResponse.Item.Answer.Value.Date(this)
+
+      is DateTime -> QuestionnaireResponse.Item.Answer.Value.DateTime(this)
+
+      is Decimal -> QuestionnaireResponse.Item.Answer.Value.Decimal(this)
+
+      is Integer -> QuestionnaireResponse.Item.Answer.Value.Integer(this)
+
+      is Quantity -> QuestionnaireResponse.Item.Answer.Value.Quantity(this)
+
+      is Reference -> QuestionnaireResponse.Item.Answer.Value.Reference(this)
+
+      is FhirR4String -> QuestionnaireResponse.Item.Answer.Value.String(this)
+
+      is Time -> QuestionnaireResponse.Item.Answer.Value.Time(this)
+
+      is Uri -> QuestionnaireResponse.Item.Answer.Value.Uri(this)
+
+      // FHIRPath System types
+      is Boolean -> QuestionnaireResponse.Item.Answer.Value.Boolean(FhirR4Boolean(value = this))
+
+      is FhirPathDate ->
+        QuestionnaireResponse.Item.Answer.Value.Date(Date(value = FhirDate.fromString(toString())))
+
+      is FhirPathDecimal ->
+        QuestionnaireResponse.Item.Answer.Value.Decimal(
+          Decimal(value = FhirDecimal.fromBigDecimal(asBigDecimal()))
+        )
+
+      is Int -> QuestionnaireResponse.Item.Answer.Value.Integer(Integer(value = this))
+
+      is Long ->
+        QuestionnaireResponse.Item.Answer.Value.Decimal(Decimal(value = FhirDecimal.fromLong(this)))
+
+      is String -> QuestionnaireResponse.Item.Answer.Value.String(FhirR4String(value = this))
+
+      else -> null
+    }
 
   private fun removeDisabledAnswers(
     questionnaireItem: Questionnaire.Item,
