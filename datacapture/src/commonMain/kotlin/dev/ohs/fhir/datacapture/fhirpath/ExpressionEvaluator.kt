@@ -177,31 +177,35 @@ internal class ExpressionEvaluator(
   }
 
   /**
+   * Returns the items with calculated expression extension, in questionnaire order, whose value
+   * depends on the value of [questionnaireItem].
+   */
+  fun affectedCalculatedItems(questionnaireItem: Questionnaire.Item): List<Questionnaire.Item> =
+    questionnaire.item.flattened().filter { item ->
+      // Condition 1. item is calculable
+      // Condition 2. item answer depends on the updated item answer, directly or through a
+      // variable
+      item.calculatedExpression != null &&
+        (questionnaireItem.isReferencedBy(item) ||
+          questionnaireItem.isReferencedThroughVariables(item.calculatedExpression!!, item))
+    }
+
+  /**
    * Returns a list of pair of item and the calculated and evaluated value for all items with
    * calculated expression extension, which is dependent on value of updated response
    */
   suspend fun evaluateAllAffectedCalculatedExpressions(
     questionnaireItem: Questionnaire.Item
   ): List<ItemToAnswersPair> =
-    questionnaire.item
-      .flattened()
-      .filter { item ->
-        // Condition 1. item is calculable
-        // Condition 2. item answer depends on the updated item answer, directly or through a
-        // variable
-        item.calculatedExpression != null &&
-          (questionnaireItem.isReferencedBy(item) ||
-            questionnaireItem.isReferencedThroughVariables(item.calculatedExpression!!, item))
-      }
-      .map { item ->
-        // Evaluate in the scope of the calculated item, not the updated one, so variables
-        // declared on the calculated item and its ancestors resolve.
-        // TODO: Pass the questionnaire response item corresponding to the
-        //  questionnaire item with the calculated expression for the FHIRPath supplement
-        //  `%context`.
-        val updatedAnswer = evaluateCalculatedExpression(item)
-        item to updatedAnswer
-      }
+    affectedCalculatedItems(questionnaireItem).map { item ->
+      // Evaluate in the scope of the calculated item, not the updated one, so variables
+      // declared on the calculated item and its ancestors resolve.
+      // TODO: Pass the questionnaire response item corresponding to the
+      //  questionnaire item with the calculated expression for the FHIRPath supplement
+      //  `%context`.
+      val updatedAnswer = evaluateCalculatedExpression(item)
+      item to updatedAnswer
+    }
 
   /**
    * Returns the evaluated value of [calculatedExpression] from the given [questionnaireItem]. A

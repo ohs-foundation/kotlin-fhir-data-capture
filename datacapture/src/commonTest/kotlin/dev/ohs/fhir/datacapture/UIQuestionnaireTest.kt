@@ -596,6 +596,25 @@ class UIQuestionnaireTest {
     waitForCalculatedValue("100")
   }
 
+  @Test
+  fun calculatedExpression_shouldUpdate_whenCalculatedItemItDependsOnChanges() = runComposeUiTest {
+    setQuestionnaireContent(
+      chainedWeightQuestionnaire(),
+      dataCaptureConfig = DataCaptureConfig(textInputDebounce = Duration.ZERO),
+    )
+    waitForCalculatedValue("160")
+
+    // Edit fields are rendered in item order: weight, double, quadruple, total.
+    enterText(fieldIndex = 0, text = "50")
+    waitForCalculatedValue("100")
+    // quadruple only references double, which is itself calculated.
+    waitForCalculatedValue("200")
+    // total references weight and double: it must read the updated double (50 + 100), not the
+    // previous one (50 + 80).
+    waitForCalculatedValue("150")
+    onAllNodesWithTag(EDIT_TEXT_FIELD_TEST_TAG)[3].assertTextEquals("150")
+  }
+
   private fun ComposeUiTest.enterText(fieldIndex: Int, text: String) {
     onAllNodesWithTag(EDIT_TEXT_FIELD_TEST_TAG)[fieldIndex].performTextReplacement(text)
     waitForIdle()
@@ -645,6 +664,43 @@ class UIQuestionnaireTest {
       }
       """
     )
+
+  private fun chainedWeightQuestionnaire(): Questionnaire {
+    fun calculated(linkId: String, expression: String) =
+      """
+      {
+        "linkId": "$linkId",
+        "text": "$linkId",
+        "type": "integer",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+            "valueExpression": { "language": "text/fhirpath", "expression": "$expression" }
+          }
+        ]
+      }
+      """
+    fun answer(linkId: String) = "%resource.repeat(item).where(linkId='$linkId').answer.value"
+    return fhirJson.decodeFromString<Questionnaire>(
+      """
+      {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "item": [
+          {
+            "linkId": "weight",
+            "text": "Weight",
+            "type": "integer",
+            "initial": [{ "valueInteger": 40 }]
+          },
+          ${calculated("double", "${answer("weight")} * 2")},
+          ${calculated("quadruple", "${answer("double")} * 2")},
+          ${calculated("total", "${answer("weight")} + ${answer("double")}")}
+        ]
+      }
+      """
+    )
+  }
 
   private fun birthDateForAge30(): LocalDate =
     Clock.System.todayIn(TimeZone.currentSystemDefault())

@@ -34,6 +34,7 @@ import dev.ohs.fhir.datacapture.extensions.createQuestionnaireResponseItem
 import dev.ohs.fhir.datacapture.extensions.descendant
 import dev.ohs.fhir.datacapture.extensions.entryMode
 import dev.ohs.fhir.datacapture.extensions.filterByCodeInNameExtension
+import dev.ohs.fhir.datacapture.extensions.flattened
 import dev.ohs.fhir.datacapture.extensions.forEachItemPair
 import dev.ohs.fhir.datacapture.extensions.isDisplayItem
 import dev.ohs.fhir.datacapture.extensions.isHelpCode
@@ -713,12 +714,16 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
 
   /**
    * Updates all items that has [dev.ohs.fhir.datacapture.extensions.calculatedExpression] that
-   * reference the given [questionnaireItem] within their calculations.
+   * reference the given [questionnaireItem] within their calculations, then the items that
+   * reference those, and so on: a calculated item can depend on another calculated item.
    *
    * If item X has a [dev.ohs.fhir.datacapture.extensions.calculatedExpression], but that item does
-   * not reference the given [questionnaireItem], then item X should not be calculated.
+   * not reference the given [questionnaireItem] or an item recalculated because of it, then item X
+   * should not be calculated.
    *
-   * Only items that have not been modified by the user will be updated to prevent any event loops.
+   * Each item is evaluated after the items it depends on have been updated, so it never reads a
+   * stale value. Only items that have not been modified by the user will be updated to prevent any
+   * event loops.
    *
    * @param questionnaireItem The questionnaire item referenced by other items through
    *   [dev.ohs.fhir.datacapture.extensions.calculatedExpression].
@@ -726,18 +731,35 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
   private suspend fun updateAnswerWithAffectedCalculatedExpression(
     questionnaireItem: Questionnaire.Item
   ) {
-    expressionEvaluator.evaluateAllAffectedCalculatedExpressions(questionnaireItem).forEach {
-      (calculatedItem, calculatedAnswers) ->
-      // Walk the live response items (not builder copies) so the update is actually applied.
-      questionnaireResponse.value.item
-        .flatMap { it.descendant }
-        // Item answer should not be modified and touched by user;
-        // https://build.fhir.org/ig/HL7/sdc/StructureDefinition-sdc-questionnaire-calculatedExpression.html
-        .filter {
-          it.linkId == calculatedItem.linkId && !modifiedQuestionnaireResponseItemSet.contains(it)
-        }
-        .forEach { it.setCalculatedAnswers(calculatedAnswers) }
+    val changedItems = ArrayDeque(listOf(questionnaireItem))
+    // Guards against a cycle through several items, which the pairwise check at initialization
+    // does not detect. An acyclic chain settles well within this bound.
+    var remainingUpdates = calculatedItemCount * calculatedItemCount + 1
+    while (changedItems.isNotEmpty() && remainingUpdates-- > 0) {
+      val changedItem = changedItems.removeFirst()
+      expressionEvaluator.affectedCalculatedItems(changedItem).forEach { calculatedItem ->
+        // Evaluate in the scope of the calculated item, not the updated one, so variables
+        // declared on the calculated item and its ancestors resolve.
+        val calculatedAnswers = expressionEvaluator.evaluateCalculatedExpression(calculatedItem)
+        // Walk the live response items (not builder copies) so the update is actually applied.
+        val updated =
+          questionnaireResponse.value.item
+            .flatMap { it.descendant }
+            // Item answer should not be modified and touched by user;
+            // https://build.fhir.org/ig/HL7/sdc/StructureDefinition-sdc-questionnaire-calculatedExpression.html
+            .filter {
+              it.linkId == calculatedItem.linkId &&
+                !modifiedQuestionnaireResponseItemSet.contains(it)
+            }
+            .map { it.setCalculatedAnswers(calculatedAnswers) }
+            .any { it }
+        if (updated && calculatedItem !in changedItems) changedItems.addLast(calculatedItem)
+      }
     }
+  }
+
+  private val calculatedItemCount: Int by lazy {
+    questionnaire.item.flattened().count { it.calculatedExpression != null }
   }
 
   /**
@@ -765,17 +787,19 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
    * is mutated directly (as in [answersChangedCallback]) because `toBuilder()` returns a detached
    * copy, so changes made through it are never reflected in the questionnaire response.
    *
-   * Update only when the value has changed, to prevent any event loop.
+   * Update only when the value has changed, to prevent any event loop. Returns whether it changed.
    */
-  private fun QuestionnaireResponse.Item.setCalculatedAnswers(calculatedValues: List<Any>) {
+  private fun QuestionnaireResponse.Item.setCalculatedAnswers(
+    calculatedValues: List<Any>
+  ): Boolean {
     val newValues = calculatedValues.mapNotNull { it.toAnswerValue() }
-    if (answer.map { it.value } == newValues) return
-    (answer as? MutableList)?.let { answerList ->
-      answerList.clear()
-      answerList.addAll(
-        newValues.map { QuestionnaireResponse.Item.Answer.Builder().apply { value = it }.build() }
-      )
-    }
+    if (answer.map { it.value } == newValues) return false
+    val answerList = answer as? MutableList ?: return false
+    answerList.clear()
+    answerList.addAll(
+      newValues.map { QuestionnaireResponse.Item.Answer.Builder().apply { value = it }.build() }
+    )
+    return true
   }
 
   /**
