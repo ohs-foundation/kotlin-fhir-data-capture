@@ -54,6 +54,7 @@ import dev.ohs.fhir.datacapture.extensions.validateLaunchContextExtensions
 import dev.ohs.fhir.datacapture.extensions.zipByLinkId
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
+import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseItemValidator
@@ -416,6 +417,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
             questionnaireItemParentMap,
             questionnaireLaunchContextMap,
             xFhirQueryResolver,
+            expressionCache,
           )
       }
       modifiedQuestionnaireResponseItemSet.add(questionnaireResponseItem)
@@ -425,6 +427,8 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       modificationCount.update { it + 1 }
     }
 
+  private val expressionCache = QuestionnaireExpressionCache()
+
   private val expressionEvaluator: ExpressionEvaluator =
     ExpressionEvaluator(
       questionnaire,
@@ -432,6 +436,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       questionnaireItemParentMap,
       questionnaireLaunchContextMap,
       xFhirQueryResolver,
+      expressionCache,
     )
 
   private var enablementEvaluator: EnablementEvaluator =
@@ -441,6 +446,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
       questionnaireItemParentMap,
       questionnaireLaunchContextMap,
       xFhirQueryResolver,
+      expressionCache,
     )
 
   private val answerOptionsEvaluator: EnabledAnswerOptionsEvaluator =
@@ -822,7 +828,15 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
    *
    * The traverse is carried out in the two lists in tandem.
    */
-  private suspend fun getQuestionnaireState(): QuestionnaireState {
+  private suspend fun getQuestionnaireState(): QuestionnaireState =
+    try {
+      expressionCache.activate()
+      computeQuestionnaireState()
+    } finally {
+      expressionCache.deactivate()
+    }
+
+  private suspend fun computeQuestionnaireState(): QuestionnaireState {
     val questionnaireItemList = questionnaire.item
     val questionnaireResponseItemList = questionnaireResponse.value.item
 

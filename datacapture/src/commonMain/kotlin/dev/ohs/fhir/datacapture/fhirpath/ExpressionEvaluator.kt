@@ -56,6 +56,7 @@ internal class ExpressionEvaluator(
   private val questionnaireItemParentMap: Map<Questionnaire.Item, Questionnaire.Item> = emptyMap(),
   private val questionnaireLaunchContextMap: Map<String, Resource>? = emptyMap(),
   private val xFhirQueryResolver: XFhirQueryResolver? = null,
+  private val expressionCache: QuestionnaireExpressionCache = QuestionnaireExpressionCache(),
 ) {
 
   private val reservedItemVariables =
@@ -94,6 +95,13 @@ internal class ExpressionEvaluator(
    * in this expression
    */
   private val variableRegex = Regex("%([A-Za-z0-9\\-']{1,64})")
+
+  /** Every `%` variable reference, including the delimited `%'name'` and `%`name`` forms. */
+  private val sharableVariableReferenceRegex = Regex("%('[^']*'|`[^`]*`|[A-Za-z0-9_\\-]+)")
+
+  /** Variables that resolve to the same value whichever item an expression is evaluated for. */
+  private val itemIndependentVariables =
+    setOf("resource", "rootResource", "questionnaire", "sct", "loinc", "ucum")
 
   /**
    * Finds all the matching occurrences of FHIRPaths in x-fhir-query. See:
@@ -147,13 +155,41 @@ internal class ExpressionEvaluator(
     expression: Expression?,
   ): List<Any> {
     if (expression == null) return emptyList()
+    val expressionText = expression.expression?.value ?: ""
+    val cacheKey = if (expressionCache.isActive) sharableResultKey(expressionText) else null
+    cacheKey?.let { key ->
+      expressionCache.cachedResult(key)?.let {
+        return it
+      }
+    }
     val variables =
       extractItemDependentVariables(expression, questionnaireItem, questionnaireResponseItem)
-    return FhirPathService.evaluate(
-      expression.fhirPathFor(variables),
-      questionnaireResponse,
-      variables,
-    )
+    val result =
+      FhirPathService.evaluate(expression.fhirPathFor(variables), questionnaireResponse, variables)
+    cacheKey?.let { expressionCache.cacheResult(it, result) }
+    return result
+  }
+
+  /**
+   * Share a result only when it cannot depend on the item it is evaluated for. Conservative: the
+   * expression must mention `%resource` or `%questionnaire`, and every variable it references must
+   * resolve the same way for every item. `%context`, `%qitem` and variables declared on items do
+   * not, so an expression referencing any of them is never shared.
+   */
+  private fun sharableResultKey(expressionText: String): String? {
+    val references =
+      sharableVariableReferenceRegex
+        .findAll(expressionText)
+        .map { it.groupValues[1].trim('\'', '`') }
+        .toList()
+    if (references.none { it == "resource" || it == questionnaireFhirPathSupplement }) return null
+    val itemIndependent = { name: String ->
+      name in itemIndependentVariables ||
+        name.startsWith("vs-") ||
+        name.startsWith("ext-") ||
+        questionnaireLaunchContextMap?.containsKey(name) == true
+    }
+    return if (references.all(itemIndependent)) expressionText else null
   }
 
   /**
