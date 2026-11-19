@@ -38,7 +38,7 @@ jobs:
         run: |
           sudo swapoff -a || true
           sudo rm -f /mnt/swapfile
-          sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=16384
+          sudo fallocate -l 16G /mnt/swapfile
           sudo chmod 600 /mnt/swapfile
           sudo mkswap /mnt/swapfile
           sudo swapon /mnt/swapfile
@@ -78,11 +78,13 @@ jobs:
 
       - name: Generate binary size report
         env:
-          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          COMMIT_SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           python3 scripts/binary-size-report.py \
             --root . \
             --commit-sha "$COMMIT_SHA" \
+            --head-sha "$HEAD_SHA" \
             --output binary-size.json \
             --compare baseline-binary-size.json \
             --markdown-output binary-size-report.md

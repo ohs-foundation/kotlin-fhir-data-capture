@@ -30,14 +30,13 @@ MODULES = {
     "datacapture": "dev.ohs.fhir.datacapture",
 }
 
-ANDROID_MIN_API = "26"
+DEFAULT_ANDROID_MIN_API = "26"
 ANDROID_ABI = "arm64-v8a"
 DEX_FIELD_IDS_OFFSET = 0x50
 DEX_METHOD_IDS_OFFSET = 0x58
 DEX_CLASS_DEFS_OFFSET = 0x60
 
 COMPOSE_RESOURCES_PREFIX = "composeResources/"
-JS_MODULE_PREFIX = "kotlin-fhir-data-capture-"
 TOP_DEPENDENCIES = 15
 NOISE_BYTES = 1_024
 NOISE_PERCENT = 0.1
@@ -159,11 +158,11 @@ def analyze_packaged_files(aar_paths: list[str]) -> dict:
     return {"native_libs_bytes": native, "assets_bytes": assets}
 
 
-def _run_d8(jar_path: str, d8_jar: str, android_jar: str, out_zip: str) -> dict:
+def _run_d8(jar_path: str, d8_jar: str, android_jar: str, out_zip: str, min_api: str) -> dict:
     subprocess.run(
         [
             "java", "-Xmx3g", "-cp", d8_jar, "com.android.tools.r8.D8",
-            "--release", "--min-api", ANDROID_MIN_API,
+            "--release", "--min-api", min_api,
             "--lib", android_jar,
             "--output", out_zip,
             jar_path,
@@ -181,6 +180,7 @@ def _run_r8(
     d8_jar: str,
     android_jar: str,
     tmpdir: str,
+    min_api: str,
 ) -> dict:
     # Keeping the whole public API makes this an upper bound: an app using every widget.
     rules_path = os.path.join(tmpdir, "r8.pro")
@@ -194,7 +194,7 @@ def _run_r8(
     out_zip = os.path.join(tmpdir, "r8.zip")
     cmd = [
         "java", "-Xmx4g", "-cp", d8_jar, "com.android.tools.r8.R8",
-        "--release", "--min-api", ANDROID_MIN_API,
+        "--release", "--min-api", min_api,
         "--output", out_zip,
         "--pg-conf", rules_path,
         "--lib", android_jar,
@@ -212,6 +212,7 @@ def analyze_android(
     dependencies: list[dict],
     d8_jar: Optional[str],
     android_jar: Optional[str],
+    min_api: str,
 ) -> dict:
     entry = analyze_aar(aar_path)
     dependency_aars = [d["file"] for d in dependencies if d["file"].endswith(".aar") and os.path.isfile(d["file"])]
@@ -224,8 +225,9 @@ def analyze_android(
         if not classes_jar:
             return entry
         try:
-            entry["d8"] = _run_d8(classes_jar, d8_jar, android_jar, os.path.join(tmpdir, "d8.zip"))
+            entry["d8"] = _run_d8(classes_jar, d8_jar, android_jar, os.path.join(tmpdir, "d8.zip"), min_api)
         except subprocess.CalledProcessError as exc:
+            entry.setdefault("errors", []).append("D8 failed")
             print(f"⚠️  D8 failed for {aar_path}: {exc.stderr.decode()[-2000:]}", file=sys.stderr)
 
         if not dependencies:
@@ -247,9 +249,10 @@ def analyze_android(
                 program_jars.append(path)
         try:
             entry["r8_with_dependencies"] = _run_r8(
-                program_jars, rule_files, module_pkg, d8_jar, android_jar, tmpdir
+                program_jars, rule_files, module_pkg, d8_jar, android_jar, tmpdir, min_api
             )
         except subprocess.CalledProcessError as exc:
+            entry.setdefault("errors", []).append("R8 failed")
             print(f"⚠️  R8 failed for {aar_path}: {exc.stderr.decode()[-2000:]}", file=sys.stderr)
     return entry
 
@@ -279,7 +282,7 @@ def _analyze_web_dir(directory: str, extensions: tuple[str, ...], own_name: str)
     }
 
 
-def analyze_web_artifacts(mod_dir: str, artifact_name: str) -> dict:
+def analyze_web_artifacts(mod_dir: str, artifact_name: str, root_name: str) -> dict:
     # Development output is measured because the production library is dead-code eliminated
     # against an empty export list. It holds every linked dependency; Wasm links them into one
     # binary, so only JS has a module-only share.
@@ -287,7 +290,7 @@ def analyze_web_artifacts(mod_dir: str, artifact_name: str) -> dict:
     targets = {"js": ("js", (".js",)), "wasm": ("wasmJs", (".wasm", ".mjs"))}
     for key, (target, extensions) in targets.items():
         directory = os.path.join(mod_dir, "build", "compileSync", target, "main", "developmentLibrary", "kotlin")
-        if result := _analyze_web_dir(directory, extensions, f"{JS_MODULE_PREFIX}{artifact_name}."):
+        if result := _analyze_web_dir(directory, extensions, f"{root_name}-{artifact_name}."):
             web[key] = result
     return web
 
@@ -328,7 +331,21 @@ def _run_cmd(cmd: list[str], cwd: str) -> Optional[str]:
         return None
 
 
-def collect_metadata(root: str, commit_sha: Optional[str] = None) -> dict:
+def read_build_settings(root: str) -> tuple[str, str]:
+    """The Android min SDK and the root project name, as the build defines them."""
+    min_api, root_name = DEFAULT_ANDROID_MIN_API, os.path.basename(root)
+    properties = os.path.join(root, "gradle.properties")
+    if os.path.isfile(properties):
+        if m := re.search(r"^androidMinSdk\s*=\s*(\d+)", Path(properties).read_text(encoding="utf-8"), re.M):
+            min_api = m.group(1)
+    settings = os.path.join(root, "settings.gradle.kts")
+    if os.path.isfile(settings):
+        if m := re.search(r'rootProject\.name\s*=\s*"([^"]+)"', Path(settings).read_text(encoding="utf-8")):
+            root_name = m.group(1)
+    return min_api, root_name
+
+
+def collect_metadata(root: str, commit_sha: Optional[str] = None, head_sha: Optional[str] = None) -> dict:
     sha = (
         commit_sha
         or os.environ.get("COMMIT_SHA")
@@ -338,6 +355,8 @@ def collect_metadata(root: str, commit_sha: Optional[str] = None) -> dict:
     meta: dict = {"timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
     if sha:
         meta["commit_sha"] = sha
+    if head_sha and head_sha != sha:
+        meta["head_sha"] = head_sha
     meta["repository"] = os.environ.get("GITHUB_REPOSITORY", "ohs-foundation/kotlin-fhir-data-capture")
     meta["server_url"] = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
     if run_id := os.environ.get("GITHUB_RUN_ID"):
@@ -366,8 +385,14 @@ def collect_metadata(root: str, commit_sha: Optional[str] = None) -> dict:
     return meta
 
 
-def build_report(root: str, commit_sha: Optional[str] = None, skip_android: bool = False) -> dict:
-    report: dict = {METADATA_KEY: collect_metadata(root, commit_sha=commit_sha)}
+def build_report(
+    root: str,
+    commit_sha: Optional[str] = None,
+    head_sha: Optional[str] = None,
+    skip_android: bool = False,
+) -> dict:
+    report: dict = {METADATA_KEY: collect_metadata(root, commit_sha=commit_sha, head_sha=head_sha)}
+    min_api, root_name = read_build_settings(root)
 
     d8_jar, android_jar = (None, None) if skip_android else _find_android_sdk_jars()
     if not skip_android and not d8_jar:
@@ -393,12 +418,12 @@ def build_report(root: str, commit_sha: Optional[str] = None, skip_android: bool
 
         if aar := _first_file(os.path.join(mod_dir, "build", "outputs", "aar", "*.aar")):
             entry["android"] = analyze_android(
-                aar, module_pkg, dependencies.get("android", []), d8_jar, android_jar
+                aar, module_pkg, dependencies.get("android", []), d8_jar, android_jar, min_api
             )
         else:
             print(f"⚠️  AAR not found for {mod}", file=sys.stderr)
 
-        if web := analyze_web_artifacts(mod_dir, name):
+        if web := analyze_web_artifacts(mod_dir, name, root_name):
             entry["web"] = web
         if native := analyze_native(mod_dir, name):
             entry["native"] = native
@@ -634,7 +659,8 @@ def render_markdown(report: dict, baseline: Optional[dict]) -> str:
         "that uses every widget. Sizes are uncompressed unless marked gzip.</sub>",
     ]
     if sha := meta.get("commit_sha"):
-        lines += ["", f"<sub>Commit {sha[:10]} · Kotlin {meta.get('kotlin_version', '?')} · "
+        measured = f"Merge commit {sha[:10]} of head {meta['head_sha'][:10]}" if meta.get("head_sha") else f"Commit {sha[:10]}"
+        lines += ["", f"<sub>{measured} · Kotlin {meta.get('kotlin_version', '?')} · "
                       f"Compose Multiplatform {meta.get('compose_multiplatform_version', '?')}</sub>"]
     return "\n".join(lines) + "\n"
 
@@ -643,14 +669,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=".", help="Repository root (default: current directory)")
     parser.add_argument("--output", default="binary-size.json", help="Where to write the JSON report")
-    parser.add_argument("--commit-sha", help="Commit SHA to record in the report metadata")
+    parser.add_argument("--commit-sha", help="SHA of the measured commit")
+    parser.add_argument("--head-sha", help="Pull request head SHA, when the measured commit is its merge commit")
     parser.add_argument("--compare", help="Baseline JSON report to diff against (ignored if missing)")
     parser.add_argument("--markdown-output", help="Where to write the Markdown report")
     parser.add_argument("--skip-android", action="store_true", help="Skip D8/R8 DEX analysis")
     args = parser.parse_args()
 
     root = os.path.abspath(args.root)
-    report = build_report(root, commit_sha=args.commit_sha, skip_android=args.skip_android)
+    report = build_report(root, commit_sha=args.commit_sha, head_sha=args.head_sha, skip_android=args.skip_android)
     Path(args.output).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {args.output}", file=sys.stderr)
 
@@ -664,6 +691,12 @@ def main() -> int:
         print(f"Wrote {args.markdown_output}", file=sys.stderr)
     else:
         print(markdown)
+
+    # A report with missing metrics must not become the baseline.
+    errors = [f"{mod}: {e}" for mod in MODULES for e in report.get(mod, {}).get("android", {}).get("errors", [])]
+    if errors:
+        print("Binary size report is incomplete: " + "; ".join(errors), file=sys.stderr)
+        return 1
     return 0
 
 

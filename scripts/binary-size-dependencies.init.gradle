@@ -30,7 +30,7 @@ allprojects {
         def report = [:]
         configurations.each { target, configurationName ->
           def artifacts = project.configurations.getByName(configurationName)
-            .incoming.artifactView { lenient = true }.artifacts.artifacts
+            .incoming.artifacts.artifacts
           report[target] = artifacts.collect { artifact ->
             def id = artifact.id.componentIdentifier
             def entry = [file: artifact.file.absolutePath, bytes: artifact.file.length()]
