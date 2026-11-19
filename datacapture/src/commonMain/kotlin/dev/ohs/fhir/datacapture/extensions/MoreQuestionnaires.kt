@@ -262,7 +262,7 @@ private suspend fun forEachItemPair(
     // response items.
     if (
       questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-        questionnaireItem.repeats?.value == false &&
+        questionnaireItem.repeats?.value != true &&
         questionnaireItem.item.isNotEmpty()
     ) {
       forEachItemPair(questionnaireItem.item, questionnaireResponseItem.item, forEach)
