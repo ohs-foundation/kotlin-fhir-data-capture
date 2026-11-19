@@ -133,10 +133,14 @@ kotlin {
     @Suppress("unused")
     val jvmMain by getting {
       dependencies {
-        implementation(compose.desktop.currentOs)
+        implementation(compose.desktop.common)
         implementation(libs.kotlinx.coroutines.swing)
       }
     }
+
+    @Suppress("unused")
+    val jvmTest by getting { dependencies { implementation(compose.desktop.currentOs) } }
+
     androidMain {
       dependencies {
         implementation(libs.androidx.activity.compose)
