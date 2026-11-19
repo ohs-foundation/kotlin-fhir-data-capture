@@ -52,7 +52,7 @@ jobs:
           GRADLE_OPTS: ${{ env.GRADLE_JVM_ARGS }}
         run: >-
           ./gradlew
-          --init-script scripts/binary-size-dependencies.init.gradle
+          --init-script scripts/binary-size-dependencies.init.gradle.kts
           :datacapture:binarySizeDependencies
           :datacapture:jvmJar
           :datacapture:bundleAndroidMainAar
