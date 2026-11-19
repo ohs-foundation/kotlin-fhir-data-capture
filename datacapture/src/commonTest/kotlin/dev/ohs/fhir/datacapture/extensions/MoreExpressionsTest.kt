@@ -15,8 +15,8 @@
  */
 package dev.ohs.fhir.datacapture.extensions
 
-import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Expression
+import dev.ohs.fhir.model.r4.ExtensibleEnumeration
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -27,7 +27,7 @@ class MoreExpressionsTest {
   fun isXFhirQueryShouldReturnTrue() {
     val expression =
       Expression(
-        language = Enumeration(value = Expression.ExpressionLanguage.Application_X_Fhir_Query)
+        language = ExtensibleEnumeration.of(Expression.ExpressionLanguage.Application_X_Fhir_Query)
       )
 
     assertTrue(expression.isXFhirQuery)
@@ -36,7 +36,7 @@ class MoreExpressionsTest {
   @Test
   fun isXFhirQueryShouldReturnFalse() {
     val expression =
-      Expression(language = Enumeration(value = Expression.ExpressionLanguage.Text_Cql))
+      Expression(language = ExtensibleEnumeration.of(Expression.ExpressionLanguage.Text_Cql))
 
     assertFalse(expression.isXFhirQuery)
   }
@@ -44,7 +44,7 @@ class MoreExpressionsTest {
   @Test
   fun isFhirPathShouldReturnTrue() {
     val expression =
-      Expression(language = Enumeration(value = Expression.ExpressionLanguage.Text_Fhirpath))
+      Expression(language = ExtensibleEnumeration.of(Expression.ExpressionLanguage.Text_Fhirpath))
 
     assertTrue(expression.isFhirPath)
   }
@@ -53,7 +53,7 @@ class MoreExpressionsTest {
   fun isFhirPathShouldReturnFalse() {
     val expression =
       Expression(
-        language = Enumeration(value = Expression.ExpressionLanguage.Application_X_Fhir_Query)
+        language = ExtensibleEnumeration.of(Expression.ExpressionLanguage.Application_X_Fhir_Query)
       )
 
     assertFalse(expression.isFhirPath)

@@ -86,9 +86,9 @@ internal val Element.displayString: String?
         remember(this) { value?.let { if (it) yesStringText else noStringText } }
       }
 
-      is Quantity -> remember(this) { value?.value?.toStringExpanded() }
+      is Quantity -> remember(this) { value?.value?.asBigDecimal()?.toStringExpanded() }
 
-      is Decimal -> remember(this) { value?.toStringExpanded() }
+      is Decimal -> remember(this) { value?.asBigDecimal()?.toStringExpanded() }
 
       else -> remember(this) { null }
     }

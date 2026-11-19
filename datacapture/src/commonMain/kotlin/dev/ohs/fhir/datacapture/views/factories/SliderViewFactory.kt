@@ -130,7 +130,7 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
   private fun getExtensionValueFloat(extensionValue: Extension.Value?, default: Float) =
     extensionValue?.let {
       when (it) {
-        is Extension.Value.Decimal -> it.value.value?.floatValue()
+        is Extension.Value.Decimal -> it.value.value?.asBigDecimal()?.floatValue()
         is Extension.Value.Integer -> it.value.value?.toFloat()
         else -> throw IllegalArgumentException("Unexpected Extension.value: $extensionValue")
       }

@@ -102,7 +102,11 @@ kotlin {
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.kscan)
       implementation(libs.navigation.compose)
-      implementation(libs.ohs.fhir.engine)
+      implementation(libs.ohs.fhir.engine.get().toString()) {
+        exclude(group = "dev.ohs.fhir", module = "fhir-model-r4")
+        exclude(group = "dev.ohs.fhir", module = "fhir-path-r4")
+      }
+      implementation(libs.ohs.fhir.path)
       implementation(libs.ohs.fhir.model)
       implementation(project(":datacapture"))
     }

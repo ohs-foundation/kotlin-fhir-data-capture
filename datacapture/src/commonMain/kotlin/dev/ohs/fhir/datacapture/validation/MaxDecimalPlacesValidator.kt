@@ -41,6 +41,7 @@ internal object MaxDecimalPlacesValidator :
           .asDecimal()!!
           .value
           .value
+          ?.asBigDecimal()
           ?.toStringExpanded()
           ?.substringAfter(".")
           ?.length!! > maxDecimalPlaces

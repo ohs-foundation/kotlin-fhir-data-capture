@@ -48,6 +48,7 @@ import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -108,7 +109,7 @@ class DecimalTextInputFactoryTest {
                   QuestionnaireResponse.Item.Answer(
                     value =
                       QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "1.1".toBigDecimal())
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("1.1".toBigDecimal()))
                       )
                   )
                 ),
@@ -138,7 +139,7 @@ class DecimalTextInputFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "1.1".toBigDecimal())
+                      value = Decimal(value = FhirDecimal.fromBigDecimal("1.1".toBigDecimal()))
                     )
                 )
               ),
@@ -188,7 +189,7 @@ class DecimalTextInputFactoryTest {
               QuestionnaireResponse.Item.Answer(
                 value =
                   QuestionnaireResponse.Item.Answer.Value.Decimal(
-                    value = Decimal(value = "1.1".toBigDecimal())
+                    value = Decimal(value = FhirDecimal.fromBigDecimal("1.1".toBigDecimal()))
                   )
               )
             ),
@@ -225,7 +226,7 @@ class DecimalTextInputFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "1.1".toBigDecimal())
+                      value = Decimal(value = FhirDecimal.fromBigDecimal("1.1".toBigDecimal()))
                     )
                 )
               ),
@@ -269,7 +270,7 @@ class DecimalTextInputFactoryTest {
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1.1")
     waitUntil { answers != null }
 
-    answers!!.single().value?.asDecimal()?.value?.value.shouldBe(1.1.toBigDecimal())
+    answers!!.single().value?.asDecimal()?.value?.value?.asBigDecimal().shouldBe(1.1.toBigDecimal())
   }
 
   @Test
@@ -324,11 +325,17 @@ class DecimalTextInputFactoryTest {
                 listOf(
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "2.2".toBigDecimal())),
+                    value =
+                      Extension.Value.Decimal(
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("2.2".toBigDecimal()))
+                      ),
                   ),
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "4.4".toBigDecimal())),
+                    value =
+                      Extension.Value.Decimal(
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("4.4".toBigDecimal()))
+                      ),
                   ),
                 ),
             ),
@@ -339,7 +346,7 @@ class DecimalTextInputFactoryTest {
                   QuestionnaireResponse.Item.Answer(
                     value =
                       QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "3.3".toBigDecimal())
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("3.3".toBigDecimal()))
                       )
                   )
                 ),
@@ -366,11 +373,17 @@ class DecimalTextInputFactoryTest {
                 listOf(
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/minValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "2.1".toBigDecimal())),
+                    value =
+                      Extension.Value.Decimal(
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("2.1".toBigDecimal()))
+                      ),
                   ),
                   Extension(
                     url = "http://hl7.org/fhir/StructureDefinition/maxValue",
-                    value = Extension.Value.Decimal(value = Decimal(value = "4.2".toBigDecimal())),
+                    value =
+                      Extension.Value.Decimal(
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("4.2".toBigDecimal()))
+                      ),
                   ),
                 ),
             ),
@@ -381,7 +394,7 @@ class DecimalTextInputFactoryTest {
                   QuestionnaireResponse.Item.Answer(
                     value =
                       QuestionnaireResponse.Item.Answer.Value.Decimal(
-                        value = Decimal(value = "1.1".toBigDecimal())
+                        value = Decimal(value = FhirDecimal.fromBigDecimal("1.1".toBigDecimal()))
                       )
                   )
                 ),
@@ -620,7 +633,7 @@ class DecimalTextInputFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "124.5".toBigDecimal())
+                      value = Decimal(value = FhirDecimal.fromBigDecimal("124.5".toBigDecimal()))
                     )
                 )
               ),
@@ -643,7 +656,7 @@ class DecimalTextInputFactoryTest {
                 QuestionnaireResponse.Item.Answer(
                   value =
                     QuestionnaireResponse.Item.Answer.Value.Decimal(
-                      value = Decimal(value = "124.578".toBigDecimal())
+                      value = Decimal(value = FhirDecimal.fromBigDecimal("124.578".toBigDecimal()))
                     )
                 )
               ),

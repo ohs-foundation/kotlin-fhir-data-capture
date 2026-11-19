@@ -51,6 +51,7 @@ import dev.ohs.fhir.model.r4.Coding
 import dev.ohs.fhir.model.r4.Decimal
 import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
+import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.Uri
@@ -67,7 +68,7 @@ fun quantity(
   system: String? = null,
 ) =
   dev.ohs.fhir.model.r4.Quantity(
-    value = Decimal(value = value),
+    value = Decimal(value = value?.let(FhirDecimal::fromBigDecimal)),
     unit = FhirR4String(value = unit),
     code = Code(value = code),
     system = Uri(value = system),

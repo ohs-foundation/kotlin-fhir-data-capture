@@ -18,9 +18,7 @@ package dev.ohs.fhir.datacapture.extensions
 import dev.ohs.fhir.model.r4.Expression
 
 internal val Expression.isXFhirQuery: Boolean
-  get() =
-    Expression.ExpressionLanguage.Application_X_Fhir_Query.getCode() ==
-      this.language.value?.getCode()
+  get() = Expression.ExpressionLanguage.Application_X_Fhir_Query.code == this.language.code
 
 internal val Expression.isFhirPath: Boolean
-  get() = Expression.ExpressionLanguage.Text_Fhirpath.getCode() == this.language.value?.getCode()
+  get() = Expression.ExpressionLanguage.Text_Fhirpath.code == this.language.code

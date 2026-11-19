@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import dev.ohs.fhir.datacapture.enablement.EnablementEvaluator
 import dev.ohs.fhir.datacapture.expressions.EnabledAnswerOptionsEvaluator
-import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_LAST_LAUNCHED_TIMESTAMP
 import dev.ohs.fhir.datacapture.extensions.EntryMode
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
@@ -55,6 +54,7 @@ import dev.ohs.fhir.datacapture.extensions.validateLaunchContextExtensions
 import dev.ohs.fhir.datacapture.extensions.zipByLinkId
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
+import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.validation.QuestionnaireResponseItemValidator

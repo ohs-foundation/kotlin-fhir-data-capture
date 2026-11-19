@@ -90,9 +90,9 @@ kotlin {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.io.core)
         implementation(libs.kotlinx.serialization.json)
-        implementation(libs.navigation.compose)
         implementation(libs.ohs.fhir.model)
         implementation(libs.ohs.fhir.path)
+        implementation(libs.compass.geolocation)
       }
     }
 
@@ -117,20 +117,16 @@ kotlin {
         implementation(libs.androidx.test.ext.junit)
         implementation(libs.androidx.test.ext.junit.ktx)
         implementation(libs.androidx.test.runner)
-        implementation(libs.androidx.test.rules)
         implementation(libs.kotlinx.coroutines.test)
-        implementation(libs.truth)
       }
     }
 
     getByName("androidHostTest") {
       dependencies {
-        implementation(libs.androidx.fragment.testing)
         implementation(libs.androidx.test.core)
         implementation(libs.junit)
         implementation(libs.kotlin.test.junit)
         implementation(libs.kotlinx.coroutines.test)
-        implementation(libs.truth)
       }
     }
 
@@ -141,6 +137,17 @@ kotlin {
         implementation(libs.kotlinx.coroutines.swing)
       }
     }
+    androidMain {
+      dependencies {
+        implementation(libs.androidx.activity.compose)
+        implementation(libs.compass.geolocation.mobile)
+      }
+    }
+
+    iosMain { dependencies { implementation(libs.compass.geolocation.mobile) } }
+
+    jsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
+    wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
   }
 }
 

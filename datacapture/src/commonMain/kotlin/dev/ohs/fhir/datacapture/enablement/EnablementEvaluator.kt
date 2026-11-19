@@ -18,8 +18,8 @@ package dev.ohs.fhir.datacapture.enablement
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.extensions.enableWhenExpression
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
-import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.datacapture.fhirpath.FhirPathService
+import dev.ohs.fhir.datacapture.fhirpath.QuestionnaireExpressionCache
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
 import dev.ohs.fhir.model.r4.Resource
@@ -124,7 +124,7 @@ internal class EnablementEvaluator(
     }
 
     questionnaireResponseItemPreOrderList.forEachIndexed { index, item ->
-      questionnaireResponseItemPreOrderIndexMap.putIfAbsent(item, index)
+      questionnaireResponseItemPreOrderIndexMap.getOrPut(item) { index }
       questionnaireResponseItemPreOrderIndicesByLinkId
         .getOrPut(item.linkId.value) { mutableListOf() }
         .add(index)
@@ -248,8 +248,7 @@ internal class EnablementEvaluator(
       parent = questionnaireResponseItemParentMap[parent]
     }
 
-    val candidateIndices =
-      questionnaireResponseItemPreOrderIndicesByLinkId[linkId] ?: return null
+    val candidateIndices = questionnaireResponseItemPreOrderIndicesByLinkId[linkId] ?: return null
     val originIndex = questionnaireResponseItemPreOrderIndexMap[origin] ?: -1
     val originPosition = candidateIndices.binarySearch(originIndex)
     val precedingCount = if (originPosition >= 0) originPosition else -(originPosition + 1)
