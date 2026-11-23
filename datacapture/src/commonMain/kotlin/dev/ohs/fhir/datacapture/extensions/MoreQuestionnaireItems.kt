@@ -663,7 +663,7 @@ internal fun Questionnaire.Item.isReferencedBy(item: Questionnaire.Item) =
       ?.expression
       ?.value
       ?.replace(" ", "")
-      ?.contains(Regex(".*linkId='${this.linkId}'.*")) == true
+      ?.contains(Regex(".*linkId='${this.linkId.value}'.*")) == true
   }
 
 internal val Questionnaire.Item.answerExpression: Expression?
