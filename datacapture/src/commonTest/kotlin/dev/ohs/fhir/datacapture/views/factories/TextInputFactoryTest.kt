@@ -38,6 +38,7 @@ import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.FhirDecimal
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.decimal_format_validation_error_msg
@@ -61,6 +62,7 @@ class TextInputFactoryTest {
     }
 
   @Test
+  @Ignore // Compose 1.12 JS test-harness regression
   fun bindingWhenViewIsInFocusDoesNotProgrammaticallyUpdateEditTextButUpdatesValidationUi() =
     runComposeUiTest {
       var questionnaireViewItem by

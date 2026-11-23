@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.cancel
 import kotlin_fhir_data_capture.datacapture.generated.resources.ic_access_time
@@ -45,7 +46,6 @@ import kotlin_fhir_data_capture.datacapture.generated.resources.switch_to_clock_
 import kotlin_fhir_data_capture.datacapture.generated.resources.switch_to_text_input
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

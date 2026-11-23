@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import kotlin.time.Duration
@@ -51,7 +52,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal const val EDIT_TEXT_FIELD_TEST_TAG = "text_input_edit_text"
 internal const val UNIT_TEXT_TEST_TAG = "unit_text_view"
