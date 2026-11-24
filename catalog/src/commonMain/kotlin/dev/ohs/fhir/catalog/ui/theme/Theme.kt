@@ -79,7 +79,7 @@ private val LightColorScheme =
   )
 
 /**
- * Named styles referenced by `component_per_question_custom_style.json` through the android-style
+ * Named styles referenced by `component_per_question_custom_style.json` through the custom-style
  * extension. Mirrors android-fhir's `CustomStyle_1` .. `CustomStyle_9` (text appearance from
  * Display Large down to Label Small, on a progressively lighter blue background).
  */

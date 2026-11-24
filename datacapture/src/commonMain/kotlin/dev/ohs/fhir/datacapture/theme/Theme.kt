@@ -207,11 +207,12 @@ data class QuestionnaireAlphas(
 
 /**
  * A named style that a questionnaire item can opt into through the
- * `https://github.com/google/android-fhir/tree/master/datacapture/android-style` extension, e.g.
+ * `https://github.com/ohs-foundation/kotlin-fhir-data-capture/StructureDefinition/custom-style`
+ * extension, e.g.
  *
  * ```
  * {
- *   "url": "https://github.com/google/android-fhir/tree/master/datacapture/android-style",
+ *   "url": "https://github.com/ohs-foundation/kotlin-fhir-data-capture/StructureDefinition/custom-style",
  *   "extension": [{ "url": "question_text_view", "valueString": "CustomStyle_1" }]
  * }
  * ```
@@ -262,7 +263,7 @@ val LocalQuestionnaireCustomStyles = staticCompositionLocalOf {
  * @param textStyles Custom textStyles for the questionnaire.
  * @param shapes Custom shapes for the questionnaire. Defaults to QuestionnaireShapes().
  * @param alphas Custom alpha values for the questionnaire. Defaults to QuestionnaireAlphas().
- * @param customStyles Named styles that questionnaire items can reference through the android-style
+ * @param customStyles Named styles that questionnaire items can reference through the custom-style
  *   extension. See [QuestionnaireCustomStyle].
  * @param content The composable content to be themed.
  */

@@ -113,7 +113,8 @@ fun Header(
     Header(
       prefixLocalizedText = prefixLocalizedText,
       questionLocalizedText = questionLocalizedText,
-      readCustomStyleName = remember { { questionnaireItem.readCustomStyleExtension(it) } },
+      readCustomStyleName =
+        remember(questionnaireItem) { { questionnaireItem.readCustomStyleExtension(it) } },
       hintLocalizedText = hintLocalizedText,
       isHelpCardOpen = questionnaireViewItem.isHelpCardOpen,
       isHelpButtonVisible = questionnaireItem.hasHelpButton,
@@ -277,7 +278,7 @@ internal fun Help(
 
 /**
  * Header text that honours the custom style the questionnaire item requests through the
- * android-style extension (see [dev.ohs.fhir.datacapture.theme.QuestionnaireCustomStyle]). Falls
+ * custom-style extension (see [dev.ohs.fhir.datacapture.theme.QuestionnaireCustomStyle]). Falls
  * back to [defaultStyle] when the item names no style or the name is not registered in the theme.
  */
 @Composable
