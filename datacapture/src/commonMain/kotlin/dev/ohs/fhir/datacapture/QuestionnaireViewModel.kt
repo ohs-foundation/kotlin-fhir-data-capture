@@ -26,6 +26,7 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_LAST_LAUNCHED_TIMESTAMP
 import dev.ohs.fhir.datacapture.extensions.EntryMode
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.extensions.addMissingResponseItems
 import dev.ohs.fhir.datacapture.extensions.allItems
 import dev.ohs.fhir.datacapture.extensions.calculatedExpression
 import dev.ohs.fhir.datacapture.extensions.copyNestedItemsToChildlessAnswers
@@ -165,7 +166,6 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
             readFileContent(state[EXTRA_QUESTIONNAIRE_RESPONSE_JSON_URI]!! as String)
           ) as QuestionnaireResponse
 
-        addMissingResponseItems(questionnaire.item, questionnaireResponseDraft.item.toMutableList())
         checkQuestionnaireResponse(questionnaire, questionnaireResponseDraft)
       }
 
@@ -174,7 +174,6 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
           state[EXTRA_QUESTIONNAIRE_RESPONSE_JSON_STRING] as String
         questionnaireResponseDraft =
           jsonR4.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
-        addMissingResponseItems(questionnaire.item, questionnaireResponseDraft.item.toMutableList())
         checkQuestionnaireResponse(questionnaire, questionnaireResponseDraft)
       }
 
@@ -216,6 +215,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
               }
             )
 
+          addMissingResponseItems(this@QuestionnaireViewModel.questionnaire)
           packRepeatedGroups(this@QuestionnaireViewModel.questionnaire)
         }
         .build()
@@ -455,54 +455,6 @@ internal class QuestionnaireViewModel(state: Map<String, Any>, config: DataCaptu
 
   private val questionnaireResponseItemValidator: QuestionnaireResponseItemValidator =
     QuestionnaireResponseItemValidator(expressionEvaluator)
-
-  /**
-   * Adds empty [QuestionnaireResponse.Item]s to `responseItems` so that each [Questionnaire.Item]
-   * in `questionnaireItems` has at least one corresponding [QuestionnaireResponse.Item]. This is
-   * because user-provided [QuestionnaireResponse] might not contain answers to unanswered or
-   * disabled questions. This function should only be used for unpacked questionnaire.
-   */
-  @VisibleForTesting
-  internal fun addMissingResponseItems(
-    questionnaireItems: List<Questionnaire.Item>,
-    responseItems: MutableList<QuestionnaireResponse.Item>,
-  ) {
-    // To associate the linkId to QuestionnaireResponse.Item, do not use associateBy().
-    // Instead, use groupBy().
-    // This is because a questionnaire response may have multiple
-    // QuestionnaireResponseItemComponents with the same linkId.
-    val responseItemMap = responseItems.groupBy { it.linkId }
-
-    // Clear the response item list, and then add the missing and existing response items back to
-    // the list
-    responseItems.clear()
-
-    questionnaireItems.forEach {
-      if (responseItemMap[it.linkId].isNullOrEmpty()) {
-        responseItems.add(it.createQuestionnaireResponseItem().build())
-      } else {
-        if (
-          it.type.value == Questionnaire.QuestionnaireItemType.Group && it.repeats?.value != true
-        ) {
-          addMissingResponseItems(
-            questionnaireItems = it.item,
-            responseItems = responseItemMap[it.linkId]!!.single().item.toMutableList(),
-          )
-        }
-        if (
-          it.type.value == Questionnaire.QuestionnaireItemType.Group && it.repeats?.value == true
-        ) {
-          responseItemMap[it.linkId]!!.forEach { rItem ->
-            addMissingResponseItems(
-              questionnaireItems = it.item,
-              responseItems = rItem.item.toMutableList(),
-            )
-          }
-        }
-        responseItems.addAll(responseItemMap[it.linkId]!!)
-      }
-    }
-  }
 
   /**
    * Returns current [QuestionnaireResponse] captured by the UI which includes answers of enabled
