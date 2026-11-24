@@ -114,7 +114,7 @@ the `kotlin` block of the module's `build.gradle.kts` file (e.g., `composeApp/bu
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha02")
+            implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha05")
         }
     }
 }
@@ -128,7 +128,7 @@ For Android projects, add the dependency to the `dependency` block in the module
 ```
 // e.g., app/build.gradle.kts
 dependencies {
-    implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha04")
+    implementation("dev.ohs.fhir:fhir-data-capture:2.0.0-alpha05")
 }
 ```
 
