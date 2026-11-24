@@ -17,6 +17,7 @@ package dev.ohs.fhir.datacapture.validation
 
 import dev.ohs.fhir.datacapture.XFhirQueryResolver
 import dev.ohs.fhir.datacapture.enablement.EnablementEvaluator
+import dev.ohs.fhir.datacapture.extensions.isNonRepeatedGroup
 import dev.ohs.fhir.datacapture.extensions.packRepeatedGroups
 import dev.ohs.fhir.datacapture.fhirpath.ExpressionEvaluator
 import dev.ohs.fhir.model.r4.Questionnaire
@@ -141,8 +142,7 @@ object QuestionnaireResponseValidator {
     when {
       questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Display -> Unit
 
-      (questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-        questionnaireItem.repeats?.value != true) ->
+      questionnaireItem.isNonRepeatedGroup ->
         // Nested items under group
         // http://www.hl7.org/fhir/questionnaireresponse-definitions.html#QuestionnaireResponse.item.item
         validateQuestionnaireResponseItems(
@@ -257,8 +257,7 @@ object QuestionnaireResponseValidator {
     when {
       questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Display -> Unit
 
-      (questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-        questionnaireItem.repeats?.value == false) ->
+      questionnaireItem.isNonRepeatedGroup ->
         // Nested items under group
         // http://www.hl7.org/fhir/questionnaireresponse-definitions.html#QuestionnaireResponse.item.item
         checkQuestionnaireResponseItems(questionnaireItem.item, questionnaireResponseItem.item)

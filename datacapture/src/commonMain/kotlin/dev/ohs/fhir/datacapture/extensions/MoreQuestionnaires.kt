@@ -260,11 +260,7 @@ private suspend fun forEachItemPair(
 
     // For non-repeated groups, simply match the child questionnaire items with child questionnaire
     // response items.
-    if (
-      questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-        questionnaireItem.repeats?.value != true &&
-        questionnaireItem.item.isNotEmpty()
-    ) {
+    if (questionnaireItem.isNonRepeatedGroup && questionnaireItem.item.isNotEmpty()) {
       forEachItemPair(questionnaireItem.item, questionnaireResponseItem.item, forEach)
     }
 
@@ -272,7 +268,7 @@ private suspend fun forEachItemPair(
     // 1. questionnaire items nested under repeated group are repeated for each instance of the
     // repeated group, each represented as an answer components in the questionnaire response item.
     // 2. questionnaire items nested directly under question are repeated for each answer.
-    if (questionnaireItem.repeats?.value == true && questionnaireItem.item.isNotEmpty()) {
+    if (questionnaireItem.shouldHaveNestedItemsUnderAnswers) {
       questionnaireResponseItem.answer.forEach {
         forEachItemPair(questionnaireItem.item, it.item, forEach)
       }

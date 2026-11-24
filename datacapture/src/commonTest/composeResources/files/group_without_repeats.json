@@ -1,0 +1,28 @@
+{
+  "resourceType": "Questionnaire",
+  "status": "active",
+  "item": [
+    {
+      "linkId": "group",
+      "type": "group",
+      "text": "Group without repeats",
+      "item": [
+        {
+          "linkId": "a",
+          "type": "integer",
+          "text": "Question A"
+        },
+        {
+          "linkId": "b",
+          "type": "integer",
+          "text": "Question B"
+        },
+        {
+          "linkId": "c",
+          "type": "integer",
+          "text": "Question C"
+        }
+      ]
+    }
+  ]
+}

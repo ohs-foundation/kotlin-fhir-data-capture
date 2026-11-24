@@ -262,6 +262,19 @@ class UIQuestionnaireTest {
   }
 
   @Test
+  fun responseWithoutUnansweredItemsUnderGroupWithoutRepeats_shouldDisplayAllItems() =
+    runComposeUiTest {
+      setQuestionnaireContent(
+        "files/group_without_repeats.json",
+        responseFileName = "files/group_without_repeats_sparse_response.json",
+      )
+
+      onNodeWithText("Question A").assertIsDisplayed()
+      onNodeWithText("Question B").assertIsDisplayed()
+      onNodeWithText("Question C").assertIsDisplayed()
+    }
+
+  @Test
   fun shouldHideNextButtonOnLastPage() = runComposeUiTest {
     val questionnaireJson =
       """{
