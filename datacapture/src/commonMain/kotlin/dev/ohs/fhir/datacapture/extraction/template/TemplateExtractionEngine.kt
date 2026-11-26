@@ -18,6 +18,7 @@ package dev.ohs.fhir.datacapture.extraction.template
 import dev.ohs.fhir.datacapture.extensions.allocateIdVariableNames
 import dev.ohs.fhir.datacapture.extensions.findContainedBundle
 import dev.ohs.fhir.datacapture.extensions.findContainedResource
+import dev.ohs.fhir.datacapture.extensions.generateAllocatedFullUrl
 import dev.ohs.fhir.datacapture.extensions.templateExtractBundleReference
 import dev.ohs.fhir.datacapture.extensions.templateExtractExtensions
 import dev.ohs.fhir.datacapture.extraction.DataExtractionException
@@ -30,7 +31,6 @@ import dev.ohs.fhir.model.r4.Resource
 import dev.ohs.fhir.model.r4.String as FhirString
 import dev.ohs.fhir.model.r4.Uri
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -369,9 +369,6 @@ object TemplateExtractionEngine {
   @OptIn(ExperimentalUuidApi::class)
   private fun allocateIdVariables(variableNames: List<String>): Map<String, Any?> =
     variableNames.associateWith { generateAllocatedFullUrl() }
-
-  @OptIn(ExperimentalUuidApi::class)
-  private fun generateAllocatedFullUrl(): String = "urn:uuid:${Uuid.random()}"
 }
 
 /** Returns `true` when this questionnaire item subtree declares template extraction anywhere. */
