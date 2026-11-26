@@ -80,3 +80,27 @@ val SurfaceVariantNeutralVariant30 = Color(0xFF444746)
 val OnSurfaceVariantNeutralVariant80 = Color(0xFFC4C7C5)
 
 val OutlineNeutralVariant60 = Color(0xFF8E918F)
+
+// Custom styles for the "Per question custom style" component, ported from android-fhir's catalog
+// `custom_style_primary_*` / `custom_style_on_primary_*` colors.
+val CustomStylePrimary100 = Color(0xFF1816FF)
+val CustomStylePrimary200 = Color(0xFF2024FF)
+val CustomStylePrimary300 = Color(0xFF2936FF)
+val CustomStylePrimary400 = Color(0xFF3249FF)
+val CustomStylePrimary500 = Color(0xFF3B5CFF)
+val CustomStylePrimary600 = Color(0xFF476FFF)
+val CustomStylePrimary700 = Color(0xFF5581FF)
+val CustomStylePrimary800 = Color(0xFF668FFF)
+val CustomStylePrimary900 = Color(0xFF7A9FFF)
+val CustomStyleOnPrimary = Color(0xFFFFFFFF)
+
+// Status text colors for the "Per question custom style" component. Light variants are used in
+// dark mode so the text stays readable on a dark surface.
+val StatusSuccessLight = Color(0xFF1E7B34)
+val StatusSuccessDark = Color(0xFF81C995)
+val StatusWarningLight = Color(0xFF9A5B00)
+val StatusWarningDark = Color(0xFFFDD663)
+val StatusErrorLight = Color(0xFFB3261E)
+val StatusErrorDark = Color(0xFFF2B8B5)
+val StatusInfoLight = Color(0xFF0B57D0)
+val StatusInfoDark = Color(0xFFA8C7FA)

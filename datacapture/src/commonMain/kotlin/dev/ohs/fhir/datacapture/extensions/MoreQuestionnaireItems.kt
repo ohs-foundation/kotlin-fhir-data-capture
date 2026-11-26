@@ -53,8 +53,15 @@ internal const val EXTENSION_ITEM_CONTROL_SYSTEM_ANDROID_FHIR =
 internal const val EXTENSION_DIALOG_URL_ANDROID_FHIR =
   "https://github.com/google/android-fhir/StructureDefinition/dialog"
 
+/** Platform-neutral URL of the extension that applies named styles to an item's header text. */
+internal const val EXTENSION_CUSTOM_STYLE_URL =
+  "https://github.com/ohs-foundation/kotlin-fhir-data-capture/StructureDefinition/custom-style"
+
+/** Legacy android-fhir URL of [EXTENSION_CUSTOM_STYLE_URL], read for existing questionnaires. */
+internal const val EXTENSION_CUSTOM_STYLE_URL_ANDROID_FHIR =
+  "https://github.com/google/android-fhir/tree/master/datacapture/android-style"
+
 internal enum class StyleUrl(val url: String) {
-  BASE("https://github.com/google/android-fhir/tree/master/datacapture/android-style"),
   PREFIX_TEXT_VIEW("prefix_text_view"),
   QUESTION_TEXT_VIEW("question_text_view"),
   SUBTITLE_TEXT_VIEW("subtitle_text_view"),
@@ -1011,9 +1018,14 @@ val Resource.logicalId: String
       ?: throw IllegalStateException("Id field cannot be null")
   }
 
+/**
+ * Reads the style name for [styleUrl] from the custom-style extension. [EXTENSION_CUSTOM_STYLE_URL]
+ * takes precedence over the legacy [EXTENSION_CUSTOM_STYLE_URL_ANDROID_FHIR] if both are present.
+ */
 internal fun Questionnaire.Item.readCustomStyleExtension(styleUrl: StyleUrl): String? {
-  // Find the base extension
-  val baseExtension = extension.find { it.url == StyleUrl.BASE.url }
+  val baseExtension =
+    extension.find { it.url == EXTENSION_CUSTOM_STYLE_URL }
+      ?: extension.find { it.url == EXTENSION_CUSTOM_STYLE_URL_ANDROID_FHIR }
   baseExtension?.let { ext ->
     // Extract nested extension based on the given StyleUrl
     ext.extension.forEach { nestedExt ->
