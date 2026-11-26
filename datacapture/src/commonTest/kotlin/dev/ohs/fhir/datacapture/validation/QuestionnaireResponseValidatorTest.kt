@@ -22,10 +22,60 @@ import dev.ohs.fhir.model.r4.String as FhirString
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class QuestionnaireResponseValidatorTest {
+
+  private val fhirJson = Json {
+    explicitNulls = false
+    encodeDefaults = false
+  }
+
+  @Test
+  fun checkQuestionnaireResponse_shouldCheckItemsUnderGroupWithoutRepeats() {
+    val questionnaire =
+      fhirJson.decodeFromString<Questionnaire>(
+        """
+        {
+          "resourceType": "Questionnaire",
+          "status": "active",
+          "item": [
+            {
+              "linkId": "group",
+              "type": "group",
+              "item": [{ "linkId": "a", "type": "integer" }]
+            }
+          ]
+        }
+        """
+      )
+    val questionnaireResponse =
+      fhirJson.decodeFromString<QuestionnaireResponse>(
+        """
+        {
+          "resourceType": "QuestionnaireResponse",
+          "status": "in-progress",
+          "item": [
+            {
+              "linkId": "group",
+              "item": [{ "linkId": "a", "answer": [{ "valueString": "not an integer" }] }]
+            }
+          ]
+        }
+        """
+      )
+
+    assertFailsWith<IllegalArgumentException> {
+      QuestionnaireResponseValidator.checkQuestionnaireResponse(
+        questionnaire,
+        questionnaireResponse,
+      )
+    }
+  }
 
   @Test
   fun shouldReturnValidResults() = runTest {

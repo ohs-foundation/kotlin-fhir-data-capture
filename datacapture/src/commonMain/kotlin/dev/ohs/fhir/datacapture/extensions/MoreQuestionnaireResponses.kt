@@ -28,6 +28,55 @@ val QuestionnaireResponse.Builder.allItems: List<QuestionnaireResponse.Item>
   get() = item.flatMap { it.build().descendant }
 
 /**
+ * Adds empty questionnaire response items so that each questionnaire item has at least one
+ * corresponding questionnaire response item. This is because an application-provided questionnaire
+ * response might not contain answers to unanswered or disabled questions.
+ *
+ * Repeated groups without instances are skipped, because [packRepeatedGroups] adds their
+ * questionnaire response items.
+ *
+ * This function should only be called on an unpacked questionnaire response, before
+ * [packRepeatedGroups].
+ */
+internal fun QuestionnaireResponse.Builder.addMissingResponseItems(questionnaire: Questionnaire) {
+  item = item.addMissingResponseItems(questionnaire.item).toMutableList()
+}
+
+private fun List<QuestionnaireResponse.Item.Builder>.addMissingResponseItems(
+  questionnaireItems: List<Questionnaire.Item>
+): List<QuestionnaireResponse.Item.Builder> {
+  // Use groupBy() and not associateBy(), because an unpacked repeated group has one questionnaire
+  // response item for each instance.
+  val linkIdToResponseItems = groupBy { it.linkId.value }
+  return questionnaireItems.flatMap { questionnaireItem ->
+    val responseItems = linkIdToResponseItems[questionnaireItem.linkId.value]
+    when {
+      !responseItems.isNullOrEmpty() ->
+        responseItems.onEach { it.addMissingNestedResponseItems(questionnaireItem) }
+
+      questionnaireItem.isRepeatedGroup -> emptyList()
+
+      else -> listOf(questionnaireItem.createQuestionnaireResponseItem())
+    }
+  }
+}
+
+private fun QuestionnaireResponse.Item.Builder.addMissingNestedResponseItems(
+  questionnaireItem: Questionnaire.Item
+) {
+  if (questionnaireItem.item.isEmpty()) return
+  if (questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group) {
+    // Nested items under a non-repeated group, or under an instance of an unpacked repeated group
+    item = item.addMissingResponseItems(questionnaireItem.item).toMutableList()
+  } else {
+    // Nested items under each answer of a question
+    answer.forEach {
+      it.item = it.item.addMissingResponseItems(questionnaireItem.item).toMutableList()
+    }
+  }
+}
+
+/**
  * Packs repeated groups under the same questionnaire response item.
  *
  * Repeated groups need some massaging before the questionnaire view model can interpret them
@@ -75,10 +124,7 @@ private fun List<QuestionnaireResponse.Item.Builder>.packRepeatedGroups(
             .build()
         }
 
-      if (
-        questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-          questionnaireItem.repeats?.value == true
-      ) {
+      if (questionnaireItem.isRepeatedGroup) {
         listOf(
           QuestionnaireResponse.Item.Builder(questionnaireItem.linkId.toBuilder()).apply {
             linkId = questionnaireItem.linkId.toBuilder()

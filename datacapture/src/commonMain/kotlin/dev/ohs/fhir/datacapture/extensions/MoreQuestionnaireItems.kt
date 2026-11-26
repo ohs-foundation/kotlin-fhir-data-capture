@@ -609,10 +609,8 @@ internal val Questionnaire.Item.answerOptionsToggleExpressions
           rootExtension.extension
             .filter { it.url == EXTENSION_ANSWER_OPTION_TOGGLE_EXPRESSION_OPTION }
             .map { it.value }
-        if (options.isEmpty()) {
-          throw IllegalArgumentException(
-            "Questionnaire item $linkId with extension '$EXTENSION_ANSWER_EXPRESSION_URL' requires at least one option. See http://hl7.org/fhir/uv/sdc/STU3/StructureDefinition-sdc-questionnaire-answerOptionsToggleExpression.html."
-          )
+        check(options.isNotEmpty()) {
+          "Questionnaire item $linkId with extension '$EXTENSION_ANSWER_EXPRESSION_URL' requires at least one option. See http://hl7.org/fhir/uv/sdc/STU3/StructureDefinition-sdc-questionnaire-answerOptionsToggleExpression.html."
         }
         val expression =
           rootExtension.extension
@@ -910,10 +908,7 @@ internal fun Questionnaire.Item.createQuestionnaireResponseItem():
           answer.isNotEmpty()
       ) {
         this.copyNestedItemsToChildlessAnswers(this@createQuestionnaireResponseItem)
-      } else if (
-        this@createQuestionnaireResponseItem.type.value ==
-          Questionnaire.QuestionnaireItemType.Group && repeats?.value != true
-      ) {
+      } else if (this@createQuestionnaireResponseItem.isNonRepeatedGroup) {
         this@createQuestionnaireResponseItem.item.forEach {
           if (!it.isRepeatedGroup) {
             this.item.add(it.createQuestionnaireResponseItem())
@@ -950,19 +945,15 @@ private fun Questionnaire.Item.createQuestionnaireResponseItemAnswers():
     return mutableListOf()
   }
 
-  if (
-    type.value == Questionnaire.QuestionnaireItemType.Group ||
-      type.value == Questionnaire.QuestionnaireItemType.Display
+  check(
+    type.value != Questionnaire.QuestionnaireItemType.Group &&
+      type.value != Questionnaire.QuestionnaireItemType.Display
   ) {
-    throw IllegalArgumentException(
-      "Questionnaire item ${linkId.value} has initial value(s) and is a group or display item. See rule que-8 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
-    )
+    "Questionnaire item ${linkId.value} has initial value(s) and is a group or display item. See rule que-8 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
   }
 
-  if ((answerOption.initialSelected.size > 1 || initial.size > 1) && repeats?.value == false) {
-    throw IllegalArgumentException(
-      "Questionnaire item ${linkId.value} can only have multiple initial values for repeating items. See rule que-13 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
-    )
+  check(repeats?.value == true || (answerOption.initialSelected.size <= 1 && initial.size <= 1)) {
+    "Questionnaire item ${linkId.value} can only have multiple initial values for repeating items. See rule que-13 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
   }
 
   val answersFromInitial =
@@ -991,6 +982,10 @@ private fun List<Questionnaire.Item>.flattenInto(output: MutableList<Questionnai
 
 internal val Questionnaire.Item.isRepeatedGroup: Boolean
   get() = type.value == Questionnaire.QuestionnaireItemType.Group && repeats?.value == true
+
+/** A group without `repeats` does not repeat. */
+internal val Questionnaire.Item.isNonRepeatedGroup: Boolean
+  get() = type.value == Questionnaire.QuestionnaireItemType.Group && repeats?.value != true
 
 /**
  * The template extraction extension can also appear on a Questionnaire.item so each logical
