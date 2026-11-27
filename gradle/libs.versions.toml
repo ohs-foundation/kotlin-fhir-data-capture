@@ -27,7 +27,6 @@ kt-lint = "1.8.0"
 licensee-plugin = "1.14.1"
 material = "1.13.0"
 maven-publish = "0.36.0"
-navigation = "2.9.8"
 navigation-compose = "2.9.1"
 ohs-fhir = "1.0.0-rc03"
 ohs-fhir-engine = "2.0.0-alpha04"
@@ -83,12 +82,10 @@ ohs-fhir-path = { module = "dev.ohs.fhir:fhir-path-r4", version.ref = "ohs-fhir-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle-plugin" }
-androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 cashapp-licensee = { id = "app.cash.licensee", version.ref = "licensee-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-hotreload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hotreload" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
