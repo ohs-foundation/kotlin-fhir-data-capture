@@ -4,7 +4,7 @@ plugins {
 }
 
 val androidNamespace: String by project
-val applicationId: String by project
+val androidApplicationId: String by project
 val applicationVersionCode: String by project
 val applicationVersionName: String by project
 val androidCompileSdk: String by project
@@ -16,7 +16,7 @@ android {
   compileSdk = androidCompileSdk.toInt()
 
   defaultConfig {
-    applicationId = applicationId
+    applicationId = androidApplicationId
     minSdk = androidMinSdk.toInt()
     targetSdk = androidTargetSdk.toInt()
     versionCode = applicationVersionCode.toInt()
