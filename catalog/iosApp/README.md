@@ -43,4 +43,4 @@ To run the application, set the `TEAM_ID`:
 2. Set your `TEAM_ID`.
 3. Plug in your iOS device into the computer.
 4. Re-open the project in Android Studio. It should show the registered iOS device in the `iosApp` run configuration.
-5. You could also open the `catalog-iosApp` project and run it with Xcode
+5. You could also open the `catalog/iosApp` project and run it with Xcode

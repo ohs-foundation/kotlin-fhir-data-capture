@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":catalog"))
+  implementation(project(":catalog:shared"))
   implementation(project(":datacapture"))
   implementation(libs.androidx.activity.compose)
 }

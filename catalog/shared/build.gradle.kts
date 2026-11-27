@@ -116,3 +116,6 @@ kotlin {
     wasmJsMain { dependencies { implementation(libs.compass.geolocation.browser) } }
   }
 }
+
+// Keeps the generated Res package independent of the module's Gradle path.
+compose.resources { packageOfResClass = "kotlin_fhir_data_capture.catalog.generated.resources" }
