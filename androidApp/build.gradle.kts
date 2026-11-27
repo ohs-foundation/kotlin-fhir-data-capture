@@ -8,12 +8,15 @@ val androidApplicationId: String by project
 val applicationVersionCode: String by project
 val applicationVersionName: String by project
 val androidCompileSdk: String by project
+val androidCompileSdkMinor: String by project
 val androidMinSdk: String by project
 val androidTargetSdk: String by project
 
 android {
   namespace = androidNamespace
-  compileSdk = androidCompileSdk.toInt()
+  compileSdk {
+    version = release(androidCompileSdk.toInt()) { minorApiLevel = androidCompileSdkMinor.toInt() }
+  }
 
   defaultConfig {
     applicationId = androidApplicationId

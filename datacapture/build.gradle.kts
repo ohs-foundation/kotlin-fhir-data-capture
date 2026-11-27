@@ -15,6 +15,7 @@ plugins {
 }
 
 val androidCompileSdk: String by project
+val androidCompileSdkMinor: String by project
 val androidMinSdk: String by project
 
 val androidNamespace: String by project
@@ -41,7 +42,10 @@ kotlin {
 
   android {
     namespace = androidNamespace
-    compileSdk = androidCompileSdk.toInt()
+    compileSdk {
+      version =
+        release(androidCompileSdk.toInt()) { minorApiLevel = androidCompileSdkMinor.toInt() }
+    }
     minSdk = androidMinSdk.toInt()
     withJava()
     withHostTestBuilder {}
