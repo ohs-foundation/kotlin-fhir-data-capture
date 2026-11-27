@@ -60,26 +60,27 @@ The library's support for different
 [target platforms](https://kotlinlang.org/docs/multiplatform-dsl-reference.html#targets)
 is listed in the following table:
 
-| Target platform                    | Gradle target  | Artifact suffix  | Support |
-|:-----------------------------------|:---------------|:-----------------|:--------|
-| Kotlin/JVM                         | `jvm`          | `-jvm`           | ✅       |
-| Kotlin/Wasm                        | `wasmJs`       | `-wasm-js`       | ✅       |
-| Kotlin/Wasm                        | `wasmWasi`     | `-wasm-wasi`     | ⛔       |
-| Kotlin/JS                          | `js`           | `-js`            | ✅       |
-| Android applications and libraries | `android`      | `-android`       | ✅       |
+| Target platform                    | Gradle target | Artifact suffix | Support |
+|:-----------------------------------|:--------------|:----------------|:--------|
+| Kotlin/JVM                         | `jvm`         | `-jvm`          | ✅      |
+| Kotlin/Wasm                        | `wasmJs`      | `-wasm-js`      | ✅      |
+| Kotlin/Wasm                        | `wasmWasi`    | `-wasm-wasi`    | ⛔      |
+| Kotlin/JS                          | `js`          | `-js`           | ✅      |
+| Android applications and libraries | `android`     | `-android`      | ✅      |
 
 The library also supports the following
 [Kotlin/Native targets](https://kotlinlang.org/docs/native-target-support.html):
 
-| Gradle target      | Artifact suffix      | Tier | Support |
-|:-------------------|:---------------------|:-----|:--------|
-| iosSimulatorArm64  | `-iossimulatorarm64` | 1    | ✅       |
-| iosArm64           | `-iosarm64`          | 1    | ✅       |
+| Gradle target     | Artifact suffix      | Tier | Support |
+|:------------------|:---------------------|:-----|:--------|
+| iosSimulatorArm64 | `-iossimulatorarm64` | 1    | ✅      |
+| iosArm64          | `-iosarm64`          | 1    | ✅      |
 
 ## Catalog app
 
-The `catalog` module is a multiplatform demo application. To run the iOS variant see
-[catalog-iosApp/README.md](catalog-iosApp/README.md).
+The `catalog` folder holds the multiplatform demo application: `shared` (common UI), `androidApp` and
+`iosApp`. To run the iOS variant see
+[catalog/iosApp/README.md](catalog/iosApp/README.md).
 
 ## User Guide
 
