@@ -28,7 +28,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
@@ -179,6 +179,7 @@ class SingleLineTextInputFactoryTest {
     setContent { QuestionnaireEditTextSingleLineView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("Answer")
     waitUntil { answers != null }
+    waitForIdle()
 
     answers!!.single().value!!.asString()!!.value.value!!.shouldBe("Answer")
   }

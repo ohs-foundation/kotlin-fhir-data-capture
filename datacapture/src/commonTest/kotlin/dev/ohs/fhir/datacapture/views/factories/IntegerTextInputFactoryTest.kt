@@ -28,7 +28,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
@@ -174,6 +174,7 @@ class IntegerTextInputFactoryTest {
     setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("13")
     waitUntil { answers != null }
+    waitForIdle()
 
     answers!!.single().value!!.asInteger()!!.value.value.shouldBe(13)
   }
@@ -214,6 +215,7 @@ class IntegerTextInputFactoryTest {
     // The character in 1O2 is the letter O, not the number 0
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1O2")
     waitUntil { draftAnswer != null }
+    waitForIdle()
     (draftAnswer as String).shouldBe("1O2")
   }
 

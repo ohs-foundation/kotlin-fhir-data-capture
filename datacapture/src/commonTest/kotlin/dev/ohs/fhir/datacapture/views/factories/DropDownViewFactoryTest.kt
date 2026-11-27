@@ -37,7 +37,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_ANSWER_MEDIA
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
@@ -789,7 +789,6 @@ class DropDownViewFactoryTest {
   }
 
   @Test
-  @Ignore // Compose 1.12 JS test-harness regression
   fun shouldClearAutoCompleteTextView() = runComposeUiTest {
     val questionnaireViewItem =
       QuestionnaireViewItem(

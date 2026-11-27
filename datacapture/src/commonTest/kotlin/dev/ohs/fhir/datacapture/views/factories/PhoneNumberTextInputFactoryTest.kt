@@ -28,7 +28,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
@@ -274,6 +274,7 @@ class PhoneNumberTextInputFactoryTest {
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("+12345678910")
 
     waitUntil { answers != null }
+    waitForIdle()
 
     answers!!.single().value?.asString()?.value?.value.shouldBe("+12345678910")
   }

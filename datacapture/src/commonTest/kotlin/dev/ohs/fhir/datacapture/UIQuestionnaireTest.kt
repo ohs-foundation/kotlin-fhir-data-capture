@@ -33,7 +33,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performSemanticsAction
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -56,7 +56,6 @@ import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.terminologies.PublicationStatus
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin_fhir_data_capture.datacapture.generated.resources.Res
 import kotlin_fhir_data_capture.datacapture.generated.resources.button_pagination_next
@@ -87,7 +86,6 @@ class UIQuestionnaireTest {
     resetTestMainDispatcher()
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {
     setQuestionnaireContent("files/paginated_questionnaire_with_dependent_answer.json", true)
@@ -128,7 +126,6 @@ class UIQuestionnaireTest {
   }
 
   @Test
-  @Ignore // Compose 1.12 JS test-harness regression
   fun displayItems_shouldGetEnabled_withAnswerChoice() = runComposeUiTest {
     setQuestionnaireContent("files/questionnaire_with_enabled_display_items.json")
 
@@ -227,7 +224,6 @@ class UIQuestionnaireTest {
   }
 
   @Test
-  @Ignore // Compose 1.12 JS test-harness regression
   fun test_repeated_group_adds_multiple_items() = runComposeUiTest {
     setQuestionnaireContent("files/component_multiple_repeated_group.json")
     onNode(hasTestTag(ADD_REPEATED_GROUP_BUTTON_TAG) and hasText("Add Repeated Group"))

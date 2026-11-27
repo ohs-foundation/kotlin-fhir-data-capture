@@ -26,7 +26,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
@@ -37,7 +37,6 @@ import dev.ohs.fhir.model.r4.Enumeration
 import dev.ohs.fhir.model.r4.Extension
 import dev.ohs.fhir.model.r4.Questionnaire
 import dev.ohs.fhir.model.r4.QuestionnaireResponse
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -48,7 +47,6 @@ class AttachmentViewFactoryTest {
     AttachmentViewFactory.Content(questionnaireViewItem)
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayTakePhotoAndUploadPhotoButton() = runComposeUiTest {
     val questionnaireItemView =
@@ -76,7 +74,6 @@ class AttachmentViewFactoryTest {
     onNodeWithTag(UPLOAD_FILE_BUTTON_TAG).assertTextEquals("Upload Photo")
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayUploadAudioButton() = runComposeUiTest {
     val questionnaireItemView =
@@ -103,7 +100,6 @@ class AttachmentViewFactoryTest {
     onNodeWithTag(UPLOAD_FILE_BUTTON_TAG).assertTextEquals("Upload Audio")
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayUploadVideoButton() = runComposeUiTest {
     val questionnaireItemView =
@@ -130,7 +126,6 @@ class AttachmentViewFactoryTest {
     onNodeWithTag(UPLOAD_FILE_BUTTON_TAG).assertTextEquals("Upload Video")
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayUploadDocumentButton() = runComposeUiTest {
     val questionnaireItemView =
@@ -157,7 +152,6 @@ class AttachmentViewFactoryTest {
     onNodeWithTag(UPLOAD_FILE_BUTTON_TAG).assertTextEquals("Upload Document")
   }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun shouldDisplayTakePhotoAndUploadFileButton() = runComposeUiTest {
     val questionnaireItemView =
@@ -569,7 +563,6 @@ class AttachmentViewFactoryTest {
       onNodeWithText("Yellow Doc").assertIsDisplayed()
     }
 
-  @Ignore // Compose 1.12 JS test-harness regression (node not found / inject mouse)
   @Test
   fun deleteRemovesPreviewOfAnswerAttachment() = runComposeUiTest {
     val questionnaireViewItem =
