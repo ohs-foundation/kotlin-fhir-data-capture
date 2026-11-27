@@ -269,7 +269,6 @@ class DecimalTextInputFactoryTest {
     setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1.1")
     waitUntil { answers != null }
-    waitForIdle()
 
     answers!!.single().value?.asDecimal()?.value?.value?.asBigDecimal().shouldBe(1.1.toBigDecimal())
   }
@@ -309,7 +308,6 @@ class DecimalTextInputFactoryTest {
     setContent { QuestionnaireEditTextDecimalView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1.1.1.1")
     waitUntil { draftAnswer != null }
-    waitForIdle()
 
     (draftAnswer as String).shouldBe("1.1.1.1")
   }

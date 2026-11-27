@@ -274,7 +274,6 @@ class PhoneNumberTextInputFactoryTest {
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("+12345678910")
 
     waitUntil { answers != null }
-    waitForIdle()
 
     answers!!.single().value?.asString()?.value?.value.shouldBe("+12345678910")
   }

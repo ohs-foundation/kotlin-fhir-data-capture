@@ -152,7 +152,6 @@ class AndroidDateViewFactoryTest {
     setContent { DateViewFactory.Content(item) }
     onNodeWithTag(DATE_TEXT_INPUT_FIELD).performTextInput("11/19/2020")
     waitUntil { answers != null }
-    waitForIdle()
 
     val answer = (answers!!.single().value?.asDate()?.value?.value as? FhirDate.Date)?.date
 

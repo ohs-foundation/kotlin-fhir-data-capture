@@ -174,7 +174,6 @@ class IntegerTextInputFactoryTest {
     setContent { QuestionnaireEditTextIntegerView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("13")
     waitUntil { answers != null }
-    waitForIdle()
 
     answers!!.single().value!!.asInteger()!!.value.value.shouldBe(13)
   }
@@ -215,7 +214,6 @@ class IntegerTextInputFactoryTest {
     // The character in 1O2 is the letter O, not the number 0
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("1O2")
     waitUntil { draftAnswer != null }
-    waitForIdle()
     (draftAnswer as String).shouldBe("1O2")
   }
 

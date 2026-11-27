@@ -179,7 +179,6 @@ class MultiLineTextInputFactoryTest {
     setContent { QuestionnaireEditTextMultiLineView(questionnaireViewItem) }
     onNodeWithTag(EDIT_TEXT_FIELD_TEST_TAG).performTextReplacement("Answer")
     waitUntil { answers != null }
-    waitForIdle()
 
     answers!!.single().value!!.asString()!!.value.value!!.shouldBe("Answer")
   }
