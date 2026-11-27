@@ -37,7 +37,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_ANSWER_MEDIA
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
@@ -46,6 +45,7 @@ import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.extensions.toAnnotatedString
 import dev.ohs.fhir.datacapture.extensions.toQuestionnaireResponseItemAnswer
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated

@@ -31,7 +31,6 @@ import androidx.compose.ui.test.isOff
 import androidx.compose.ui.test.isOn
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import dev.ohs.fhir.datacapture.extensions.ChoiceOrientationTypes
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_CHOICE_ORIENTATION_URL
@@ -41,6 +40,7 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_URL
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_OPTION_EXCLUSIVE_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated

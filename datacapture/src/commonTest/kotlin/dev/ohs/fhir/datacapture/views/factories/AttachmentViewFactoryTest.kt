@@ -26,8 +26,8 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.model.r4.Attachment

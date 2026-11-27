@@ -1,7 +1,6 @@
 plugins {
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.android.kotlin.multiplatform.library) apply false
-  alias(libs.plugins.androidx.navigation.safeargs) apply false
   alias(libs.plugins.cashapp.licensee) apply false
   alias(libs.plugins.compose.compiler) apply false
   alias(libs.plugins.compose.hotreload) apply false

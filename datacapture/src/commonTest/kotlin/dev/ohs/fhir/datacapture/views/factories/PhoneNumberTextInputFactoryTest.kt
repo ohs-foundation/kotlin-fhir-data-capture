@@ -28,7 +28,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextReplacement
-import androidx.compose.ui.test.runComposeUiTest
 import dev.ohs.fhir.datacapture.DataCaptureConfig
 import dev.ohs.fhir.datacapture.LocalDataCaptureConfig
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_SYSTEM
@@ -36,6 +35,7 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_ITEM_CONTROL_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4Integer
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated

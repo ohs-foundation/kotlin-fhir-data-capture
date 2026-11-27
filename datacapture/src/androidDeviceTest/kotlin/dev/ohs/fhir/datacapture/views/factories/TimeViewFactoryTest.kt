@@ -22,9 +22,9 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasTextExactly
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.runComposeUiTest
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem

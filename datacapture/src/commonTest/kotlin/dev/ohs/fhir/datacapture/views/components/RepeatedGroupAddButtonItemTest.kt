@@ -20,9 +20,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.runComposeUiTest
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.validation.NotValidated
 import dev.ohs.fhir.datacapture.views.QuestionnaireViewItem
 import dev.ohs.fhir.model.r4.Enumeration
