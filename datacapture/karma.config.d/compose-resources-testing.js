@@ -1,11 +1,8 @@
-const fs = require('fs')
 const path = require('path')
 
-const composeResourcesTestingSetupFile = path.join(__dirname, 'compose-resources-testing-setup.js')
-fs.writeFileSync(composeResourcesTestingSetupFile, 'window.composeResourcesTesting = true;\n')
-
+// Serves Compose resources to the test page at the path the resources runtime fetches from.
 config.set({
-    files: [composeResourcesTestingSetupFile].concat(config.files).concat([
+    files: config.files.concat([
         {
             pattern: path.join(__dirname, 'kotlin', 'composeResources', '**', '*'),
             included: false,

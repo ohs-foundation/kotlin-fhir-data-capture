@@ -28,25 +28,13 @@ kotlin {
   jvm()
 
   wasmJs {
-    browser {
-      testTask {
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
-      }
-    }
+    browser()
     binaries.library()
     binaries.executable()
   }
 
   js {
-    browser {
-      testTask {
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.UIQuestionnaireTest*")
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.factories.*FactoryTest*")
-        filter.excludeTestsMatching("dev.ohs.fhir.datacapture.views.components.*Test*")
-      }
-    }
+    browser()
     binaries.library()
     binaries.executable()
   }

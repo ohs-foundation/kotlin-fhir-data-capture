@@ -30,7 +30,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
-import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import dev.ohs.fhir.datacapture.extensions.DisplayItemControlType
 import dev.ohs.fhir.datacapture.extensions.EXTENSION_DIALOG_URL_ANDROID_FHIR
@@ -40,6 +39,7 @@ import dev.ohs.fhir.datacapture.extensions.EXTENSION_OPTION_EXCLUSIVE_URL
 import dev.ohs.fhir.datacapture.extensions.FhirR4Boolean
 import dev.ohs.fhir.datacapture.extensions.FhirR4String
 import dev.ohs.fhir.datacapture.extensions.ItemControlTypes
+import dev.ohs.fhir.datacapture.runComposeUiTest
 import dev.ohs.fhir.datacapture.theme.QuestionnaireTheme
 import dev.ohs.fhir.datacapture.validation.Invalid
 import dev.ohs.fhir.datacapture.validation.NotValidated
